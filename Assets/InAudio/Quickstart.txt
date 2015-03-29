@@ -1,0 +1,22 @@
+InAudio - Advanced Audio Plugin for Unity
+
+InAudio is a powerful designer driven audio plugin for Unity. Written completely in C# 
+
+Installation: Just open any window found under Window/InAudio. All it requires is the InAudio Manager in the scene.
+
+To use InAudio, the super short guide is:
+
+1. Drag an audio clip into the Audio window.
+2. Create an event in the Event window
+3. Drag the audio to be played on the event.
+4. Use the event hook or hook in the code when to trigger an event.
+5. Drag-n-drop the event(s) from the window to the inspector.
+6. Play game to hear it work.
+
+For a more in-depth explanation please visit
+http://www.innersystems.net/wiki/quickstart 
+
+For up to date documentation visit
+http://innersystems.net/wiki
+For help visit
+http://forum.unity3d.com/threads/232490-InAudio-Advanced-Audio-for-Unity

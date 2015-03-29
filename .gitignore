@@ -1,0 +1,16 @@
+.DS_Store
+Library/*
+*.userprefs
+Temp
+*.csproj
+*.pidb
+*.sln
+build
+obj/*
+*.swp
+*.pyc
+*.suo
+*.DotSettings
+*.unityproj
+*.1-csharp.sln.DotSettings.user
+*.unitypackage
