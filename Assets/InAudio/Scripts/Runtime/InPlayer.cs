@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEngine;
@@ -552,16 +553,16 @@ namespace InAudioSystem.Runtime
 
                 source.spatialBlend = RuntimeHelper.CalcBlend(startNode, currentNode);
                 source.pitch = RuntimeHelper.CalcPitch(startNode, currentNode);
-                RuntimeHelper.CalcAttentutation(startNode, currentNode, source);
+                source.rolloffMode = RuntimeHelper.CalcAttentutation(startNode, currentNode, source);
 
                 length = RuntimeHelper.LengthFromPitch(length, source.pitch);
                 Current.EndTime = playAtDSPTime + length;
                 Current.StartTime = playAtDSPTime;
                 Current.UsedNode = currentNode;
 
-                source.panStereo = _panStereo;
-                source.spread = spread;
-                source.spatialBlend = _spatialBlend;
+                source.panStereo += _panStereo;
+                source.spread *= spread;
+                source.spatialBlend *= _spatialBlend;
                 source.timeSamples = (int) (lengthOffset);
                 source.PlayScheduled(playAtDSPTime);
             }

@@ -126,8 +126,8 @@ public static class RuntimeHelper
                 return Random.Range(data.MinBlend, data.MaxBlend);
         }
 
-        if (!data.RandomVolume)
-            return data.MinBlend * CalcVolume(root, current._parent);
+        if (!data.RandomBlend)
+            return data.MinBlend * CalcBlend(root, current._parent);
         else
             return Random.Range(data.MinBlend, data.MaxBlend) * CalcBlend(root, current._parent);
 

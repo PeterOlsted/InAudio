@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Runtime;
 using UnityEngine;
@@ -42,6 +43,49 @@ namespace InAudioSystem.Internal
             poolObject.transform.position = position;
             Play(controllingObject, audioNode, poolObject, fade, fadeType);
             return poolObject;
+        }
+
+        public void StopAll(InAudioNode node, float fadeOutTime, LeanTweenType type)
+        {
+            foreach (var audioNode in GOAudioNodes)
+            {
+                var infoList = audioNode.Value;
+                if (infoList != null)
+                {
+                    int count = infoList.InfoList.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (infoList.InfoList[i].Node == node)
+                        {
+                            infoList.InfoList[i].Player.Stop();
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+
+        public void StopAll(float fadeOutTime, LeanTweenType type)
+        {
+            foreach (var audioNode in GOAudioNodes)
+            {
+                var infoList = audioNode.Value;
+
+                if (infoList != null)
+                {
+                    var list = infoList.InfoList;
+                    for (int i = 0; i < list.Count; ++i)
+                    {
+                        if (fadeOutTime > 0)
+                            list[i].Player.Stop(fadeOutTime, type);
+                        else
+                            list[i].Player.Stop();
+                    }
+                }
+            }
+            
         }
 
         public void StopAll(GameObject controllingObject, float fadeOutTime, LeanTweenType type)

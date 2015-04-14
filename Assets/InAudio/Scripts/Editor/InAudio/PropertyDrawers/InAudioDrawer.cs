@@ -18,6 +18,19 @@ namespace InAudioSystem
             EditorGUILayout.SelectableLabel("inaudio@outlook.com");
             EditorGUILayout.EndHorizontal();
 
+
+            GUI.enabled = Application.isPlaying;
+            if (GUILayout.Button("Stop All Sound Effects"))
+            {
+                InAudio.StopAll();
+            }
+            if (GUILayout.Button("Stop All Music"))
+            {
+                InAudio.Music.StopAll();
+            }
+            GUI.enabled = true;
+            EditorGUILayout.Separator();
+
             if (GUILayout.Button("Documentation"))
             {
                 Application.OpenURL("http://innersystems.net/wiki");

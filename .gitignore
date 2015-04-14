@@ -14,3 +14,4 @@ obj/*
 *.unityproj
 *.1-csharp.sln.DotSettings.user
 *.unitypackage
+Assets/InAudio/Resources/InAudio/*InAudio*

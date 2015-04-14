@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using InAudioLeanTween;
 using InAudioSystem;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
@@ -269,6 +270,46 @@ public class InAudio : MonoBehaviour
     public static void Break(GameObject gameObject, InAudioNode audioNode)
     {
         instance._inAudioEventWorker.Break(gameObject, audioNode);
+    }
+
+    /// <summary>
+    /// Stop all sound effects
+    /// </summary>
+    /// <param name="gameObject"></param>
+    public static void StopAll(InAudioNode audioNode)
+    {
+        instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+    }
+
+    /// <summary>
+    /// Stop all sound effects
+    /// </summary>
+    /// <param name="gameObject"></param>
+    public static void StopAll()
+    {
+        instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+    }
+
+    /// <summary>
+    /// Stop all sounds & music
+    /// </summary>
+    /// <param name="gameObject"></param>
+    public static void StopAllAndMusic()
+    {
+        instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+        Music.StopAll(0, LeanTweenType.notUsed);
+    }
+
+
+    /// <summary>
+    /// Stop all sounds playing with fade out time
+    /// </summary>
+    /// <param name="gameObject"></param>
+    /// <param name="fadeOut">Time to fade out</param>
+    /// <param name="fadeType">Fade type</param>
+    public static void StopAll(float fadeOut, LeanTweenType fadeType)
+    {
+        instance._inAudioEventWorker.StopAll(fadeOut, fadeType);
     }
 
     /// <summary>
@@ -1080,10 +1121,19 @@ public class InAudio : MonoBehaviour
             _inAudioEventWorker = GetComponentInChildren<InAudioEventWorker>();
             runtimeData = GetComponentInChildren<InRuntimeAudioData>();
             BankLoader.LoadAutoLoadedBanks();
-            runtimeData.UpdateEvents(InAudioInstanceFinder.DataManager.EventTree);
 
-            CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
-            MusicVolumeUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
+            if (InAudioInstanceFinder.DataManager.Loaded)
+            {
+                runtimeData.UpdateEvents(InAudioInstanceFinder.DataManager.EventTree);
+
+                CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
+                MusicVolumeUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
+            }
+            else
+            {
+                InDebug.LogError(
+                    "InAudio: There was a problem loading the InAudio project. Have you created one?");
+            }
         }
 
     }

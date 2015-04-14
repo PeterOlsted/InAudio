@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEngine;
@@ -80,7 +81,7 @@ namespace InAudioSystem
         }
 
         /// <summary>
-        /// /// Gets the parent of the musicGroup, and fades all other nodes out than the parameter
+        /// Gets the parent of the musicGroup, and fades all other nodes out than the parameter
         /// </summary>
         /// <param name="musicGroup">The child to focus on</param>
         /// <param name="targetVolume">The new volume of it</param>

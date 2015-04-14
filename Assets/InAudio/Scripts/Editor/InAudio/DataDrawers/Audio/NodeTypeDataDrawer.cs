@@ -39,7 +39,11 @@ public static class NodeTypeDataDrawer
             }
             if (GUILayout.Button("Stop Playing Node") && preview != null)
             {
-                preview.Stop();
+                InAudio.StopAll(InAudioInstanceFinder.Instance.gameObject);
+            }
+            if (GUILayout.Button("Stop All Instances") )
+            {
+                InAudio.StopAll(node);
             }
             EditorGUILayout.EndHorizontal();
         }

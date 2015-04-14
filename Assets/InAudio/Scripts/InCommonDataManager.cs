@@ -8,16 +8,6 @@ namespace InAudioSystem.Internal
     [AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "Common Data Manager")]
     public class InCommonDataManager : MonoBehaviour
     {
-
-        /*[SerializeField]
-    private GameObject AudioRootGO;
-    [SerializeField]
-    private GameObject EventRootGO;
-    [SerializeField]
-    private GameObject BusRootGO;
-    [SerializeField]
-    private GameObject BankLinkRootGO;*/
-
         private InAudioNode AudioRoot;
         private InAudioEventNode EventRoot;
         private InAudioBankLink BankLinkRoot;
@@ -112,6 +102,11 @@ namespace InAudioSystem.Internal
         {
             //Instance = this;
             Load();
+        }
+
+        public bool Loaded
+        {
+            get { return AudioTree != null && MusicTree != null && EventTree != null && BankLinkTree != null; }
         }
     }
 
