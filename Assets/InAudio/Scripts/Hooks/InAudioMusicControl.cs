@@ -9,7 +9,7 @@ namespace InAudioSystem
     [System.Serializable]
     public class InHookMusicControl
     {
-        public MusicState DoForAllMusic = MusicState.Nothing;   
+        //public MusicState DoForAllMusic = MusicState.Nothing;   
         public List<InEventHookMusicControl> MusicControls = new List<InEventHookMusicControl>();
     }
 

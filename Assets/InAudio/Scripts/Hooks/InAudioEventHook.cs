@@ -159,15 +159,6 @@ public class InAudioEventHook : MonoBehaviour
 
     private void HandleMusic(InHookMusicControl InMusicControl)
     {
-        if (InMusicControl.DoForAllMusic == MusicState.Paused)
-        {
-            InAudio.Music.PauseAll();
-        }
-        else if (InMusicControl.DoForAllMusic == MusicState.Stopped)
-        {
-            InAudio.Music.StopAll();
-        }
-
         var controls = InMusicControl.MusicControls;
         int count = controls.Count;
         for (int i = 0; i < count; i++)

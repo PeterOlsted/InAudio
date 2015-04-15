@@ -276,9 +276,18 @@ public class InAudio : MonoBehaviour
     /// Stop all sound effects
     /// </summary>
     /// <param name="gameObject"></param>
-    public static void StopAll(InAudioNode audioNode)
+    public static void StopAllOfNode(InAudioNode audioNode)
     {
         instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+    }
+
+    /// <summary>
+    /// Stop all sound effects
+    /// </summary>
+    /// <param name="gameObject"></param>
+    public static void StopAllOfNode(InAudioNode audioNode, float fadeOutDuration, LeanTweenType leanTweenType = LeanTweenType.easeInOutQuad)
+    {
+        instance._inAudioEventWorker.StopAll(0, leanTweenType);
     }
 
     /// <summary>

@@ -43,7 +43,7 @@ public static class NodeTypeDataDrawer
             }
             if (GUILayout.Button("Stop All Instances") )
             {
-                InAudio.StopAll(node);
+                InAudio.StopAllOfNode(node);
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -153,6 +153,7 @@ public static class NodeTypeDataDrawer
 
             #region Loops
 
+            GUI.enabled = true;
             GUILayout.BeginVertical();
 
             UndoHelper.GUIUndo(baseData, "Use looping", ref baseData.Loop, () => EditorGUILayout.Toggle("Loop", baseData.Loop));

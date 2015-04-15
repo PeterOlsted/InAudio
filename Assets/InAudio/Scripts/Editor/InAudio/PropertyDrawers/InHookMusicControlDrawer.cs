@@ -20,7 +20,6 @@ namespace InAudioSystem.InAudioEditor
             property.isExpanded = EditorGUILayout.Foldout(property.isExpanded, label);
             if (property.isExpanded)
             {
-                EditorGUILayout.PropertyField(property.FindPropertyRelative("DoForAllMusic"));
                 ReorderableListGUI.ListField(property.FindPropertyRelative("MusicControls"), EditorGUIUtility.singleLineHeight * 2);
             }
             EditorGUI.EndProperty();
