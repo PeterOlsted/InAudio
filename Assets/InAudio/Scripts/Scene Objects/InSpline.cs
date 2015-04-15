@@ -3,7 +3,7 @@ using InAudioSystem;
 using InAudioSystem.ExtensionMethods;
 using UnityEngine;
 
-[AddComponentMenu("InAudio/Audio Spline")]
+[AddComponentMenu("InAudio/Spline/Audio Spline")]
 public class InSpline : MonoBehaviour
 {
     [InEventName("Spline Audio")] public InAudioEvent SplineAudioEvent;

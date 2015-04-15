@@ -81,7 +81,7 @@ namespace InAudioSystem.InAudioEditor
         }
 
 
-        [MenuItem("GameObject/Create Other/InAudio/Spline")]
+        [MenuItem("GameObject/Audio/InAudio Spline")]
         private static void CreateSpline()
         {
             GameObject go = new GameObject("Audio Spline");

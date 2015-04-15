@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 using UnityEngine.EventSystems;
 
 namespace InAudioSystem
@@ -15,8 +14,6 @@ namespace InAudioSystem
         public bool stopNodeOnExit = true;
         public InAudioNode playNodeWhileMouseOver;
         
-        
-
         public void OnPointerEnter(PointerEventData eventData)
         {
             InAudio.PostEvent(gameObject, ActivateOnMouseOver);

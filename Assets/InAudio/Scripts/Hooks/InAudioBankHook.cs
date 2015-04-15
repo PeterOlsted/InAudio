@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using InAudioSystem;
 using UnityEngine;
 
-[AddComponentMenu("InAudio/Audio Bank Hook")]
+[AddComponentMenu("InAudio/Event Hook/Audio Bank Hook")]
 public class InAudioBankHook : MonoBehaviour
 {
     public BankHookActions EnableActions = new BankHookActions("On Enable");

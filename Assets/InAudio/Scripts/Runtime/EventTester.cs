@@ -1,15 +1,15 @@
-using UnityEngine;
+//using UnityEngine;
 
-namespace InAudioSystem.Internal
-{
+//namespace InAudioSystem.Internal
+//{
 
 
 
-    [AddComponentMenu("InAudio/Manual Event Poster")]
-    public class EventTester : MonoBehaviour
-    {
+//    [AddComponentMenu("InAudio/Manual Event Poster")]
+//    public class EventTester : MonoBehaviour
+//    {
 
-        public InAudioEvent EventList;
-    }
+//        public InAudioEvent EventList;
+//    }
 
-}
+//}

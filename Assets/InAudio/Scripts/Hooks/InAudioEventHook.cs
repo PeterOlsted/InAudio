@@ -1,7 +1,7 @@
 using InAudioSystem;
 using UnityEngine;
 
-[AddComponentMenu("InAudio/Audio Event Hook")]
+[AddComponentMenu("InAudio/Event Hook/Audio Event Hook")]
 public class InAudioEventHook : MonoBehaviour
 {
     public InAudioEvent onEnable;
