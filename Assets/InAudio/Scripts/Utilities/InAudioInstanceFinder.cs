@@ -11,7 +11,6 @@ namespace InAudioSystem.Internal
 #if UNITY_EDITOR
     [ExecuteInEditMode]
 #endif
-    [AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "InAudio Instance Finder")]
     public class InAudioInstanceFinder : MonoBehaviour
     {
         private static InAudioInstanceFinder instance;

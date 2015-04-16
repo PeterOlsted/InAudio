@@ -8,7 +8,6 @@ namespace InAudioSystem.InAudioEditor
     {
         public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
         {
-            //return base.GetPropertyHeight(prop, label);
             var node = prop.objectReferenceValue as InAudioNode;
             if (node == null)
             {
@@ -28,15 +27,9 @@ namespace InAudioSystem.InAudioEditor
             float width = pos.width;
             pos.height = EditorGUIUtility.singleLineHeight;
             var node = prop.objectReferenceValue as InAudioNode;
-            //if (node == null)
-            //{
-            //    pos.height -= 2f;
-            //    pos.height /= 2f;
-            //}
-            //else
+           
                  
             EditorGUI.PropertyField(pos, prop, label);
-            //prop.objectReferenceValue = EditorGUILayout.ObjectField(label, prop.objectReferenceValue, typeof(InAudioNode), false);
             pos.y += 15;
             pos.x += 125;
             pos.width -= 60;

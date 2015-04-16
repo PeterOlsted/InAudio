@@ -1,9 +1,5 @@
-using UnityEngine;
-
 namespace InAudioSystem.Runtime
 {
-
-    [AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "Runtime Info Pool")]
     public class InRuntimeInfoPool : InAudioObjectPool<RuntimeInfo>
     {
         public new RuntimeInfo GetObject()

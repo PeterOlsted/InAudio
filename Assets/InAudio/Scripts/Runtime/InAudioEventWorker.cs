@@ -7,8 +7,6 @@ using UnityEngine;
 
 namespace InAudioSystem.Internal
 {
-
-    [AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "Runtime Event Worker")]
     public class InAudioEventWorker : MonoBehaviour
     {
         public InPlayer PlayAttachedTo(GameObject controllingObject, InAudioNode audioNode, GameObject attachedTo,

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using InAudioSystem;
 using UnityEngine;
 
-[AddComponentMenu(FolderSettings.ComponentPathInternalPools + "Game Object Pool")]
 public class InAudioObjectPool<T> : MonoBehaviour where T : new()
 {
     [SerializeField]

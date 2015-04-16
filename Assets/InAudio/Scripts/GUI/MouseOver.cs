@@ -13,17 +13,27 @@ namespace InAudioSystem
         [Header("Node Play")]
         public bool stopNodeOnExit = true;
         public InAudioNode playNodeWhileMouseOver;
+
+        //Method to enable the Enable toggle in the inspector
+        private void OnEnable()
+        { }
         
         public void OnPointerEnter(PointerEventData eventData)
         {
-            InAudio.PostEvent(gameObject, ActivateOnMouseOver);
-            InAudio.Play(gameObject, playNodeWhileMouseOver);
+            if (enabled)
+            {
+                InAudio.PostEvent(gameObject, ActivateOnMouseOver);
+                InAudio.Play(gameObject, playNodeWhileMouseOver);
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (stopNodeOnExit)
-                InAudio.Stop(gameObject, playNodeWhileMouseOver);
+            if (enabled)
+            {
+                if (stopNodeOnExit)
+                    InAudio.Stop(gameObject, playNodeWhileMouseOver);
+            }
         }
     }
 

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using InAudioSystem;
 using UnityEngine;
 
-[AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "Runtime Audio Data")]
 public class InRuntimeAudioData : MonoBehaviour {
     public Dictionary<int, InAudioEventNode> Events;
 

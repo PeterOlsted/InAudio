@@ -2,7 +2,6 @@
 
 namespace InAudioSystem.Runtime
 {
-    [AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "DSP Time Pool")]
     public class InDSPTimePool : InAudioObjectPool<DSPTime>
     {
 

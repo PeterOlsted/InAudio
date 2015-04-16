@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace InAudioSystem.InAudioEditor
 {
-[AddComponentMenu(FolderSettings.ComponentPathPrefabsGUIPrefs + "GUI User Prefs")]
 public class InAudioGUIUserPrefs : MonoBehaviour
 {
 #if UNITY_EDITOR

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using InAudioLeanTween;
@@ -9,7 +8,6 @@ using InAudioSystem.Runtime;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "InAudio")]
 #if UNITY_EDITOR
 [ExecuteInEditMode]
 #endif

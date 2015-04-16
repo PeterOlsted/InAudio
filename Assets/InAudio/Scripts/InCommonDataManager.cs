@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace InAudioSystem.Internal
 {
-    [AddComponentMenu(FolderSettings.ComponentPathPrefabsManager + "Common Data Manager")]
     public class InCommonDataManager : MonoBehaviour
     {
         private InAudioNode AudioRoot;
