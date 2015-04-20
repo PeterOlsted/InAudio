@@ -48,6 +48,7 @@ namespace InAudioSystem.InAudioEditor
 
         private void OnGUI()
         {
+            bankGUI.BaseOnGUI();
             CheckForClose();
             if (Manager == null)
             {
@@ -92,7 +93,7 @@ namespace InAudioSystem.InAudioEditor
 
             if (selectedToolbar == 0)
             {
-                isDirty |= bankGUI.OnGUI(LeftWidth, (int) position.height);
+                isDirty |= bankGUI.OnGUI(LeftWidth, (int) position.height - (int)EditorGUIUtility.singleLineHeight);
             }
 
             if (selectedToolbar == 1)

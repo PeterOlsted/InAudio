@@ -43,6 +43,7 @@ public class InAudio : MonoBehaviour
     #endregion
 
     #region Audio player
+    #region Play
 
     /// <summary>
     /// Play an audio node directly
@@ -238,6 +239,27 @@ public class InAudio : MonoBehaviour
     }
 
     /// <summary>
+    /// Play an audio node on InAudio directly so it does not get destroyed in scene transition.
+    /// No fade in as code would not get called during scene transition
+    /// </summary>
+    /// <param name="gameObject">The game object to attach to and be controlled by</param>
+    /// <param name="audioNode">The node to play</param>
+    /// <returns>A controller for the playing node</returns>
+    public static InPlayer PlayPersistent(Vector3 position, InAudioNode audioNode)
+    {
+        if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
+            return null;
+
+        InPlayer player = instance._inAudioEventWorker.PlayAtPosition(instance.gameObject, audioNode, position);
+
+        return player;
+    }
+
+    #endregion
+
+    #region Stop
+
+    /// <summary>
     /// Stop all instances of the this audio node on the game object
     /// </summary>
     /// <param name="gameObject"></param>
@@ -339,7 +361,9 @@ public class InAudio : MonoBehaviour
         instance._inAudioEventWorker.StopAll(gameObject, fadeOut, fadeType);
     }
 
+    #endregion
 
+    #region Players
     /// <summary>
     /// Get a list of all players attached to this game object
     /// </summary>
@@ -366,6 +390,8 @@ public class InAudio : MonoBehaviour
             instance._inAudioEventWorker.GetPlayers(gameObject, copyToList);
         }
     }
+
+    #endregion
 
     #endregion
 
@@ -1055,6 +1081,7 @@ public class InAudio : MonoBehaviour
 
     private static InAudio instance;
 
+
     #endregion
 
     #region Unity functions
@@ -1084,6 +1111,8 @@ public class InAudio : MonoBehaviour
             }
         }
     }
+
+    public const string CurrentVersion = "2.0";
 
     void OnLevelWasLoaded()
     {

@@ -8,7 +8,6 @@ namespace InAudioSystem
     {
         public InAudioEvent onClick;
 
-        //[Header("Sound Effect")]
         public InAudioNode onClickSound;
 
         //Method to enable the Enable toggle in the inspector
@@ -20,8 +19,9 @@ namespace InAudioSystem
             if (enabled)
             {
                 InAudio.PostEvent(gameObject, onClick);
-                InAudio.Play(gameObject, onClickSound);
+                InAudio.PlayPersistent(gameObject.transform.position, onClickSound);
             }
+            
         }
     }
 }

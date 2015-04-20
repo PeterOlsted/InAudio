@@ -19,7 +19,7 @@ namespace InAudioSystem.InAudioEditor
 
         public bool OnGUI(int leftWidth, int height)
         {
-            BaseOnGUI();
+            //BaseOnGUI();
 
             this.leftWidth = leftWidth;
             this.height = height;

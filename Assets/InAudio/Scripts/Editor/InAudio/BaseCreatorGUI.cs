@@ -1,8 +1,10 @@
+using System;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using InAudioSystem.TreeDrawer;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InAudioSystem.InAudioEditor
 {
@@ -15,11 +17,6 @@ public abstract class BaseCreatorGUI<T> where T : Object, InITreeNode<T>
 
     public T SelectedNode { get; set; }
 
-    //protected GUISkin inspectorSkin;
-
-    //public delegate void DrawSelectedNodeDelegate(T toDraw);
-
-    //public DrawSelectedNodeDelegate DrawSelectedNode;
 
     protected bool isDirty;
 
@@ -31,16 +28,49 @@ public abstract class BaseCreatorGUI<T> where T : Object, InITreeNode<T>
         this.window = window;
     }
 
-    protected void BaseOnGUI()
+    private char[] spliter = {'\n'};
+    public void BaseOnGUI()
     {
-        isDirty = false;
-        /*if (!UndoHelper.IsNewUndo)
+        if (PlayerPrefs.HasKey("InAudioVersion"))
         {
-            if (inspectorSkin == null)
+            string version = PlayerPrefs.GetString("InAudioVersion");
+            var split = version.Split(spliter);
+            if (version != InAudio.CurrentVersion)
             {
-                inspectorSkin = CreaterGUIHelper.GetEditorSkin();
+                EditorGUILayout.BeginHorizontal();
+                try
+                {
+                    string text = "New version available: " + split[0] + split[1];
+
+                    
+                    EditorGUILayout.LabelField(text, EditorStyles.boldLabel);
+                    var rect = GUILayoutUtility.GetLastRect();
+                    var dimensions = new Rect(rect.width - 350, 0, 200, EditorGUIUtility.singleLineHeight);
+
+                    if(GUI.Button(dimensions, "Open the Asset Store"))
+                    {
+                        Application.OpenURL("https://www.assetstore.unity3d.com/en/#!/content/15609");
+                    }
+
+                    dimensions.x = rect.width - 25;
+                    dimensions.width = 30;
+                    if (GUI.Button(dimensions, "X"))
+                    {
+                        PlayerPrefs.SetString("InAudioVersion", InAudio.CurrentVersion);
+                    }
+                }
+                catch (Exception)
+                {
+                    
+                    
+                }
+                
+                
+                EditorGUILayout.EndHorizontal();
             }
-        }*/
+        }
+
+        isDirty = false;
 
         if (Event.current.IsKeyDown(KeyCode.W) && Event.current.control)
         {

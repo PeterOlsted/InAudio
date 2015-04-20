@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -48,17 +49,8 @@ namespace InAudioSystem.Internal
                 SaveAndLoad.LoadManagerData(out audioData, out eventData, out musicData, out bankLinkData);
                 AudioRoot = CheckData<InAudioNode>(audioData);
                 EventRoot = CheckData<InAudioEventNode>(eventData);
-                BankLinkTree = CheckData<InAudioBankLink>(bankLinkData); 
-                MusicTree = CheckData<InMusicNode>(musicData); 
-
-                /*if (BusRoot != null)
-                BusRootGO = BusRoot.gameObject;
-            if (AudioRoot != null)
-                AudioRootGO = AudioRoot.gameObject;
-            if (EventRoot != null)
-                EventRootGO = EventRoot.gameObject;
-            if (BankLinkTree != null)
-                BankLinkRootGO = BankLinkTree.gameObject;*/
+                BankLinkTree = CheckData<InAudioBankLink>(bankLinkData);
+                MusicTree = CheckData<InMusicNode>(musicData);
             }
         }
 
@@ -106,6 +98,30 @@ namespace InAudioSystem.Internal
         {
             get { return AudioTree != null && MusicTree != null && EventTree != null && BankLinkTree != null; }
         }
+
+
+#if UNITY_EDITOR
+        private bool checkVersion;
+
+        private IEnumerator VersionCheck()
+        {
+            WWW website = new WWW("http://innersystems.net/version.html");
+            yield return website;
+            if (website.error == null)
+            {
+                PlayerPrefs.SetString("InAudioVersion", website.text);
+            }
+        }
+
+        void Update()
+        {
+            if (!checkVersion) //!PlayerPrefs.HasKey("InAudioVersion") && 
+            {
+                checkVersion = true;
+                StartCoroutine(VersionCheck());
+            }
+        }
+#endif
     }
 
 }

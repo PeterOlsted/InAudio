@@ -1,6 +1,4 @@
-using InAudioSystem;
 using InAudioSystem.ExtensionMethods;
-using InAudioSystem.InAudioEditor;
 using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
@@ -93,6 +91,7 @@ namespace InAudioSystem.InAudioEditor
 
         protected void PostOnGUI()
         {
+            
         }
 
         protected bool IsKeyDown(KeyCode code)
