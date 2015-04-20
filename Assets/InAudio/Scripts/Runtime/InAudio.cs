@@ -240,7 +240,7 @@ public class InAudio : MonoBehaviour
 
     /// <summary>
     /// Play an audio node on InAudio directly so it does not get destroyed in scene transition.
-    /// No fade in as code would not get called during scene transition
+    /// No fade in as code would not get called during scene transition. Works best with simple sound effects
     /// </summary>
     /// <param name="gameObject">The game object to attach to and be controlled by</param>
     /// <param name="audioNode">The node to play</param>
@@ -1112,7 +1112,7 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.0";
+    public const string CurrentVersion = "2.1";
 
     void OnLevelWasLoaded()
     {
