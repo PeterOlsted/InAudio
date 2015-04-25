@@ -28,6 +28,20 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
     public delegate bool CanDropObjectsDelegate(T node, UnityEngine.Object[] objects);
     public CanDropObjectsDelegate CanDropObjects;
 
+    public delegate bool CanPlaceHereDelegate(T previous, T next);
+
+    public CanPlaceHereDelegate CanPlaceHere = (p, n) =>
+    {
+        return true;
+    };
+
+    public delegate void PlaceHereDelegate(T previous, T next);
+
+    public PlaceHereDelegate PlaceHere = (p, n) =>
+    {
+        
+    };
+
     private T selectedNode;
     private T draggingNode;
     private Rect selectedArea;
@@ -75,6 +89,31 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
         return false;
     }
 
+    private static Texture2D _staticRectTexture;
+    private static GUIStyle _staticRectStyle;
+
+    public static void GUIDrawRect(Rect position, Color color)
+    {
+        if (_staticRectTexture == null)
+        {
+            _staticRectTexture = new Texture2D(1, 1);
+        }
+
+        if (_staticRectStyle == null)
+        {
+            _staticRectStyle = new GUIStyle();
+        }
+
+        _staticRectTexture.SetPixel(0, 0, color);
+        _staticRectTexture.Apply();
+
+        _staticRectStyle.normal.background = _staticRectTexture;
+
+        GUI.Box(position, GUIContent.none, _staticRectStyle);
+
+
+    }
+
     //Draw all nodes recursively 
     void DrawTree(T node, int indentLevel)
     {
@@ -92,6 +131,21 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
             ////
             Rect area = GUILayoutUtility.GetLastRect();
             EditorGUI.indentLevel = indentLevel - 1;
+
+            //if (Event.current.type != EventType.Repaint && Event.current.type != EventType.Layout)
+            //Debug.Log(Event.current.mousePosition + " "+Event.current.type);
+            //if (Event.current.Contains(area) && Event.current.type == EventType.mouseDrag)
+            //{
+            //    GUIDrawRect(area, Color.red);
+            //    Debug.Log(area + " " + Event.current.mousePosition);
+            //    Rect dragArea = area;
+            //    dragArea.y += dragArea.height;
+            //    dragArea.height = 5;
+            //    GUIDrawRect(dragArea, Color.red);
+            //    //Event.current.Use();
+            //}
+
+
             if (Event.current.DraggedWithin(area) && CanDropObjects(node, DragAndDrop.objectReferences))
             {
                 DragHandle(node);
@@ -106,6 +160,7 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
             if (!node.IsFoldedOut)
                 return;
             
+            
             if(Event.current.type == EventType.Layout)
                 NodeWorker.RemoveNullChildren(node);
             for (int i = 0; i < node._getChildren.Count; ++i)
@@ -113,10 +168,12 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
                 T child = node._getChildren[i];
                 DrawTree(child, indentLevel + 1);
             }
+
+  
         }
     }
 
-  private void KeyboardControl()
+    private void KeyboardControl()
     {
         #region keyboard control
 
@@ -195,8 +252,7 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
     private void DragHandle(T node)
     {
         if (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform)
-        {
-           
+        {  
             DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
 
             if (Event.current.type == EventType.DragPerform)

@@ -23,18 +23,7 @@ namespace InAudioSystem.InAudioEditor
             EventWindow.Launch();
         }
 
-        [MenuItem("Window/InAudio/Bus Window #&4")]
-        private static void ShowBusWindow()
-        {
-            AuxWindow.Launch();
-            AuxWindow window = EditorWindow.GetWindow(typeof(AuxWindow)) as AuxWindow;
-            if (window != null)
-            {
-                window.SelectBusCreation();
-            }
-        }
-
-        [MenuItem("Window/InAudio/Banks Window #&5")]
+        [MenuItem("Window/InAudio/Banks Window #&4")]
         private static void ShowBanksWindow()
         {
             AuxWindow.Launch();
@@ -45,7 +34,7 @@ namespace InAudioSystem.InAudioEditor
             }
         }
 
-        [MenuItem("Window/InAudio/Integrity Window #&6")]
+        [MenuItem("Window/InAudio/Integrity Window #&5")]
         private static void ShowIntegrityWindow()
         {
             AuxWindow.Launch();
@@ -56,17 +45,7 @@ namespace InAudioSystem.InAudioEditor
             }
 
         }
-         
-        //[MenuItem("Window/InAudio/Project Window #&6")]
-        //private static void ShowProjectWindow()
-        //{
-        //    AuxWindow.Launch();
-        //    AuxWindow window = EditorWindow.GetWindow(typeof(AuxWindow)) as AuxWindow;
-        //    if (window != null)
-        //    {
-        //        window.SelectDataCreation();
-        //    }
-        //}
+
 
         [MenuItem("Window/InAudio/Documentation (website)")]
         private static void ShowDocumentation()

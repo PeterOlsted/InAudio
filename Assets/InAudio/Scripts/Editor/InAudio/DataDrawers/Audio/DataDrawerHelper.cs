@@ -60,10 +60,18 @@ public static class DataDrawerHelper
             EditorGUILayout.PropertyField(prop, new GUIContent("Mixer Group"));
         else
         {
-            var parentProp = new SerializedObject(node.GetParentMixing());
-            parentProp.Update();
-            EditorGUILayout.PropertyField(parentProp.FindProperty("_mixerGroup"), new GUIContent("Parent Mixer Group"));
-            parentProp.ApplyModifiedProperties();
+            if (node._parent != null)
+            {
+                var parentProp = new SerializedObject(node.GetParentMixing());
+                parentProp.Update();
+                EditorGUILayout.PropertyField(parentProp.FindProperty("_mixerGroup"),
+                    new GUIContent("Parent Mixer Group"));
+                parentProp.ApplyModifiedProperties();
+            }
+            else
+            {
+                Debug.LogError("InAudio: There was a problem drawing the music tree, please go to the Integrity window and click to Fix button.");
+            }
         }
 
         GUI.enabled = node.GetParentMixing() != null;

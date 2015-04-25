@@ -13,6 +13,16 @@ namespace InAudioSystem.ExtensionMethods
                 node._getParent = newParent;
             }
         }
+
+        public static void MoveToNewParent<T>(this T node, T newParent) where T : Object, InITreeNode<T>
+        {
+            if (node != null && newParent != null)
+            {
+                node._getParent._getChildren.Remove(node);
+                newParent._getChildren.Add(node);
+                node._getParent = newParent;
+            }
+        }
     }
 
     public static class AudioNodeExtensions

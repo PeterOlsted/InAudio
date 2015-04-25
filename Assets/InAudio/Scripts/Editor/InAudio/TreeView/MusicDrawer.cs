@@ -80,8 +80,7 @@ namespace InAudioSystem.TreeDrawer
             labelArea.x += 65;
             EditorGUI.LabelField(labelArea, node.GetName);
 
-            EditorGUILayout.EndHorizontal();
-
+          
 
             if (group != null)
             {
@@ -110,6 +109,8 @@ namespace InAudioSystem.TreeDrawer
             {
                 DrawVolume(fullArea, @group);
             }
+            EditorGUILayout.EndHorizontal();
+
             return node.IsFoldedOut;
         }
 

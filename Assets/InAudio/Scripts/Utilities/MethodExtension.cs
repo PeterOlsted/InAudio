@@ -404,6 +404,11 @@ namespace InAudioSystem.ExtensionMethods
             return IsDragging(unityEvent) && area.Contains(unityEvent.mousePosition) && GUIUtility.hotControl == 0;
         }
 
+        public static bool Contains(this Event unityEvent, Rect area)
+        {
+            return area.Contains(unityEvent.mousePosition) && GUIUtility.hotControl == 0;
+        }
+
         public static bool MouseUpWithin(this Event unityEvent, Rect area)
         {
             return unityEvent.type == EventType.MouseUp && area.Contains(unityEvent.mousePosition) &&

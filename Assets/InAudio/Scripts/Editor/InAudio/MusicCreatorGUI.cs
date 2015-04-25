@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using InAudioSystem.TreeDrawer;
 using UnityEditor;
@@ -127,27 +129,25 @@ namespace InAudioSystem.InAudioEditor
 
         }
 
-        protected override void OnDrop(InMusicNode node, UnityEngine.Object[] objects)
+        protected override void OnDrop(InMusicNode newParent, UnityEngine.Object[] objects)
         {
-            if (node == null || objects == null )
+            if (newParent == null || objects == null )
                 return; 
 
             var dragged = objects[0] as InMusicNode;
-            if (dragged == null || dragged.IsRoot || dragged == node)
+            if (dragged == null || dragged.IsRoot || dragged == newParent)
                 return;
+
             UndoHelper.DoInGroup(() =>
             {
                 
                 var oldParent = dragged._parent;
-                UndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, node);
+                UndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
 
-                
-                oldParent._getChildren.Remove(dragged);
-                node._getChildren.Add(dragged);
-
+                dragged.MoveToNewParent(newParent);
 
                 AudioBankWorker.RebuildBanks();
-                node.IsFoldedOut = true;
+                newParent.IsFoldedOut = true;
             });
         }
 

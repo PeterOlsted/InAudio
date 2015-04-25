@@ -199,29 +199,24 @@ namespace InAudioSystem.InAudioEditor
 
 
 
-        public void SelectBusCreation()
+        public void SelectBankCreation()
         {
             selectedToolbar = 0;
         }
 
-        public void SelectBankCreation()
-        {
-            selectedToolbar = 1;
-        }
-
         public void SelectIntegrity()
         {
-            selectedToolbar = 2;
+            selectedToolbar = 1;
         }
 
         public void SelectDataCreation()
         {
-            selectedToolbar = 3;
+            selectedToolbar = 2;
         }
 
         public void FindBank(InAudioBankLink bankLink)
         {
-            selectedToolbar = 1;
+            selectedToolbar = 0;
             bankGUI.Find(bankLink);
 
         }
