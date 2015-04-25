@@ -140,7 +140,6 @@ namespace InAudioSystem.InAudioEditor
 
             UndoHelper.DoInGroup(() =>
             {
-                
                 var oldParent = dragged._parent;
                 UndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
 
