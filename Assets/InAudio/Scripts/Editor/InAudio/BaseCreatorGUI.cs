@@ -13,10 +13,11 @@ namespace InAudioSystem.InAudioEditor
     {
         protected InAudioBaseWindow window;
 
+        public InAudioBaseWindow Window { get { return window; }}
+
         public TreeDrawer<T> treeDrawer = new TreeDrawer<T>();
 
         public T SelectedNode { get; set; }
-
 
         protected bool isDirty;
 
@@ -26,7 +27,10 @@ namespace InAudioSystem.InAudioEditor
         protected BaseCreatorGUI(InAudioBaseWindow window)
         {
             this.window = window;
+            InAudioBaseWindow.OnScriptReloaded += OnScriptReloaded;
         }
+
+        protected abstract void OnScriptReloaded();
 
         private char[] spliter = { '\n' };
         public void BaseOnGUI()
@@ -34,8 +38,9 @@ namespace InAudioSystem.InAudioEditor
             if (PlayerPrefs.HasKey("InAudioVersion"))
             {
                 string version = PlayerPrefs.GetString("InAudioVersion");
+                
                 var split = version.Split(spliter);
-                if (version != InAudio.CurrentVersion)
+                if (split[0] != InAudio.CurrentVersion)
                 {
                     EditorGUILayout.BeginHorizontal();
                     try
@@ -88,6 +93,7 @@ namespace InAudioSystem.InAudioEditor
                 GUIData.Position = treeDrawer.ScrollPosition;
             }
         }
+         
 
         protected abstract T Root();
 

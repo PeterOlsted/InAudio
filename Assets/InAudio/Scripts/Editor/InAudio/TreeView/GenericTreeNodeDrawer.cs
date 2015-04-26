@@ -7,7 +7,6 @@ namespace InAudioSystem.TreeDrawer
 {
     public class GenericTreeNodeDrawer
     {
-        private static Object lastClickNode;
         private static GUIStyle noMargain;
         public static bool Draw<T>(T node, bool isSelected, out bool clicked) where T : Object, InITreeNode<T>
         {
@@ -36,6 +35,10 @@ namespace InAudioSystem.TreeDrawer
                 GUILayout.Width(EditorResources.Minus.width));
             Rect foldRect = GUILayoutUtility.GetLastRect();
             if (Event.current.ClickedWithin(foldRect))
+            {
+                Event.current.Use();
+            }
+            if (Event.current.MouseUpWithin(foldRect))
             {
                 node.IsFoldedOut = !node.IsFoldedOut;
                 Event.current.Use();
@@ -78,13 +81,12 @@ namespace InAudioSystem.TreeDrawer
 
             if (Event.current.ClickedWithin(fullArea, 0))
             {
-                lastClickNode = node;
                 clicked = true;
             }
-            if (Event.current.type == EventType.MouseDrag && isSelected && lastClickNode == node && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
+            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
             {
                 DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
+                DragAndDrop.objectReferences = new Object[] { node };
                 DragAndDrop.StartDrag("Music Node Drag");
                 Event.current.Use();
             }

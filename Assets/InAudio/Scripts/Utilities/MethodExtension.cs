@@ -478,6 +478,29 @@ namespace InAudioSystem.ExtensionMethods
             a.y += y;
             return a;
         }
+
+        public static Rect Substract(this Rect a, Rect b)
+        {
+            a.x -= b.x;
+            a.y -= b.y;
+            a.width     -= b.width;
+            a.height    -= b.height;
+            return a;
+        }
+
+        public static Rect Substract(this Rect a, Vector2 v)
+        {
+            a.x -= v.x;
+            a.y -= v.y;
+            return a;
+        }
+
+        public static Rect Substract(this Rect a, float x, float y)
+        {
+            a.x -= x;
+            a.y -= y;
+            return a;
+        }
     }
 
     public static class GameObjectExtensions

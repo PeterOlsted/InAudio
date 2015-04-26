@@ -147,6 +147,7 @@ namespace InAudioSystem.InAudioEditor
 
                 AudioBankWorker.RebuildBanks();
                 newParent.IsFoldedOut = true;
+                Event.current.Use();
             });
         }
 
@@ -241,9 +242,23 @@ namespace InAudioSystem.InAudioEditor
             return InAudioInstanceFinder.DataManager.MusicTree;
         }
 
-        protected override GUIPrefs GUIData
+        protected override GUIPrefs GUIData 
         {
             get { return InAudioInstanceFinder.InAudioGuiUserPrefs.AudioGUIData; }
+        }
+
+        protected override void OnScriptReloaded()
+        {
+            try
+            {
+                int id = InAudioInstanceFinder.InAudioGuiUserPrefs.AudioGUIData.SelectedNode;
+                var audioNode = TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.MusicTree, node => node._ID == id);
+                SelectedNode = audioNode;
+                treeDrawer.SelectedNode = audioNode;
+
+            }
+            catch (Exception)
+            { }
         }
     }
 }

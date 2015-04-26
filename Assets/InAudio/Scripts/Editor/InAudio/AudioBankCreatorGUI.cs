@@ -177,5 +177,10 @@ namespace InAudioSystem.InAudioEditor
             get { return InAudioInstanceFinder.InAudioGuiUserPrefs.BankGUIData; }
         }
 
+
+        protected override void OnScriptReloaded()
+        {
+            
+        }
     }
 }

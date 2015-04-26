@@ -9,7 +9,6 @@ namespace InAudioSystem.TreeDrawer
 {
     public class MusicDrawer
     {
-        private static Object lastClickNode;
         private static GUIStyle noMargain;
         public static bool Draw(InMusicNode node, bool isSelected, out bool clicked) 
         {
@@ -41,17 +40,18 @@ namespace InAudioSystem.TreeDrawer
             Rect foldRect = GUILayoutUtility.GetLastRect();
             if (Event.current.ClickedWithin(foldRect))
             {
+                Event.current.Use();
+            }
+            if (Event.current.MouseUpWithin(foldRect))
+            {
                 node.IsFoldedOut = !node.IsFoldedOut;
                 Event.current.Use();
             }
 
             Texture icon = LookUpIcon(node);
-           
-
 
             TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), icon, noMargain);
             EditorGUILayout.LabelField("");
-
 
             EditorGUILayout.EndHorizontal();
             Rect labelArea = GUILayoutUtility.GetLastRect();
@@ -80,7 +80,7 @@ namespace InAudioSystem.TreeDrawer
             labelArea.x += 65;
             EditorGUI.LabelField(labelArea, node.GetName);
 
-          
+
 
             if (group != null)
             {
@@ -91,12 +91,13 @@ namespace InAudioSystem.TreeDrawer
                 DrawMuteSolo(fullArea, group);
             }
 
+
+            EditorGUILayout.EndHorizontal();
             if (Event.current.ClickedWithin(fullArea, 0))
             {
-                lastClickNode = node;
                 clicked = true;
             }
-            if (Event.current.type == EventType.MouseDrag && isSelected && lastClickNode == node && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
+            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
             {
                 DragAndDrop.PrepareStartDrag();
                 DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
@@ -105,12 +106,7 @@ namespace InAudioSystem.TreeDrawer
             }
 
             
-            if (group != null)
-            {
-                DrawVolume(fullArea, @group);
-            }
-            EditorGUILayout.EndHorizontal();
-
+         
             return node.IsFoldedOut;
         }
 
@@ -161,20 +157,9 @@ namespace InAudioSystem.TreeDrawer
             sliderRect.x = sliderRect.width - 30;
             sliderRect.width = 20;
             sliderRect.height -= 5;
-            //if (Application.isPlaying)
-            {
-                GUI.VerticalSlider(sliderRect, @group.PlayingInfo.FinalVolume, 1f, 0f);
-            }
-            //else
-            {
-                //var parent = group.Parent as InMusicGroup;
-                //float pVolume = 1f;
-                //if (parent != null)
-                //{
-                //    pVolume = group._minVolume * pVolume.
-                //}
-                //GUI.VerticalSlider(sliderRect, pVolume, 1f, 0f);
-            }
+            
+            GUI.VerticalSlider(sliderRect, @group.PlayingInfo.FinalVolume, 1f, 0f);
+
             GUI.enabled = true;
         }
 

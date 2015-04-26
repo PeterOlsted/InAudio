@@ -6,7 +6,7 @@ using UnityEngine;
 namespace InAudioSystem.InAudioEditor
 {
 
-    public class InAudioBaseWindow : EditorWindow
+    public abstract class InAudioBaseWindow : EditorWindow
     {
         public InCommonDataManager Manager;
 
@@ -25,6 +25,19 @@ namespace InAudioSystem.InAudioEditor
 
             EditorResources.Reload();
         }
+
+        [UnityEditor.Callbacks.DidReloadScripts]
+        private static void OnScriptsReloaded()
+        {
+            if (OnScriptReloaded != null)
+            {
+                OnScriptReloaded();
+            }
+        }
+
+        public delegate void OnScriptReloadedDelegate();
+
+        public static event OnScriptReloadedDelegate OnScriptReloaded;
 
         protected void BaseUpdate()
         {

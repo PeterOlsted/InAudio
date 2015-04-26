@@ -43,10 +43,26 @@ public class IntegrityGUI
     private void FixParentChild()
     {
         var data = InAudioInstanceFinder.DataManager;
-        TreeWalker.ForEach(data.AudioTree, node => node._getChildren.ForEach(n => n._parent = node));
-        TreeWalker.ForEach(data.MusicTree, node => node._getChildren.ForEach(n => n._parent = node));
-        TreeWalker.ForEach(data.BankLinkTree, node => node._getChildren.ForEach(n => n._parent = node));
-        TreeWalker.ForEach(data.EventTree, node => node._getChildren.ForEach(n => n._parent = node));
+        TreeWalker.ForEach(data.AudioTree, FixParentChild);
+        TreeWalker.ForEach(data.MusicTree, FixParentChild);
+        TreeWalker.ForEach(data.BankLinkTree, FixParentChild);
+        TreeWalker.ForEach(data.EventTree, FixParentChild);
     }
 
+    private void FixParentChild<T>(T node) where T : Object, InITreeNode<T>
+    {
+        for (int i = 0; i < node._getChildren.Count; i++)
+        {
+            var child = node._getChildren[i];
+            if (child == null)
+            {
+                node._getChildren.RemoveAt(i);
+                i--;
+            }
+            else
+            {
+                child._getParent = node;
+            }
+        }
+    }
 }

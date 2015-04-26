@@ -16,5 +16,13 @@ public class PackageExporter : MonoBehaviour
         string[] paths = package.Paths.Convert(path => "Assets/" + path);
         AssetDatabase.ExportPackage(paths, package.Name + ".unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
     }
+
+    [System.Serializable]
+    public class Package
+    {
+        public string Name;
+        public string[] Paths;
+    }
+
 #endif
 }

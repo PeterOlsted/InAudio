@@ -15,11 +15,11 @@ public class InAudioGUIUserPrefs : MonoBehaviour
 }
 
 
+
     [System.Serializable]
     public class GUIPrefs 
     {
         public int SelectedNode;
         public Vector2 Position;
     }
-
 }

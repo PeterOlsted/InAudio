@@ -7,7 +7,6 @@ namespace InAudioSystem.TreeDrawer
 {
     public static class EventDrawer
     {
-        private static Object lastClickNode;
         private static GUIStyle noMargain;
         public static bool EventFoldout(InAudioEventNode node, bool isSelected, out bool clicked)
         {
@@ -27,12 +26,11 @@ namespace InAudioSystem.TreeDrawer
                 GUILayout.Space(EditorGUI.indentLevel * 16);
             else
                 GUILayout.Space(EditorGUI.indentLevel * 24);
-            bool folded = node.IsFoldedOut;
 
             if (node._type != EventNodeType.Event)
             {
                 Texture picture;
-                if (folded || node._children.Count == 0)
+                if (node.IsFoldedOut || node._children.Count == 0)
                     picture = EditorResources.Minus;
                 else
                     picture = EditorResources.Plus;
@@ -42,7 +40,11 @@ namespace InAudioSystem.TreeDrawer
                 Rect foldRect = GUILayoutUtility.GetLastRect();
                 if (Event.current.ClickedWithin(foldRect))
                 {
-                    folded = !folded;
+                    Event.current.Use();
+                }
+                if (Event.current.MouseUpWithin(foldRect))
+                {
+                    node.IsFoldedOut = !node.IsFoldedOut;
                     Event.current.Use();
                 }
           
@@ -105,18 +107,17 @@ namespace InAudioSystem.TreeDrawer
             EditorGUILayout.EndHorizontal();
             if (Event.current.ClickedWithin(fullArea, 0))
             {
-                lastClickNode = node;
                 clicked = true;
             }
-            if (Event.current.type == EventType.MouseDrag && lastClickNode == node && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
+            if (Event.current.type == EventType.MouseDown /*&& lastClickNode == node */&& Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
             {
                 DragAndDrop.PrepareStartDrag();
                 DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
-                DragAndDrop.StartDrag("Audio Node Drag");
+                DragAndDrop.StartDrag("Event Node Drag");
                 Event.current.Use();
             }
 
-            return folded;
+            return node.IsFoldedOut;
         }
     }
 
