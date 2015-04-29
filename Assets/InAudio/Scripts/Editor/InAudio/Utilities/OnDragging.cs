@@ -28,10 +28,6 @@ namespace InAudioSystem.InAudioEditor
                         }
                     }
                 }
-                else if (Event.current.type == EventType.Repaint)
-                {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
-                }
             }
             return null;
         }
@@ -52,10 +48,6 @@ namespace InAudioSystem.InAudioEditor
                         return DragAndDrop.objectReferences[0] as T;
                     }
                 }
-                else
-                {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
-                }
             }
             return null;
         }
@@ -75,10 +67,6 @@ namespace InAudioSystem.InAudioEditor
                     {
                         return DragAndDrop.objectReferences[0] as T;
                     }
-                }
-                else
-                {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
                 }
             }
             return null;
@@ -112,7 +100,7 @@ namespace InAudioSystem.InAudioEditor
                 }
                 else
                 {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
+                    //DragAndDrop.visualMode = DragAndDropVisualMode.None;
                 }
             }
             return null;
@@ -144,16 +132,11 @@ namespace InAudioSystem.InAudioEditor
                         return true;
                     }
                 }
-                else
-                {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
-                }
             }
             return false;
         }
 
-        public static bool OnDraggingObject(Object[] objects, Rect area, Func<Object[], bool> predicate,
-            Action<Object[]> OnDrop)
+        public static bool OnDraggingObject(Object[] objects, Rect area, Func<Object[], bool> predicate, Action<Object[]> OnDrop)
         {
             if (area.Contains(Event.current.mousePosition) && Event.current.IsDragging() &&
                 DragAndDrop.objectReferences.Length > 0)
@@ -169,10 +152,6 @@ namespace InAudioSystem.InAudioEditor
                         GUI.changed = true;
                         return true;
                     }
-                }
-                else
-                {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
                 }
             }
             return false;

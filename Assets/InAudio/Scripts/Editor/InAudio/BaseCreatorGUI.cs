@@ -30,7 +30,14 @@ namespace InAudioSystem.InAudioEditor
             InAudioBaseWindow.OnScriptReloaded += OnScriptReloaded;
         }
 
-        protected abstract void OnScriptReloaded();
+        protected void OnScriptReloaded()
+        {
+            int id = GUIData.SelectedNode;
+            var foundNode = TreeWalker.FindFirst(Root(), node => node._ID == id);
+            SelectedNode = foundNode;
+            treeDrawer.SelectedNode = foundNode;
+            treeDrawer.ScrollPosition = GUIData.Position;
+        }
 
         private char[] spliter = { '\n' };
         public void BaseOnGUI()

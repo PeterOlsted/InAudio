@@ -46,10 +46,6 @@ public static  class DrawerHelper  {
                     Event.current.Use();
                 }
             }
-            else 
-            {
-                DragAndDrop.visualMode = DragAndDropVisualMode.None;
-            }
         }
     }
 
@@ -119,10 +115,6 @@ public static  class DrawerHelper  {
                     var arrEvent = prop.GetArrayElementAtIndex(arraySize - 1).FindPropertyRelative("Bank");
                     arrEvent.objectReferenceValue = DragAndDrop.objectReferences[0];
                 }
-            }
-            else 
-            {
-                DragAndDrop.visualMode = DragAndDropVisualMode.None;
             }
         }
     }

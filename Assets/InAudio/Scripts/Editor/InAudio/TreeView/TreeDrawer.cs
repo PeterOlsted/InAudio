@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using InAudioSystem.ExtensionMethods;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InAudioSystem.InAudioEditor
 {
 
-public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
+public class TreeDrawer<T> where T : Object, InITreeNode<T>
 {
     public T SelectedNode
     {
@@ -23,25 +25,91 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
     public delegate bool OnNodeDrawDelegate(T node, bool isSelected, out bool clicked);
     public OnNodeDrawDelegate OnNodeDraw;
 
-    public delegate void OnDropDelegate(T node, UnityEngine.Object[] objects);
+    public delegate void OnDropDelegate(T node, Object[] objects);
     public OnDropDelegate OnDrop;
 
-    public delegate bool CanDropObjectsDelegate(T node, UnityEngine.Object[] objects);
+    public delegate bool CanDropObjectsDelegate(T node, Object[] objects);
     public CanDropObjectsDelegate CanDropObjects;
 
-    public delegate bool CanPlaceHereDelegate(T previous, T next);
+    public delegate bool CanPlaceHereDelegate(T newParent, T toPlace);
 
     public CanPlaceHereDelegate CanPlaceHere = (p, n) =>
     {
+        if (p == n || n.IsRoot || TreeWalker.IsParentOf(n, p))
+        {
+            return false;
+        }
+
         return true;
     };
 
-    public delegate void PlaceHereDelegate(T previous, T next);
+    public delegate void PlaceHereDelegate(T newParent, T toPlace);
 
-    public PlaceHereDelegate PlaceHere = (p, n) =>
+    private PlaceHereDelegate PlaceHere = (p, n) => UndoHelper.DoInGroup(() =>
     {
-        
-    };
+        Debug.Log(p.GetName+ " " + n.GetName);
+
+        UndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
+
+
+        if (n._getParent == p._getParent)
+        {
+            Debug.Log("Same parent");
+            p.IsFoldedOut = true;
+
+            if (p._getChildren.Any())
+            {
+                n._getParent._getChildren.Remove(n);
+                p._getChildren.Insert(0, n);
+                n._getParent = p;
+            }
+            else
+            {
+                
+                n._getParent._getChildren.Remove(n);
+                var index = p._getParent._getChildren.IndexOf(p);
+                if (index == p._getParent._getChildren.Count - 1)
+                {
+                    p._getParent._getChildren.Add(n);
+                }
+                else
+                {
+                    p._getParent._getChildren.Insert(index + 1, n);
+                }
+            }
+        }
+        else 
+        {
+            Debug.Log("Different parents");
+
+            if (p._getChildren.Any())
+            {
+                n._getParent._getChildren.Remove(n);
+                n._getParent = p;
+                p._getChildren.Insert(0, n);
+            }
+            else
+            {
+                n._getParent._getChildren.Remove(n);
+                n._getParent = p._getParent;
+                //Debug.Log(p._getParent._getChildren.IndexOf(p));
+                int newIndex = p._getParent._getChildren.IndexOf(p) + 1;
+                if (newIndex == p._getParent._getChildren.Count)
+                {
+                    //Debug.Log("add");
+                    p._getParent._getChildren.Add(n);
+                }
+                else
+                {
+                    //Debug.Log("insert");
+                    p._getParent._getChildren.Insert(newIndex, n);
+                }
+
+            }
+        }
+    });
+
+
 
     private T selectedNode;
     private T draggingNode;
@@ -82,21 +150,27 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
             //IsDirty = true;
         }
 
-        DrawTree(treeRoot, EditorGUI.indentLevel);
 
-        EditorGUILayout.EndScrollView();
-        if (Event.current.type == EventType.Repaint && toDrawArea.Count > 0)
+        DrawTree(treeRoot, EditorGUI.indentLevel);
+        
+
+        foreach (var rect in toDrawArea)
         {
-            foreach (var rect in toDrawArea)
+            if (rect.Area.Contains(Event.current.mousePosition))
             {
-                if (rect.Area.Contains(Event.current.mousePosition))
-                {
-                    GUIDrawRect(rect.Area, Color.red);
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Link;
-                }
+                GUIDrawRect(rect.Area, Color.red);
+                
             }
+        }
+        if (Event.current.type == EventType.repaint)
+        {
             toDrawArea.Clear();
         }
+
+
+
+        EditorGUILayout.EndScrollView();
+        
         EditorGUI.indentLevel = startIndent;
         return false;
     }
@@ -143,12 +217,25 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
 
             Rect area = GUILayoutUtility.GetLastRect();
 
-            if (Event.current.type == EventType.MouseDrag || Event.current.type == EventType.DragUpdated)
+            Rect drawArea = area;
+            if (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform)
             {
-                Rect drawArea = area.Substract(ScrollPosition);
-                drawArea.y += drawArea.height*1.4f;
-                drawArea.height = 10;
-                //toDrawArea.Add(new DrawTuple(drawArea, node));
+                drawArea.y += area.height-5;
+                drawArea.height = 10;  
+                toDrawArea.Add(new DrawTuple(drawArea, node));                
+            }
+
+            if (Event.current.type == EventType.dragUpdated && Event.current.Contains(area) && CanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
+            {
+                DragAndDrop.visualMode = DragAndDropVisualMode.Link;
+            }
+
+            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && area.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
+            {
+                DragAndDrop.PrepareStartDrag();
+                DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
+                DragAndDrop.StartDrag("Music Node Drag");
+                Event.current.Use();
             }
 
             EditorGUI.indentLevel = indentLevel - 1;
@@ -157,24 +244,31 @@ public class TreeDrawer<T> where T : UnityEngine.Object, InITreeNode<T>
             {
                 DragHandle(node);
             }
+
             if (Event.current.MouseUpWithin(area, 1))
             {
                 OnContext(node);
                 Event.current.Use();
             }
             
-            if (!node.IsFoldedOut)
-                return;
-            
-            
             if(Event.current.type == EventType.Layout)
                 NodeWorker.RemoveNullChildren(node);
-            for (int i = 0; i < node._getChildren.Count; ++i)
+
+            if (node.IsFoldedOut)
             {
-                T child = node._getChildren[i];
-                DrawTree(child, indentLevel + 1);
+                for (int i = 0; i < node._getChildren.Count; ++i)
+                {
+                    T child = node._getChildren[i];
+                    DrawTree(child, indentLevel + 1);
+                }
             }
 
+            if (Event.current.Contains(drawArea) && Event.current.type == EventType.DragPerform && CanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
+            {
+                Debug.LogWarning("------------" + node.GetName);
+                PlaceHere(node, DragAndDrop.objectReferences[0] as T);
+                Event.current.Use();
+            }
         }
     }
 

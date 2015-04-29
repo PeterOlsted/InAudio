@@ -178,9 +178,6 @@ namespace InAudioSystem.InAudioEditor
         }
 
 
-        protected override void OnScriptReloaded()
-        {
-            
-        }
+       
     }
 }

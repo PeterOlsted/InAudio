@@ -141,7 +141,7 @@ public static class TrackDataDrawer
                 var item = DragAndDrop.objectReferences[0] as T;
                 if (!drop_area.Contains(evt.mousePosition) || predicate(item))
                 {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
+                    //DragAndDrop.visualMode = DragAndDropVisualMode.None;
                     return;
                 }            
 

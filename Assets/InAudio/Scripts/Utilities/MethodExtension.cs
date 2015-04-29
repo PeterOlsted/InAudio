@@ -174,6 +174,12 @@ namespace InAudioSystem.ExtensionMethods
     
     public static class ListExtension
     {
+        public static void Move<T>(this List<T> list, int oldIndex, int newIndex)
+        {
+            T item = list[oldIndex];
+            list.RemoveAt(oldIndex);
+            list.Insert(newIndex, item);
+        }
         public static void AddIfNotContains<T>(this List<T> list, T item)
         {
             if(!list.Contains(item))

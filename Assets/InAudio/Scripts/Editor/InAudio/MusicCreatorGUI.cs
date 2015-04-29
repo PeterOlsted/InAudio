@@ -246,19 +246,5 @@ namespace InAudioSystem.InAudioEditor
         {
             get { return InAudioInstanceFinder.InAudioGuiUserPrefs.AudioGUIData; }
         }
-
-        protected override void OnScriptReloaded()
-        {
-            try
-            {
-                int id = InAudioInstanceFinder.InAudioGuiUserPrefs.AudioGUIData.SelectedNode;
-                var audioNode = TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.MusicTree, node => node._ID == id);
-                SelectedNode = audioNode;
-                treeDrawer.SelectedNode = audioNode;
-
-            }
-            catch (Exception)
-            { }
-        }
     }
 }

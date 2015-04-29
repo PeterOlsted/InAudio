@@ -55,29 +55,8 @@ namespace InAudioSystem.TreeDrawer
 
             EditorGUILayout.EndHorizontal();
             Rect labelArea = GUILayoutUtility.GetLastRect();
-            Rect buttonArea = labelArea;
-            if (!node.IsRoot)
-            {
-                buttonArea.x = buttonArea.x + 56 + EditorGUI.indentLevel * 16;
-                buttonArea.width = 20;
-                buttonArea.height = 14;
-                GUI.Label(buttonArea, EditorResources.Up, noMargain);
-                if (Event.current.ClickedWithin(buttonArea))
-                {
-                    NodeWorker.MoveNodeOneUp(node);
-                    Event.current.Use();
-                }
-                buttonArea.y += 15;
-                GUI.Label(buttonArea, EditorResources.Down, noMargain);
-                if (Event.current.ClickedWithin(buttonArea))
-                {
-                    NodeWorker.MoveNodeOneDown(node);
-                    Event.current.Use();
-                }
-                labelArea.x += 20;
-            }
-            labelArea.y += 6;
-            labelArea.x += 65;
+            labelArea.y += 8;
+            labelArea.x += 60;
             EditorGUI.LabelField(labelArea, node.GetName);
 
 
@@ -97,13 +76,13 @@ namespace InAudioSystem.TreeDrawer
             {
                 clicked = true;
             }
-            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
-            {
-                DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
-                DragAndDrop.StartDrag("Music Node Drag");
-                Event.current.Use();
-            }
+            //if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
+            //{
+            //    DragAndDrop.PrepareStartDrag();
+            //    DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
+            //    DragAndDrop.StartDrag("Music Node Drag");
+            //    Event.current.Use();
+            //}
 
             
          
