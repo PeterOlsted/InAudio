@@ -107,9 +107,9 @@ namespace InAudioSystem.InAudioEditor
             bankAction = (node, set) =>
             {
                 set.Add(node);
-                for (int i = 0; i < node.Children.Count; ++i)
+                for (int i = 0; i < node._children.Count; ++i)
                 {
-                    bankAction(node.Children[i], set);
+                    bankAction(node._children[i], set);
                 }
             };
             int deleteCount = 0;

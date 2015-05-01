@@ -76,15 +76,6 @@ namespace InAudioSystem.TreeDrawer
             {
                 clicked = true;
             }
-            //if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && fullArea.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
-            //{
-            //    DragAndDrop.PrepareStartDrag();
-            //    DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
-            //    DragAndDrop.StartDrag("Music Node Drag");
-            //    Event.current.Use();
-            //}
-
-            
          
             return node.IsFoldedOut;
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using InAudioSystem.ExtensionMethods;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Audio;
 using Object = UnityEngine.Object;
 
 namespace InAudioSystem.InAudioEditor

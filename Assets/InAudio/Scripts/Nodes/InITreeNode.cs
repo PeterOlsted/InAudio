@@ -20,5 +20,9 @@ namespace InAudioSystem
 
         bool IsFiltered { get; set; }
 #endif
+        bool IsFolder { get; }
+
+        //void _deattachFromParent();
+        //void _assignToParent(T newParent, int index = -1);
     }
 }

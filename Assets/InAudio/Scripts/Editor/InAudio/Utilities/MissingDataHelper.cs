@@ -37,7 +37,7 @@ namespace InAudioSystem.InAudioEditor
 
             if (Manager.BankLinkTree != null)
             {
-                var bankLink = Manager.BankLinkTree.Children[0];
+                var bankLink = Manager.BankLinkTree._children[0];
                 bankLink._name = "Default - Auto loaded";
                 bankLink._autoLoad = true;
 

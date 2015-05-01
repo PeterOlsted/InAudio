@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -26,7 +27,8 @@ namespace InAudioSystem
         [FormerlySerializedAs("Parent")]
         public InAudioBankLink _parent;
 
-        public List<InAudioBankLink> Children = new List<InAudioBankLink>();
+        [FormerlySerializedAs("Children")]
+        public List<InAudioBankLink> _children = new List<InAudioBankLink>();
 
         [FormerlySerializedAs("AutoLoad")]
         public bool _autoLoad = false;
@@ -55,7 +57,7 @@ namespace InAudioSystem
 
         public List<InAudioBankLink> _getChildren
         {
-            get { return Children; }
+            get { return _children; }
         }
 
         public string GetName
@@ -67,8 +69,6 @@ namespace InAudioSystem
         {
             get { return _parent == null; }
         }
-
-
 
         public int _ID
         {
@@ -89,6 +89,30 @@ namespace InAudioSystem
             set { Filtered = value; }
         }
 #endif
+
+        public bool IsFolder
+        {
+            get { return _type == AudioBankTypes.Folder; }
+        }
+
+
+        public void _deattachFromParent()
+        {
+            _parent._children.Remove(this);
+        }
+
+        public void _assignToParent(InAudioBankLink newParent, int index = -1)
+        {
+            if (index == -1)
+            {
+                newParent._children.Add(this);
+            }
+            else
+            {
+                newParent._children.Insert(index, this);
+            }
+            _parent = newParent;
+        }
     }
 
 }

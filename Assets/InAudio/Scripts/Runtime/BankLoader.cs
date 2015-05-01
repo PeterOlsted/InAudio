@@ -100,9 +100,9 @@ public static class BankLoader
         if (bankLink._autoLoad)
             Load(bankLink);
 
-        for (int i = 0; i < bankLink.Children.Count; ++i)
+        for (int i = 0; i < bankLink._children.Count; ++i)
         {
-            LoadAuto(bankLink.Children[i]);
+            LoadAuto(bankLink._children[i]);
         }
     }
 }

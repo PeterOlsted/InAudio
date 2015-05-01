@@ -61,6 +61,11 @@ namespace InAudioSystem
         }
         #endif
 
+        public bool IsFolder
+        {
+            get { return _type == EventNodeType.Folder; }
+        }
+
         public string GetName
         {
             get { return Name; }
@@ -80,6 +85,25 @@ namespace InAudioSystem
         {
             get { return _guid; }
             set { _guid = value; }
+        }
+
+
+        public void _deattachFromParent()
+        {
+            _parent._children.Remove(this);
+        }
+
+        public void _assignToParent(InAudioEventNode newParent, int index = -1)
+        {
+            if (index == -1)
+            {
+                newParent._children.Add(this);
+            }
+            else
+            {
+                newParent._children.Insert(index, this);
+            }
+            _parent = newParent;
         }
     }
 

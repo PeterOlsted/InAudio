@@ -81,6 +81,14 @@ namespace InAudioSystem.InAudioEditor
             treeDrawer.OnContext = OnContext;
             treeDrawer.CanDropObjects = CanDropObjects;
             treeDrawer.OnDrop = OnDrop;
+            treeDrawer.CanPlaceHere = (parent, place) =>
+            {
+                if (parent._type == EventNodeType.Event)
+                {
+                    return false;
+                }
+                return true;
+            };
         }
 
         protected override void OnDrop(InAudioEventNode audioevent, Object[] objects)
@@ -167,6 +175,7 @@ namespace InAudioSystem.InAudioEditor
         {
             get { return InAudioInstanceFinder.InAudioGuiUserPrefs.EventGUIData; }
         }
+
 
     }
 

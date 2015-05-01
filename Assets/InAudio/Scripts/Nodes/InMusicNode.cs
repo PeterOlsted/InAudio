@@ -67,6 +67,25 @@ namespace InAudioSystem
                 return false;
             }
         }
+
+
+        public void _deattachFromParent()
+        {
+            _parent._getChildren.Remove(this);
+        }
+
+        public void _assignToParent(InMusicNode newParent, int index = -1)
+        {
+            if (index == -1)
+            {
+                newParent._children.Add(this);
+            }
+            else
+            {
+                newParent._children.Insert(index, this);
+            }
+            _parent = newParent;
+        }
     }
 
 

@@ -32,82 +32,71 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
     public CanDropObjectsDelegate CanDropObjects;
 
     public delegate bool CanPlaceHereDelegate(T newParent, T toPlace);
+    public CanPlaceHereDelegate CanPlaceHere = (P, N) => true;
 
-    public CanPlaceHereDelegate CanPlaceHere = (p, n) =>
+    public delegate void AssignNewParentDelegate(T newParent, T node, int index = -1);
+
+    public AssignNewParentDelegate AssignNewParent = (p, n, i) =>
     {
-        if (p == n || n.IsRoot || TreeWalker.IsParentOf(n, p))
+        n._getParent = p;
+        if (i == -1)
+        {
+            p._getChildren.Insert(0, n);
+        }
+        else
+        {
+            p._getChildren.Insert(i, n);
+        }
+    };
+
+    public delegate void DeattachFromParentDelegate(T node);
+    public DeattachFromParentDelegate DeattachFromParent = node => node._getParent._getChildren.Remove(node);
+
+    private bool genericCanPlaceHere(T p, T n)
+    {
+        if (p == null || n == null || p == n || n.IsRoot || TreeWalker.IsParentOf(n, p))
         {
             return false;
         }
-
+        if ((p.IsFolder || p.IsRoot) && !n.IsFolder)
+        {
+            return false;
+        }
+        if (n.IsFolder && !p.IsFolder && !p.IsRoot)
+        {
+            return false;
+        }
+        if (!CanPlaceHere(p, n))
+        {
+            return false;
+        }
         return true;
-    };
+    }
 
     public delegate void PlaceHereDelegate(T newParent, T toPlace);
 
-    private PlaceHereDelegate PlaceHere = (p, n) => UndoHelper.DoInGroup(() =>
+    private void genericPlaceHere (T p, T n)
     {
-        Debug.Log(p.GetName+ " " + n.GetName);
+//        Debug.Log(p.GetName+ " " + n.GetName); 
 
         UndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
 
-
-        if (n._getParent == p._getParent)
+        DeattachFromParent(n);
+        if (p._getChildren.Any() && p.IsFoldedOut)
         {
-            Debug.Log("Same parent");
-            p.IsFoldedOut = true;
-
-            if (p._getChildren.Any())
-            {
-                n._getParent._getChildren.Remove(n);
-                p._getChildren.Insert(0, n);
-                n._getParent = p;
-            }
-            else
-            {
-                
-                n._getParent._getChildren.Remove(n);
-                var index = p._getParent._getChildren.IndexOf(p);
-                if (index == p._getParent._getChildren.Count - 1)
-                {
-                    p._getParent._getChildren.Add(n);
-                }
-                else
-                {
-                    p._getParent._getChildren.Insert(index + 1, n);
-                }
-            }
+            AssignNewParent(p, n, 0);
+        }
+        else if (n._getParent == p._getParent)
+        {
+            var index = p._getParent._getChildren.IndexOf(p);
+            AssignNewParent(p._getParent, n, index + 1);
         }
         else 
         {
-            Debug.Log("Different parents");
-
-            if (p._getChildren.Any())
-            {
-                n._getParent._getChildren.Remove(n);
-                n._getParent = p;
-                p._getChildren.Insert(0, n);
-            }
-            else
-            {
-                n._getParent._getChildren.Remove(n);
-                n._getParent = p._getParent;
-                //Debug.Log(p._getParent._getChildren.IndexOf(p));
-                int newIndex = p._getParent._getChildren.IndexOf(p) + 1;
-                if (newIndex == p._getParent._getChildren.Count)
-                {
-                    //Debug.Log("add");
-                    p._getParent._getChildren.Add(n);
-                }
-                else
-                {
-                    //Debug.Log("insert");
-                    p._getParent._getChildren.Insert(newIndex, n);
-                }
-
-            }
+            int newIndex = p._getParent._getChildren.IndexOf(p) + 1;
+            AssignNewParent(p._getParent, n, newIndex);
         }
-    });
+    }
 
 
 
@@ -225,16 +214,24 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
                 toDrawArea.Add(new DrawTuple(drawArea, node));                
             }
 
-            if (Event.current.type == EventType.dragUpdated && Event.current.Contains(area) && CanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
+            if (Event.current.type == EventType.dragUpdated && Event.current.Contains(area) && genericCanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
             {
                 DragAndDrop.visualMode = DragAndDropVisualMode.Link;
             }
 
+            
             if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && area.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
             {
                 DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new UnityEngine.Object[] { node };
+                DragAndDrop.objectReferences = new Object[] { node };
                 DragAndDrop.StartDrag("Music Node Drag");
+                Event.current.Use();
+            }
+
+            if (Event.current.Contains(drawArea) && Event.current.type == EventType.DragPerform && genericCanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
+            {
+//                Debug.LogWarning("------------" + node.GetName);
+                genericPlaceHere(node, DragAndDrop.objectReferences[0] as T);
                 Event.current.Use();
             }
 
@@ -263,12 +260,7 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
                 }
             }
 
-            if (Event.current.Contains(drawArea) && Event.current.type == EventType.DragPerform && CanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
-            {
-                Debug.LogWarning("------------" + node.GetName);
-                PlaceHere(node, DragAndDrop.objectReferences[0] as T);
-                Event.current.Use();
-            }
+            
         }
     }
 

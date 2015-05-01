@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
@@ -30,6 +29,19 @@ namespace InAudioSystem.InAudioEditor
             EditorGUIHelper.DrawColums(DrawLeftSide, DrawRightSide);
 
             return isDirty;
+        }
+
+        public override void OnEnable()
+        {
+            base.OnEnable();    
+            treeDrawer.CanPlaceHere = CanPlaceHere;
+        }
+
+        private bool CanPlaceHere(InAudioNode newParent, InAudioNode toPlace)
+        {
+            if (newParent._type == AudioNodeType.Audio)
+                return false;
+            return true;
         }
 
         private void DrawLeftSide(Rect area)

@@ -29,6 +29,17 @@ namespace InAudioSystem.InAudioEditor
             return isDirty;
         }
 
+        public override void OnEnable()
+        {
+            base.OnEnable();
+            treeDrawer.CanPlaceHere = (parent, place) =>
+            {
+                if (place._type == AudioBankTypes.Bank && place._type == AudioBankTypes.Bank)
+                    return false;
+                return true;
+            };
+        }
+
 
         private void DrawLeftSide(Rect area)
         {
