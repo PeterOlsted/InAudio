@@ -1,7 +1,6 @@
 ﻿using InAudioSystem.ReorderableList;
 using UnityEditor;
 using UnityEngine;
-using System.Collections;
 
 namespace InAudioSystem.InAudioEditor
 {
@@ -16,13 +15,16 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.BeginProperty(position, label, property);
+            EditorGUI.BeginChangeCheck();
             property.isExpanded = EditorGUILayout.Foldout(property.isExpanded, label);
             if (property.isExpanded)
             {
                 ReorderableListGUI.ListField(property.FindPropertyRelative("MusicControls"), EditorGUIUtility.singleLineHeight * 2);
             }
-            EditorGUI.EndProperty();
+            if (EditorGUI.EndChangeCheck())
+            {
+                property.serializedObject.ApplyModifiedProperties();
+            }
         }
     }
 }

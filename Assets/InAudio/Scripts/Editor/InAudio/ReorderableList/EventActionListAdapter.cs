@@ -79,6 +79,12 @@ namespace InAudioSystem.InAudioEditor
         {
             ClickedInArea(index);
         }
+
+
+        public void DrawItemBackground(Rect position, int index)
+        {
+            
+        }
     }
 
 }

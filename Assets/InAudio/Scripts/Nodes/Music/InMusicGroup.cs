@@ -104,7 +104,7 @@ namespace InAudioSystem
         public bool _mute;
 
         [FormerlySerializedAs("_editorClips")]
-        public List<AudioClip> _clips;
+        public List<AudioClip> _clips = new List<AudioClip>();
 
         public List<AudioClip> _Clips
         {

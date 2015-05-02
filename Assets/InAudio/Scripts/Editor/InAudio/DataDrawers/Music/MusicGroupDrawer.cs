@@ -64,11 +64,16 @@ namespace InAudioSystem
             prop.Update();
 
             EditorGUILayout.LabelField("Clips in node");
-            if(Application.isPlaying)
-                ReorderableListGUI.ListField(node._clips, (position, item) => DrawItem(node, prop, position, item), ReorderableListFlags.DisableDuplicateCommand | ReorderableListFlags.DisableReordering);
+            if (Application.isPlaying)
+            {
+                
+                ReorderableListGUI.ListField(node._clips, (position, item) => DrawItem(node, prop, position, item),
+                    ReorderableListFlags.DisableDuplicateCommand | ReorderableListFlags.DisableReordering);
+            }
             else
             {
-                ReorderableListGUI.ListField(node._clips, (position, item) => DrawItem(node, prop, position, item), ReorderableListFlags.DisableDuplicateCommand);
+                ReorderableListGUI.ListField(node._clips, (position, item) => DrawItem(node, prop, position, item),
+                    ReorderableListFlags.DisableDuplicateCommand);
             }
             if (prop.ApplyModifiedProperties())
             {

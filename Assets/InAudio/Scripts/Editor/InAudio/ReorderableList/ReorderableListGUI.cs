@@ -1,14 +1,12 @@
 // Copyright (c) Rotorz Limited. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root.
 
-using System;
 using InAudioSystem.ReorderableList.Internal;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace InAudioSystem.ReorderableList
-{
+namespace InAudioSystem.ReorderableList {
 
 	/// <summary>
 	/// Utility class for drawing reorderable lists.
@@ -27,14 +25,14 @@ namespace InAudioSystem.ReorderableList
 		/// <remarks>
 		/// <para>This property should not be set when items are added or removed.</para>
 		/// </remarks>
-		public static int indexOfChangedItem { get; internal set; }
+		public static int IndexOfChangedItem { get; internal set; }
 
 		/// <summary>
 		/// Gets zero-based index of list item which is currently being drawn;
 		/// or a value of -1 if no item is currently being drawn.
 		/// </summary>
-		public static int currentItemIndex {
-			get { return ReorderableListControl.currentItemIndex; }
+		public static int CurrentItemIndex {
+			get { return ReorderableListControl.CurrentItemIndex; }
 		}
 
 		#region Basic Item Drawers
@@ -83,74 +81,19 @@ namespace InAudioSystem.ReorderableList
 		/// <summary>
 		/// Gets the default list control implementation.
 		/// </summary>
-		private static ReorderableListControl defaultListControl { get; set; }
+		private static ReorderableListControl DefaultListControl { get; set; }
 
 		static ReorderableListGUI() {
-			InitStyles();
-
-			defaultListControl = new ReorderableListControl();
+			DefaultListControl = new ReorderableListControl();
 
 			// Duplicate default styles to prevent user scripts from interferring with
 			// the default list control instance.
-			defaultListControl.containerStyle = new GUIStyle(defaultContainerStyle);
-			defaultListControl.addButtonStyle = new GUIStyle(defaultAddButtonStyle);
-			defaultListControl.removeButtonStyle = new GUIStyle(defaultRemoveButtonStyle);
+			DefaultListControl.ContainerStyle = new GUIStyle(ReorderableListStyles.Container);
+			DefaultListControl.FooterButtonStyle = new GUIStyle(ReorderableListStyles.FooterButton);
+			DefaultListControl.ItemButtonStyle = new GUIStyle(ReorderableListStyles.ItemButton);
 
-			indexOfChangedItem = -1;
+			IndexOfChangedItem = -1;
 		}
-
-		#region Custom Styles
-
-		/// <summary>
-		/// Gets default style for title header.
-		/// </summary>
-		public static GUIStyle defaultTitleStyle { get; private set; }
-
-		/// <summary>
-		/// Gets default style for background of list control.
-		/// </summary>
-		public static GUIStyle defaultContainerStyle { get; private set; }
-		/// <summary>
-		/// Gets default style for add item button.
-		/// </summary>
-		public static GUIStyle defaultAddButtonStyle { get; private set; }
-		/// <summary>
-		/// Gets default style for remove item button.
-		/// </summary>
-		public static GUIStyle defaultRemoveButtonStyle { get; private set; }
-
-		private static void InitStyles() {
-			defaultTitleStyle = new GUIStyle();
-			defaultTitleStyle.border = new RectOffset(2, 2, 2, 1);
-			defaultTitleStyle.margin = new RectOffset(5, 5, 5, 0);
-			defaultTitleStyle.padding = new RectOffset(5, 5, 0, 0);
-			defaultTitleStyle.alignment = TextAnchor.MiddleLeft;
-			defaultTitleStyle.normal.background = ReorderableListResources.texTitleBackground;
-			defaultTitleStyle.normal.textColor = EditorGUIUtility.isProSkin
-				? new Color(0.8f, 0.8f, 0.8f)
-				: new Color(0.2f, 0.2f, 0.2f);
-
-			defaultContainerStyle = new GUIStyle();
-			defaultContainerStyle.border = new RectOffset(2, 2, 1, 2);
-			defaultContainerStyle.margin = new RectOffset(5, 5, 5, 5);
-			defaultContainerStyle.padding = new RectOffset(1, 1, 2, 2);
-			defaultContainerStyle.normal.background = ReorderableListResources.texContainerBackground;
-
-			defaultAddButtonStyle = new GUIStyle();
-			defaultAddButtonStyle.fixedWidth = 30;
-			defaultAddButtonStyle.fixedHeight = 16;
-			defaultAddButtonStyle.normal.background = ReorderableListResources.texAddButton;
-			defaultAddButtonStyle.active.background = ReorderableListResources.texAddButtonActive;
-
-			defaultRemoveButtonStyle = new GUIStyle();
-			defaultRemoveButtonStyle.fixedWidth = 27;
-			defaultRemoveButtonStyle.active.background = ReorderableListResources.CreatePixelTexture("Dark Pixel (List GUI)", new Color32(18, 18, 18, 255));
-			defaultRemoveButtonStyle.imagePosition = ImagePosition.ImageOnly;
-			defaultRemoveButtonStyle.alignment = TextAnchor.MiddleCenter;
-
-		}
-
-		#endregion
 
 		private static GUIContent s_Temp = new GUIContent();
 
@@ -174,7 +117,7 @@ namespace InAudioSystem.ReorderableList
 		/// </example>
 		/// <param name="title">Content for title control.</param>
 		public static void Title(GUIContent title) {
-			Rect position = GUILayoutUtility.GetRect(title, defaultTitleStyle);
+			Rect position = GUILayoutUtility.GetRect(title, ReorderableListStyles.Title);
 			position.height += 6;
 			Title(position, title);
 		}
@@ -208,7 +151,7 @@ namespace InAudioSystem.ReorderableList
 		/// <param name="title">Content for title control.</param>
 		public static void Title(Rect position, GUIContent title) {
 			if (Event.current.type == EventType.Repaint)
-				defaultTitleStyle.Draw(position, title, false, false, false, false);
+				ReorderableListStyles.Title.Draw(position, title, false, false, false, false);
 		}
 
 		/// <summary>
@@ -345,13 +288,13 @@ namespace InAudioSystem.ReorderableList
 		/// </returns>
 		public static float CalculateListFieldHeight(int itemCount, float itemHeight, ReorderableListFlags flags) {
 			// We need to push/pop flags so that nested controls are properly calculated.
-			var restoreFlags = defaultListControl.flags;
+			var restoreFlags = DefaultListControl.Flags;
 			try {
-				defaultListControl.flags = flags;
-				return defaultListControl.CalculateListHeight(itemCount, itemHeight);
+				DefaultListControl.Flags = flags;
+				return DefaultListControl.CalculateListHeight(itemCount, itemHeight);
 			}
 			finally {
-				defaultListControl.flags = restoreFlags;
+				DefaultListControl.Flags = restoreFlags;
 			}
 		}
 
@@ -421,7 +364,6 @@ namespace InAudioSystem.ReorderableList
 		public static void ListField(SerializedProperty arrayProperty, ReorderableListFlags flags) {
 			DoListField(arrayProperty, 0, null, flags);
 		}
-
 		/// <inheritdoc cref="DoListFieldAbsolute(Rect, SerializedProperty, float, ReorderableListControl.DrawEmptyAbsolute, ReorderableListFlags)"/>
 		public static void ListFieldAbsolute(Rect position, SerializedProperty arrayProperty, ReorderableListFlags flags) {
 			DoListFieldAbsolute(position, arrayProperty, 0, null, flags);
@@ -448,13 +390,13 @@ namespace InAudioSystem.ReorderableList
 		/// </returns>
 		public static float CalculateListFieldHeight(SerializedProperty arrayProperty, ReorderableListFlags flags) {
 			// We need to push/pop flags so that nested controls are properly calculated.
-			var restoreFlags = defaultListControl.flags;
+			var restoreFlags = DefaultListControl.Flags;
 			try {
-				defaultListControl.flags = flags;
-				return defaultListControl.CalculateListHeight(new SerializedPropertyAdaptor(arrayProperty));
+				DefaultListControl.Flags = flags;
+				return DefaultListControl.CalculateListHeight(new SerializedPropertyAdaptor(arrayProperty));
 			}
 			finally {
-				defaultListControl.flags = restoreFlags;
+				DefaultListControl.Flags = restoreFlags;
 			}
 		}
 
@@ -581,13 +523,13 @@ namespace InAudioSystem.ReorderableList
 		/// </returns>
 		public static float CalculateListFieldHeight(IReorderableListAdaptor adaptor, ReorderableListFlags flags) {
 			// We need to push/pop flags so that nested controls are properly calculated.
-			var restoreFlags = defaultListControl.flags;
+			var restoreFlags = DefaultListControl.Flags;
 			try {
-				defaultListControl.flags = flags;
-				return defaultListControl.CalculateListHeight(adaptor);
+				DefaultListControl.Flags = flags;
+				return DefaultListControl.CalculateListHeight(adaptor);
 			}
 			finally {
-				defaultListControl.flags = restoreFlags;
+				DefaultListControl.Flags = restoreFlags;
 			}
 		}
 

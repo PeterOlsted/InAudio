@@ -3,8 +3,7 @@
 
 using System;
 
-namespace InAudioSystem.ReorderableList
-{
+namespace InAudioSystem.ReorderableList {
 
 	/// <summary>
 	/// Additional flags which can be passed into reorderable list field.
