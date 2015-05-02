@@ -322,7 +322,7 @@ public static class AudioEventDrawer
             if (GUI.Button(typePos, EventActionExtension.GetList().Find(p => p.Value == (int)item._eventActionType).Name))
             {
                 ShowChangeContext(lastEvent, item);
-                Event.current.Use();
+                EditorEventUtil.UseEvent();
             }
         }
         else
@@ -365,7 +365,7 @@ public static class AudioEventDrawer
         if (Event.current.ClickedWithin(fullArea))
         {
             audioEventAction = item;
-            Event.current.Use();
+            EditorEventUtil.UseEvent();
         }
     }
 

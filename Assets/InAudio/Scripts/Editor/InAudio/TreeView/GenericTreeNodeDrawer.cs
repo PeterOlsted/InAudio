@@ -7,15 +7,10 @@ namespace InAudioSystem.TreeDrawer
 {
     public class GenericTreeNodeDrawer
     {
-        private static GUIStyle noMargain;
         public static bool Draw<T>(T node, bool isSelected, out bool clicked) where T : Object, InITreeNode<T>
         {
             clicked = false;
-            if (noMargain == null)
-            {
-                noMargain = new GUIStyle();
-                noMargain.margin = new RectOffset(0, 0, 0, 0);
-            }
+
             Rect fullArea = EditorGUILayout.BeginHorizontal();
             Rect area = EditorGUILayout.BeginHorizontal();
             if (isSelected)
@@ -31,22 +26,16 @@ namespace InAudioSystem.TreeDrawer
             else
                 picture = EditorResources.Plus;
 
-            GUILayout.Label(picture, noMargain, GUILayout.Height(EditorResources.Minus.height),
-                GUILayout.Width(EditorResources.Minus.width));
-            Rect foldRect = GUILayoutUtility.GetLastRect();
-            if (Event.current.ClickedWithin(foldRect))
-            {
-                Event.current.Use();
-            }
-            if (Event.current.MouseUpWithin(foldRect))
+            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height),
+                GUILayout.Width(EditorResources.Minus.width)))
             {
                 node.IsFoldedOut = !node.IsFoldedOut;
-                Event.current.Use();
+                EditorEventUtil.UseEvent();
             }
             Texture icon = TreeNodeDrawerHelper.LookUpIcon(node);
 
 
-            TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), icon, noMargain);
+            TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), icon, GUIStyle.none);
             EditorGUILayout.LabelField("");
 
 

@@ -35,17 +35,10 @@ namespace InAudioSystem.TreeDrawer
                 else
                     picture = EditorResources.Plus;
 
-                GUILayout.Label(picture, noMargain, GUILayout.Height(EditorResources.Minus.height), GUILayout.Width(EditorResources.Minus.width));
-                
-                Rect foldRect = GUILayoutUtility.GetLastRect();
-                if (Event.current.ClickedWithin(foldRect))
-                {
-                    Event.current.Use();
-                }
-                if (Event.current.MouseUpWithin(foldRect))
+                if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height), GUILayout.Width(EditorResources.Minus.width)))
                 {
                     node.IsFoldedOut = !node.IsFoldedOut;
-                    Event.current.Use();
+                    EditorEventUtil.UseEvent();
                 }
           
                 TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), EditorResources.Folder, noMargain);

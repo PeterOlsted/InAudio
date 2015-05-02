@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using InAudioSystem.InAudioEditor;
 using InAudioSystem.ReorderableList.Internal;
 using UnityEditor;
 using UnityEngine;
@@ -531,13 +532,13 @@ namespace InAudioSystem.ReorderableList
 					if (GUI.enabled && Event.current.button != 1 && position.Contains(mousePosition)) {
 						GUIUtility.hotControl = controlID;
 						GUIUtility.keyboardControl = 0;
-						Event.current.Use();
+						EditorEventUtil.UseEvent();
 					}
 					break;
 
 				case EventType.MouseDrag:
 					if (GUIUtility.hotControl == controlID)
-						Event.current.Use();
+						EditorEventUtil.UseEvent();
 					break;
 
 				case EventType.MouseUp:
@@ -545,11 +546,11 @@ namespace InAudioSystem.ReorderableList
 						GUIUtility.hotControl = 0;
 
 						if (position.Contains(mousePosition)) {
-							Event.current.Use();
+							EditorEventUtil.UseEvent();
 							return true;
 						}
 						else {
-							Event.current.Use();
+							EditorEventUtil.UseEvent();
 							return false;
 						}
 					}
@@ -695,7 +696,7 @@ namespace InAudioSystem.ReorderableList
 				// Check for context click?
 				if (eventType == EventType.ContextClick && position.Contains(Event.current.mousePosition) && (flags & ReorderableListFlags.DisableContextMenu) == 0) {
 					ShowContextMenu(_controlID, itemIndex, adaptor);
-					Event.current.Use();
+					EditorEventUtil.UseEvent();
 				}
 			}
 			finally {
@@ -772,7 +773,7 @@ namespace InAudioSystem.ReorderableList
 					if (_tracking) {
 						// Cancel drag when other mouse button is pressed.
 						s_TrackingCancelBlockContext = true;
-						Event.current.Use();
+						EditorEventUtil.UseEvent();
 					}
 					break;
 
@@ -795,14 +796,14 @@ namespace InAudioSystem.ReorderableList
 							AcceptReorderDrag(adaptor);
 						else
 							StopTrackingReorderDrag();
-						Event.current.Use();
+						EditorEventUtil.UseEvent();
 					}
 					break;
 
 				case EventType.KeyDown:
 					if (_tracking && Event.current.keyCode == KeyCode.Escape) {
 						StopTrackingReorderDrag();
-						Event.current.Use();
+						EditorEventUtil.UseEvent();
 					}
 					break;
 
@@ -811,7 +812,7 @@ namespace InAudioSystem.ReorderableList
 						int itemIndex = s_ContextItemIndex;
 						try {
 							DoCommand(s_ContextCommandName, itemIndex, adaptor);
-							Event.current.Use();
+							EditorEventUtil.UseEvent();
 						}
 						finally {
 							s_ContextControlID = 0;
@@ -916,7 +917,7 @@ namespace InAudioSystem.ReorderableList
 									s_AnchorMouseOffset = itemPosition.y - mousePosition.y;
 									s_TargetIndex = i;
 
-									Event.current.Use();
+									EditorEventUtil.UseEvent();
 								}
 							}
 							break;
@@ -943,7 +944,7 @@ namespace InAudioSystem.ReorderableList
 
 					// Force repaint to occur so that dragging rectangle is visible.
 					s_TargetIndex = newTargetIndex;
-					Event.current.Use();
+					EditorEventUtil.UseEvent();
 				}
 
 				DrawFloatingListItem(eventType, adaptor, targetSlotPosition);

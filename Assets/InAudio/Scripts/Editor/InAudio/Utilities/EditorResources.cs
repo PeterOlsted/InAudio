@@ -5,7 +5,7 @@ namespace InAudioSystem
 {
     public static class EditorResources
     {
-        public static Texture Background;
+        public static Texture2D Background;
         public static Texture White;
 
         public static Texture Plus;
@@ -41,6 +41,8 @@ namespace InAudioSystem
         public static Texture2D TitleBackground;
         public static Texture2D ItemSplitter;
 
+        public static Texture2D GenericColor;
+
         public static void Reload()
         {
             
@@ -53,7 +55,7 @@ namespace InAudioSystem
             if (Down == null)
                 Down = LoadTexture("Down");
             if (Background == null)
-                Background = LoadTexture("SelectedBackground"); 
+                Background = LoadTexture("SelectedBackground") as Texture2D; 
             if (White == null)
                 White = LoadTexture("White");
 
@@ -100,6 +102,9 @@ namespace InAudioSystem
                 TitleBackground = LoadTexture("TitleBackground") as Texture2D;
             if (ItemSplitter == null)
                 ItemSplitter = LoadTexture("ItemSplitter") as Texture2D;
+
+            if (GenericColor == null)
+                GenericColor = LoadTexture("GenericColor") as Texture2D;
         }
 
         private static Texture LoadTexture(string name)

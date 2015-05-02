@@ -147,7 +147,7 @@ namespace InAudioSystem.InAudioEditor
 
                 AudioBankWorker.RebuildBanks();
                 newParent.IsFoldedOut = true;
-                Event.current.Use();
+                EditorEventUtil.UseEvent();
             });
         }
 

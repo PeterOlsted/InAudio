@@ -52,12 +52,13 @@ namespace InAudioSystem.InAudioEditor
             EditorGUILayout.BeginVertical();
 
             isDirty |= treeDrawer.DrawTree(window.Manager.AudioTree, treeArea);
+            GUIData.SelectedNode = treeDrawer.SelectedNode._ID;
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
         }
 
-        private void DrawRightSide(Rect area)
+        private void DrawRightSide(Rect area) 
         {
             EditorGUILayout.BeginVertical();
 
@@ -202,7 +203,7 @@ namespace InAudioSystem.InAudioEditor
 
                     NodeWorker.ReasignNodeParent(nodeToMove, node);
                     AudioBankWorker.RebuildBanks();
-                    Event.current.Use();
+                    EditorEventUtil.UseEvent();
                 });
                 
             }
@@ -237,7 +238,7 @@ namespace InAudioSystem.InAudioEditor
                         audioData._clip = clip;
 
                         AudioBankWorker.AddNodeToBank(child);
-                        Event.current.Use();
+                        EditorEventUtil.UseEvent();
                     }
                 });
                 
@@ -253,7 +254,7 @@ namespace InAudioSystem.InAudioEditor
                         nodeData._clip = objects[0] as AudioClip;
                     }
                 });
-                Event.current.Use();
+                EditorEventUtil.UseEvent();
 
             }
         }
@@ -388,6 +389,7 @@ namespace InAudioSystem.InAudioEditor
                 menu.AddItem(new GUIContent("Delete"), false, obj =>
                 {
                     treeDrawer.SelectedNode = TreeWalker.GetPreviousVisibleNode(treeDrawer.SelectedNode);
+                    
                     AudioNodeWorker.DeleteNode(node);
                 }, node);
             else

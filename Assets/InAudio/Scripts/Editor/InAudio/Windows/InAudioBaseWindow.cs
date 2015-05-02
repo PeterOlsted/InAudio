@@ -17,7 +17,7 @@ namespace InAudioSystem.InAudioEditor
 
         protected void BaseEnable()
         {
-            autoRepaintOnSceneChange = true;
+            //autoRepaintOnSceneChange = true;
             EditorApplication.modifierKeysChanged += Repaint;
 
             Manager = InAudioInstanceFinder.DataManager;
@@ -33,6 +33,13 @@ namespace InAudioSystem.InAudioEditor
             {
                 OnScriptReloaded();
             }
+        }
+
+
+
+        public void RepaintNextFrame()
+        {
+            
         }
 
         public delegate void OnScriptReloadedDelegate();
@@ -60,7 +67,7 @@ namespace InAudioSystem.InAudioEditor
             if (Event.current.IsKeyDown(KeyCode.W) && Event.current.modifiers == EventModifiers.Control)
             {
                 Close();
-                Event.current.Use();
+                EditorEventUtil.UseEvent();
             }
         }
 

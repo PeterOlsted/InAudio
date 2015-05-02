@@ -90,12 +90,12 @@ namespace InAudioSystem.InAudioEditor
                         SceneView.RepaintAll();
                         var returnV = DragAndDrop.objectReferences[0] as T;
 
-                        Event.current.Use();
+                        EditorEventUtil.UseEvent();
                         return returnV;
                     }
                     else
                     {
-                        Event.current.Use();
+                        EditorEventUtil.UseEvent();
                     }
                 }
                 else

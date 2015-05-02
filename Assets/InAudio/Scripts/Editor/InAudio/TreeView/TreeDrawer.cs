@@ -11,11 +11,19 @@ namespace InAudioSystem.InAudioEditor
 
 public class TreeDrawer<T> where T : Object, InITreeNode<T>
 {
+    
+    public TreeDrawer(EditorWindow window)
+    {
+        Window = window;
+        EditorApplication.update += Update;
+    }
+    
     public T SelectedNode
     {
         get { return selectedNode; }
         set { selectedNode = value; }
     }
+
 
     public Vector2 ScrollPosition;
 
@@ -52,33 +60,115 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
     public delegate void DeattachFromParentDelegate(T node);
     public DeattachFromParentDelegate DeattachFromParent = node => node._getParent._getChildren.Remove(node);
 
+    public bool DrawTree(T treeRoot, Rect area)
+    {
+        dirty = false;
+        if (SelectedNode == null)
+            selectedNode = treeRoot;
+        if (SelectedNode == null) 
+            return false;
+
+        KeyboardControl();
+
+        int startIndent = EditorGUI.indentLevel;
+        ScrollPosition = EditorGUILayout.BeginScrollView(ScrollPosition, false, true);
+
+        if (treeRoot == null || OnNodeDraw == null)
+            return true;
+
+
+        if (selectedNode.IsFiltered)
+            selectedNode = treeRoot;
+
+        if (triggerFilter)
+        {
+            FilterNodes(treeRoot, filterFunc);
+
+            triggerFilter = false;
+        }
+
+        toDrawArea.Clear();
+
+        DrawTree(treeRoot, EditorGUI.indentLevel);
+
+        if (DragAndDrop.objectReferences.FirstOrDefault() as T != null && EditorWindow.focusedWindow == Window)
+        {
+            dirty = true;
+        }
+
+        if (EditorWindow.focusedWindow == Window && DragAndDrop.objectReferences.FirstOrDefault() as T != null)
+        {
+            foreach (var rect in toDrawArea)
+            {
+                if (rect.Area.Contains(Event.current.mousePosition)) 
+                {
+                    GUIDrawRect(rect.Area, EditorResources.Background.GetPixel(0,0) * 0.9f);
+                }
+            }
+
+        }
+
+
+        if (Event.current.type == EventType.DragExited)
+        {
+            dirty = true;
+            Window.Repaint();
+        }
+
+        EditorGUILayout.EndScrollView();
+
+        EditorGUI.indentLevel = startIndent;
+        return dirty;
+    }
+
+    public void Filter(Func<T, bool> filter)
+    {
+        filterFunc = filter;
+        triggerFilter = true;
+    }
+
+    public void FocusOnSelectedNode()
+    {
+        focusOnSelectedNode = true;
+    }
+
     private bool genericCanPlaceHere(T p, T n)
     {
         if (p == null || n == null || p == n || n.IsRoot || TreeWalker.IsParentOf(n, p))
         {
             return false;
         }
-        if ((p.IsFolder || p.IsRoot) && !n.IsFolder)
+        var actualparent = GetPotentialParent(p);
+        if (TreeWalker.IsParentOf(n, actualparent))
+            return false;
+
+        if ((!p.IsFolder && !p.IsRoot) && n.IsFolder)
         {
             return false;
         }
-        if (n.IsFolder && !p.IsFolder && !p.IsRoot)
-        {
-            return false;
-        }
-        if (!CanPlaceHere(p, n))
+        
+        if (!CanPlaceHere(actualparent, n))
         {
             return false;
         }
         return true;
     }
 
-    public delegate void PlaceHereDelegate(T newParent, T toPlace);
+    private T GetPotentialParent(T p)
+    {
+        if (p._getChildren.Any() && p.IsFoldedOut)
+        {
+            return p;
+        }
+        else
+        {
+            return p._getParent;
+        }
+    }
+
 
     private void genericPlaceHere (T p, T n)
     {
-//        Debug.Log(p.GetName+ " " + n.GetName); 
-
         UndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
 
         DeattachFromParent(n);
@@ -98,95 +188,19 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         }
     }
 
-
-
-    private T selectedNode;
-    private T draggingNode;
-    private Rect selectedArea;
-
-    private bool triggerFilter = false;
-    private Func<T, bool> filterFunc;
-
-    private bool canDropObjects;
-
-    private Vector2 clickPos;
-
-    public bool DrawTree(T treeRoot, Rect area)
-    {
-        if (SelectedNode == null)
-            selectedNode = treeRoot;
-
-        if (SelectedNode == null) //If it's still null
-            return false;
-
-        KeyboardControl();
-
-        int startIndent = EditorGUI.indentLevel;
-        ScrollPosition = EditorGUILayout.BeginScrollView(ScrollPosition, false, true);
-        
-        if (treeRoot == null || OnNodeDraw == null)
-            return true;
-
-
-        if (selectedNode.IsFiltered)
-            selectedNode = treeRoot;
-
-        if (triggerFilter)
-        {
-            FilterNodes(treeRoot, filterFunc);
-            
-            triggerFilter = false;
-            //IsDirty = true;
-        }
-
-
-        DrawTree(treeRoot, EditorGUI.indentLevel);
-        
-
-        foreach (var rect in toDrawArea)
-        {
-            if (rect.Area.Contains(Event.current.mousePosition))
-            {
-                GUIDrawRect(rect.Area, Color.red);
-                
-            }
-        }
-        if (Event.current.type == EventType.repaint)
-        {
-            toDrawArea.Clear();
-        }
-
-
-
-        EditorGUILayout.EndScrollView();
-        
-        EditorGUI.indentLevel = startIndent;
-        return false;
-    }
-
-    private static Texture2D _staticRectTexture;
-    private static GUIStyle _staticRectStyle;
-
     public static void GUIDrawRect(Rect position, Color color)
     {
-        if (_staticRectTexture == null)
-        {
-            _staticRectTexture = new Texture2D(1, 1);
-        }
-
         if (_staticRectStyle == null)
-        {
+        { 
             _staticRectStyle = new GUIStyle();
         }
 
-        _staticRectTexture.SetPixel(0, 0, color);
-        _staticRectTexture.Apply();
+        EditorResources.GenericColor.SetPixel(0, 0, color);
+        EditorResources.GenericColor.Apply();
 
-        _staticRectStyle.normal.background = _staticRectTexture;
+        _staticRectStyle.normal.background = EditorResources.GenericColor;
 
         GUI.Box(position, GUIContent.none, _staticRectStyle);
-
-
     }
 
     //Draw all nodes recursively 
@@ -207,45 +221,68 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
             Rect area = GUILayoutUtility.GetLastRect();
 
             Rect drawArea = area;
+            drawArea.y += area.height - 5;
+            drawArea.height = 10;  
+            
+            toDrawArea.Add(new DrawArea(drawArea));
+
+            if (node == selectedNode && focusOnSelectedNode && Event.current.type == EventType.Repaint)
+            {
+                ScrollPosition.y = area.y - 50;
+                dirty = true;
+                focusOnSelectedNode = false;
+            }
+
             if (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform)
             {
-                drawArea.y += area.height-5;
-                drawArea.height = 10;  
-                toDrawArea.Add(new DrawTuple(drawArea, node));                
+                if (Event.current.Contains(drawArea))
+                {
+                    if (genericCanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
+                    {
+                        DragAndDrop.visualMode = DragAndDropVisualMode.Link;
+                    }
+                }
+                else if (Event.current.Contains(area) && CanDropObjects(node, DragAndDrop.objectReferences))
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Link;
+                }
             }
+           
 
-            if (Event.current.type == EventType.dragUpdated && Event.current.Contains(area) && genericCanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
+            if (Event.current.type == EventType.DragPerform)
             {
-                DragAndDrop.visualMode = DragAndDropVisualMode.Link;
+                requriesUpdate = true;
+                updateTime = Time.time;
+                if (Event.current.Contains(drawArea))
+                {
+                    if (genericCanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
+                    {
+                        genericPlaceHere(node, DragAndDrop.objectReferences[0] as T);
+                    }
+                    EditorEventUtil.UseEvent();
+                }
+                else if (Event.current.Contains(area) && CanDropObjects(node, DragAndDrop.objectReferences))
+                {
+                   
+                    OnDrop(node, DragAndDrop.objectReferences);
+                }
             }
 
-            
             if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && area.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
             {
                 DragAndDrop.PrepareStartDrag();
                 DragAndDrop.objectReferences = new Object[] { node };
                 DragAndDrop.StartDrag("Music Node Drag");
-                Event.current.Use();
-            }
-
-            if (Event.current.Contains(drawArea) && Event.current.type == EventType.DragPerform && genericCanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
-            {
-//                Debug.LogWarning("------------" + node.GetName);
-                genericPlaceHere(node, DragAndDrop.objectReferences[0] as T);
-                Event.current.Use();
+                Event.current.UseEvent();
             }
 
             EditorGUI.indentLevel = indentLevel - 1;
 
-            if (Event.current.DraggedWithin(area) && CanDropObjects(node, DragAndDrop.objectReferences))
-            {
-                DragHandle(node);
-            }
-
             if (Event.current.MouseUpWithin(area, 1))
             {
                 OnContext(node);
-                Event.current.Use();
+                SelectedNode = node;
+                EditorEventUtil.UseEvent();
             }
             
             if(Event.current.type == EventType.Layout)
@@ -264,19 +301,7 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         }
     }
 
-    private List<DrawTuple> toDrawArea = new List<DrawTuple>();
-
-    private struct DrawTuple
-    {
-        public Rect Area;
-        public T Node;
-
-        public DrawTuple(Rect area, T node)
-        {
-            Area = area;
-            Node = node;
-        }
-    }
+ 
 
     private void KeyboardControl()
     {
@@ -288,12 +313,12 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         if (Event.current.IsKeyDown(KeyCode.UpArrow))
         {
             selectedNode = TreeWalker.FindPreviousUnfoldedNode(selectedNode, arg => !arg.IsFiltered);
-            Event.current.Use();
+            EditorEventUtil.UseEvent();
         }
         if (Event.current.IsKeyDown(KeyCode.DownArrow))
         {
             selectedNode = TreeWalker.FindNextNode(SelectedNode, arg => !arg.IsFiltered );
-            Event.current.Use();
+            EditorEventUtil.UseEvent();
         }
     //    if (Event.current.IsKeyDown(KeyCode.Home))
     //    {
@@ -346,30 +371,48 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         }
     }
 
-    public void Filter(Func<T, bool> filter)
+    //Workaround to force redraw
+    private void Update()
     {
-        filterFunc = filter;
-        triggerFilter = true;
-    }
+        if (requriesUpdate && Window != null && updateTime + 0.5f > Time.time)
+        {
 
-    
-
-    private void DragHandle(T node)
-    {
-        if (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform)
-        {  
-            DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
-
-            if (Event.current.type == EventType.DragPerform)
-            {
-                OnDrop(node, DragAndDrop.objectReferences);
-            }
+            Window.Repaint();
+            requriesUpdate = false;
         }
     }
 
-    public void FocusOnSelectedNode()
+
+    private bool dirty;
+    private static GUIStyle _staticRectStyle;
+
+    private EditorWindow Window;
+    private bool requriesUpdate = false;
+    private float updateTime = 0;
+
+    private T selectedNode;
+    private T draggingNode;
+    private Rect selectedArea;
+
+    private bool triggerFilter = false;
+    private Func<T, bool> filterFunc;
+
+    private bool canDropObjects;
+
+    private Vector2 clickPos;
+
+    private List<DrawArea> toDrawArea = new List<DrawArea>();
+
+    private bool focusOnSelectedNode;
+
+    private struct DrawArea
     {
-        //focusOnSelectedNode = true;
+        public Rect Area;
+
+        public DrawArea(Rect area)
+        {
+            Area = area;
+        }
     }
 }
 }

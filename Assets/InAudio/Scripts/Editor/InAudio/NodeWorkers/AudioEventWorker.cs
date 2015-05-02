@@ -246,7 +246,7 @@ public static class AudioEventWorker  {
                     EventActionTypes.BankLoading);
                 action.BankLink = audioBank;
             }
-            Event.current.Use();
+            EditorEventUtil.UseEvent();
         });
         return true;
     }

@@ -15,7 +15,7 @@ namespace InAudioSystem.InAudioEditor
 
         public InAudioBaseWindow Window { get { return window; }}
 
-        public TreeDrawer<T> treeDrawer = new TreeDrawer<T>();
+        public TreeDrawer<T> treeDrawer;
 
         public T SelectedNode { get; set; }
 
@@ -27,6 +27,7 @@ namespace InAudioSystem.InAudioEditor
         protected BaseCreatorGUI(InAudioBaseWindow window)
         {
             this.window = window;
+            treeDrawer = new TreeDrawer<T>(window);
             InAudioBaseWindow.OnScriptReloaded += OnScriptReloaded;
         }
 
@@ -88,7 +89,7 @@ namespace InAudioSystem.InAudioEditor
             {
                 if (window != null)
                     window.Close();
-                Event.current.Use();
+                EditorEventUtil.UseEvent();
             }
             if (InAudioInstanceFinder.Instance != null && InAudioInstanceFinder.DataManager != null && InAudioInstanceFinder.DataManager.Loaded)
             {
@@ -166,10 +167,11 @@ namespace InAudioSystem.InAudioEditor
             });
             searchingFor = node._ID.ToString();
             lowercaseSearchingFor = searchingFor.ToLower().Trim();
-            treeDrawer.Filter(SearchFilter);
+            //treeDrawer.Filter(SearchFilter);
             TreeWalker.ForEachParent(node, n => n.IsFoldedOut = true);
             SelectedNode = node;
             treeDrawer.SelectedNode = node;
+            treeDrawer.FocusOnSelectedNode();
         }
 
         protected virtual bool SearchFilter(T node)

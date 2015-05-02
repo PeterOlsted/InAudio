@@ -9,16 +9,12 @@ namespace InAudioSystem.TreeDrawer
 {
     public class MusicDrawer
     {
-        private static GUIStyle noMargain;
+
         public static bool Draw(InMusicNode node, bool isSelected, out bool clicked) 
         {
             var group = node as InMusicGroup;
             clicked = false;
-            if (noMargain == null)
-            {
-                noMargain = new GUIStyle();
-                noMargain.margin = new RectOffset(0, 0, 0, 0);
-            }
+
             Rect fullArea = EditorGUILayout.BeginHorizontal();
 
             Rect area = EditorGUILayout.BeginHorizontal();
@@ -35,22 +31,16 @@ namespace InAudioSystem.TreeDrawer
             else
                 picture = EditorResources.Plus;
 
-            GUILayout.Label(picture, noMargain, GUILayout.Height(EditorResources.Minus.height),
-                GUILayout.Width(EditorResources.Minus.width));
-            Rect foldRect = GUILayoutUtility.GetLastRect();
-            if (Event.current.ClickedWithin(foldRect))
-            {
-                Event.current.Use();
-            }
-            if (Event.current.MouseUpWithin(foldRect))
+            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height),
+                GUILayout.Width(EditorResources.Minus.width)))
             {
                 node.IsFoldedOut = !node.IsFoldedOut;
-                Event.current.Use();
+                EditorEventUtil.UseEvent();
             }
 
             Texture icon = LookUpIcon(node);
 
-            TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), icon, noMargain);
+            TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), icon, GUIStyle.none);
             EditorGUILayout.LabelField("");
 
             EditorGUILayout.EndHorizontal();
@@ -97,7 +87,7 @@ namespace InAudioSystem.TreeDrawer
                 playing = EditorResources.Play;
             }
 
-            if (GUI.Button(butArea, playing, noMargain))
+            if (GUI.Button(butArea, playing, GUIStyle.none))
             {
                 if(group.PlayingInfo.State == MusicState.Playing)
                     InAudio.Music.Pause(group);
@@ -113,7 +103,7 @@ namespace InAudioSystem.TreeDrawer
             butArea.y += 14;
             Texture stop= EditorResources.Stop;
 
-            if (GUI.Button(butArea, stop, noMargain))
+            if (GUI.Button(butArea, stop, GUIStyle.none))
             {
                 InAudio.Music.Stop(group);
             }
@@ -143,17 +133,16 @@ namespace InAudioSystem.TreeDrawer
 
             Texture mute = MusicVolumeUpdater.IsMute(group) ? EditorResources.Muted : EditorResources.NotMute;
 
-            if (GUI.Button(butArea, mute, noMargain))
+            if (GUI.Button(butArea, mute, GUIStyle.none))
             {
                 UndoHelper.RegisterUndo(group, "Mute");
                 MusicVolumeUpdater.FlipMute(group);
             }
 
-
             butArea.y += 14;
             Texture solo = MusicVolumeUpdater.IsSolo(group) ? EditorResources.Soloed : EditorResources.NotSolo;
 
-            if (GUI.Button(butArea, solo, noMargain))
+            if (GUI.Button(butArea, solo, GUIStyle.none))
             {
                 UndoHelper.RegisterUndo(group, "Solo");
                 MusicVolumeUpdater.FlipSolo(group);

@@ -3,6 +3,7 @@ Library/*
 *.userprefs
 Temp
 *.csproj
+*Thumbs.db*
 *.pidb
 *.sln
 build

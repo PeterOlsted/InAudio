@@ -43,7 +43,7 @@ public static  class DrawerHelper  {
                     arrEvent.objectReferenceValue = DragAndDrop.objectReferences[0];
                     arrEvent.serializedObject.ApplyModifiedProperties();
                     GUI.changed = true;
-                    Event.current.Use();
+                    EditorEventUtil.UseEvent();
                 }
             }
         }
@@ -69,13 +69,13 @@ public static  class DrawerHelper  {
     //        {
     //            DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
     //            if (Event.current.type != EventType.DragPerform)
-    //                Event.current.Use();
+    //                EditorEventUtil.UseEvent();
 
     //            if (Event.current.type == EventType.DragPerform)
     //            {
     //                audioEvent.Add(DragAndDrop.objectReferences[0] as InAudioEventNode, EventHookListData.PostEventAt.AttachedTo);
     //                GUI.changed = true;
-    //                Event.current.Use();
+    //                EditorEventUtil.UseEvent();
     //                return true;
     //            }
     //        }

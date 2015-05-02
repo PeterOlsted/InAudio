@@ -24,6 +24,7 @@ namespace InAudioSystem.InAudioEditor
 
         public void Find(Func<InAudioNode, bool> filter)
         {
+            
             audioCreatorGUI.FindAudio(filter);
         }
 
