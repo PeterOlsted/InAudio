@@ -21,17 +21,16 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
-            EditorGUI.BeginProperty(pos, label, prop);
-            prop.serializedObject.Update();
+
+            EditorGUI.BeginChangeCheck();
 
             Rect originalPos = pos;
             float width = pos.width;
             pos.height = EditorGUIUtility.singleLineHeight;
+
             var node = prop.objectReferenceValue as InMusicGroup;
 
-
             EditorGUI.PropertyField(pos, prop, label);
-            //prop.objectReferenceValue = EditorGUILayout.ObjectField(label, prop.objectReferenceValue, typeof(InAudioNode), false);
             pos.y += 15;
             pos.x += 125;
             pos.width -= 60;
@@ -63,8 +62,10 @@ namespace InAudioSystem.InAudioEditor
                     SearchHelper.SearchFor(node);
                 }
             }
-            prop.serializedObject.ApplyModifiedProperties();
-            EditorGUI.EndProperty();
+            if (EditorGUI.EndChangeCheck())
+            {
+                prop.serializedObject.ApplyModifiedProperties();
+            }
         }
     }
 

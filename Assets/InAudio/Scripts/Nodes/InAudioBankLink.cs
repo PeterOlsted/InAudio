@@ -94,25 +94,6 @@ namespace InAudioSystem
         {
             get { return _type == AudioBankTypes.Folder; }
         }
-
-
-        public void _deattachFromParent()
-        {
-            _parent._children.Remove(this);
-        }
-
-        public void _assignToParent(InAudioBankLink newParent, int index = -1)
-        {
-            if (index == -1)
-            {
-                newParent._children.Add(this);
-            }
-            else
-            {
-                newParent._children.Insert(index, this);
-            }
-            _parent = newParent;
-        }
     }
 
 }

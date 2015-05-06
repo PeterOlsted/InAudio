@@ -216,7 +216,10 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
             //Draw node
             node.IsFoldedOut = OnNodeDraw(node, node == selectedNode, out clicked);
             if (clicked)
+            {
                 selectedNode = node;
+                GUIUtility.keyboardControl = 0;
+            }
 
             Rect area = GUILayoutUtility.GetLastRect();
 
@@ -313,22 +316,23 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         if (Event.current.IsKeyDown(KeyCode.UpArrow))
         {
             selectedNode = TreeWalker.FindPreviousUnfoldedNode(selectedNode, arg => !arg.IsFiltered);
+            FocusOnSelectedNode();
             EditorEventUtil.UseEvent();
         }
         if (Event.current.IsKeyDown(KeyCode.DownArrow))
         {
             selectedNode = TreeWalker.FindNextNode(SelectedNode, arg => !arg.IsFiltered );
+            FocusOnSelectedNode();
             EditorEventUtil.UseEvent();
         }
-    //    if (Event.current.IsKeyDown(KeyCode.Home))
-    //    {
-    //        ScrollPosition = new Vector2();
-    //        selectedNode = root;
-    //    }
-    //    if (Event.current.IsKeyDown(KeyCode.End))
-    //    {
-    //        //selectedNode = TreeWalker.;
-    //    }
+        if (Event.current.IsKeyDown(KeyCode.Home))
+        {
+            ScrollPosition = new Vector2();
+        }
+        if (Event.current.IsKeyDown(KeyCode.End))
+        {
+            ScrollPosition = new Vector2(0,100000);
+        }
 
     //    if (hasPressedDown && (_area.y + ScrollPosition.y + _area.height - selectedArea.height * 2 < selectedArea.y + selectedArea.height))
     //    {

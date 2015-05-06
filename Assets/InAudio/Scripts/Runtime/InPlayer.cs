@@ -434,7 +434,7 @@ namespace InAudioSystem.Runtime
                     var randomData = nodeData as RandomData;
                     if (current._children.Count != randomData.weights.Count)
                     {
-                        InAudio.InDebug.LogError("InAudio: There is a problem with the random weights in the node " +
+                        Debug.LogError("InAudio: There is a problem with the random weights in the node " +
                                                  current.Name + ", id=" + current._ID +
                                                  ". \nPlease open the audio window for the node and follow instructions");
                     }

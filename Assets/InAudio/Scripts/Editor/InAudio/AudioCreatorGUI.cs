@@ -35,6 +35,32 @@ namespace InAudioSystem.InAudioEditor
         {
             base.OnEnable();    
             treeDrawer.CanPlaceHere = CanPlaceHere;
+            treeDrawer.AssignNewParent = AssignNewParent;
+            treeDrawer.DeattachFromParent = DeattachFromParent;
+        }
+
+        private void AssignNewParent(InAudioNode newParent, InAudioNode node, int index)
+        {
+            if (newParent._type == AudioNodeType.Random)
+            {
+                var parentData = newParent._nodeData as RandomData;
+                parentData.weights.Insert(index, 50);
+                Undo.RecordObject(newParent._nodeData, "Random weights");
+            }
+            newParent._children.Insert(index, node);
+            node._parent = newParent;
+        }
+
+        private void DeattachFromParent(InAudioNode node)
+        {
+            var parent = node._parent;
+            if (parent._type == AudioNodeType.Random)
+            {
+                Undo.RecordObject(parent._nodeData, "Random weights");
+                int currentIndexInParent = parent._children.IndexOf(node);
+                (parent._nodeData as RandomData).weights.RemoveAt(currentIndexInParent);
+            }
+            parent._getChildren.Remove(node);
         }
 
         private bool CanPlaceHere(InAudioNode newParent, InAudioNode toPlace)

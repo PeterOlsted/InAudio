@@ -38,7 +38,7 @@ public static class RuntimeHelper
         int currentMax = 0;
         for (int i = 0; i < childCount; ++i)
         {
-            if (!lastPlayed.Contains(i))
+            if (!lastPlayed.Contains(i) || doNotRepeat == 0)
             {
                 currentMax += weights[i];
                 if (weights[i] != 0 && randomArea <= currentMax)
@@ -48,7 +48,7 @@ public static class RuntimeHelper
                 }
             }
         }
-        if (picked != -1) //If we picked one
+        if (picked != -1 && doNotRepeat > 0) //If we picked one
         {
             while (lastPlayed.Count >= doNotRepeat && doNotRepeat > 0)
             {
@@ -58,7 +58,7 @@ public static class RuntimeHelper
             lastPlayed.Enqueue(picked);
         }
 
-        return -1;
+        return picked;
     }
 
     public static AudioRolloffMode ApplyRolloffData(InAudioNode current, InAudioNodeData data, AudioSource workOn)

@@ -36,6 +36,12 @@ public class InAudio : MonoBehaviour
                 instance.activeAudioListener = ActiveListener;
         }
     }
+
+    public static bool DoesExist
+    {
+        get { return instance != null; }
+    }
+
     #endregion
 
     #region Music
@@ -55,6 +61,8 @@ public class InAudio : MonoBehaviour
     {
         if(instance != null && gameObject != null && audioNode != null)
             return instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, gameObject);
+        else
+            InDebug.MissingArguments("Play", gameObject, audioNode);
         return null;
     }
 
@@ -70,6 +78,8 @@ public class InAudio : MonoBehaviour
     {
         if (instance != null && gameObject != null && audioNode != null)
             return instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, attachedTo);
+        else
+            InDebug.MissingArguments("PlayAttachedTo", gameObject, audioNode);
         return null;
     }
 
@@ -85,6 +95,8 @@ public class InAudio : MonoBehaviour
     {
         if (instance != null && gameObject != null && audioNode != null)
             return instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position);
+        else
+            InDebug.MissingArguments("PlayAtPosition", gameObject, audioNode);
         return null;
     }
 
@@ -100,7 +112,10 @@ public class InAudio : MonoBehaviour
     public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
+        {
+            InDebug.MissingArguments("Play (tween)", gameObject, audioNode);
             return null;
+        }
 
         InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, gameObject);
         player.Volume = 0.0f;
@@ -124,7 +139,9 @@ public class InAudio : MonoBehaviour
     public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo, float fadeTime, LeanTweenType tweeenType)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
-            return null;
+        {
+            InDebug.MissingArguments("PlayAttachedTo (tween)", gameObject, audioNode);
+        }
 
         InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, attachedTo);
         player.Volume = 0.0f;
@@ -148,7 +165,10 @@ public class InAudio : MonoBehaviour
     public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position, float fadeTime, LeanTweenType tweeenType)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
+        {
+            InDebug.MissingArguments("PlayAtPosition (tween)", gameObject, audioNode);
             return null;
+        }
 
         InPlayer player = instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position);
         player.Volume = 0.0f;
@@ -174,7 +194,10 @@ public class InAudio : MonoBehaviour
     public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
+        {
+            InDebug.MissingArguments("Play (tween specific)", gameObject, audioNode);
             return null;
+        }
 
         InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, gameObject);
         player.Volume = startVolume;
@@ -200,7 +223,10 @@ public class InAudio : MonoBehaviour
     public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
+        {
+            InDebug.MissingArguments("PlayAttachedTo (tween specific)", gameObject, audioNode);
             return null;
+        }
 
         InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, attachedTo);
         player.Volume = startVolume;
@@ -226,7 +252,10 @@ public class InAudio : MonoBehaviour
     public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
+        {
+            InDebug.MissingArguments("PlayAtPosition (tween specific)", gameObject, audioNode);
             return null;
+        }
 
         InPlayer player = instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position);
         player.Volume = startVolume;
@@ -248,7 +277,11 @@ public class InAudio : MonoBehaviour
     public static InPlayer PlayPersistent(Vector3 position, InAudioNode audioNode)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
+        {
+            InDebug.MissingArgumentsForNode("PlayPersistent", audioNode);
             return null;
+        }
+        
 
         InPlayer player = instance._inAudioEventWorker.PlayAtPosition(instance.gameObject, audioNode, position);
 
@@ -268,6 +301,10 @@ public class InAudio : MonoBehaviour
     {
         if (instance != null && gameObject != null && audioNode != null)
             instance._inAudioEventWorker.StopByNode(gameObject, audioNode);
+        else
+        {
+            InDebug.MissingArguments("Stop", gameObject, audioNode);
+        }
     }
 
     /// <summary>
@@ -280,6 +317,10 @@ public class InAudio : MonoBehaviour
     {
         if(instance != null && gameObject != null && audioNode != null)
             instance._inAudioEventWorker.StopByNode(gameObject, audioNode, fadeOutTime);
+        else
+        {
+            InDebug.MissingArguments("Stop (Fadeout)", gameObject, audioNode);
+        }
     }
 
     /// <summary>
@@ -289,7 +330,12 @@ public class InAudio : MonoBehaviour
     /// <param name="audioNode"></param>
     public static void Break(GameObject gameObject, InAudioNode audioNode)
     {
-        instance._inAudioEventWorker.Break(gameObject, audioNode);
+        if(instance != null && gameObject != null && audioNode != null)
+            instance._inAudioEventWorker.Break(gameObject, audioNode);
+        else
+        {
+            InDebug.MissingArguments("Break", gameObject, audioNode);
+        }
     }
 
     /// <summary>
@@ -298,7 +344,12 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAllOfNode(InAudioNode audioNode)
     {
-        instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+        if(instance != null && audioNode != null)
+            instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+        else
+        {
+            InDebug.MissingArgumentsForNode("StopAllOfNode", audioNode);
+        }
     }
 
     /// <summary>
@@ -307,7 +358,12 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAllOfNode(InAudioNode audioNode, float fadeOutDuration, LeanTweenType leanTweenType = LeanTweenType.easeInOutQuad)
     {
-        instance._inAudioEventWorker.StopAll(0, leanTweenType);
+        if(instance != null)
+            instance._inAudioEventWorker.StopAll(0, leanTweenType);
+        else
+        {
+            InDebug.MissingArgumentsForNode("StopAllOfNode", audioNode);
+        }
     }
 
     /// <summary>
@@ -316,7 +372,12 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAll()
     {
-        instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+        if(instance != null)
+            instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+        else
+        {
+            InDebug.InstanceMissing("StopAll");
+        }
     }
 
     /// <summary>
@@ -325,8 +386,15 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAllAndMusic()
     {
-        instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
-        Music.StopAll(0, LeanTweenType.notUsed);
+        if (instance != null)
+        {
+            instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
+            Music.StopAll(0, LeanTweenType.notUsed);
+        }
+        else
+        {
+            InDebug.InstanceMissing("StopAllAndMusic");
+        }
     }
 
 
@@ -338,7 +406,14 @@ public class InAudio : MonoBehaviour
     /// <param name="fadeType">Fade type</param>
     public static void StopAll(float fadeOut, LeanTweenType fadeType)
     {
-        instance._inAudioEventWorker.StopAll(fadeOut, fadeType);
+        if(instance != null){
+            instance._inAudioEventWorker.StopAll(fadeOut, fadeType);
+        }
+        else
+        {
+            InDebug.InstanceMissing("StopAll (fade)");
+        }
+        
     }
 
     /// <summary>
@@ -347,7 +422,14 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAll(GameObject gameObject)
     {
-        instance._inAudioEventWorker.StopAll(gameObject, 0, LeanTweenType.notUsed);
+        if(instance != null && gameObject != null)
+        {
+            instance._inAudioEventWorker.StopAll(gameObject, 0, LeanTweenType.notUsed);
+        }
+        else
+        {
+            InDebug.MissingArguments("StopAll (on GameObject)", gameObject, null);
+        }
     }
 
     /// <summary>
@@ -358,7 +440,14 @@ public class InAudio : MonoBehaviour
     /// <param name="fadeType">Fade type</param>
     public static void StopAll(GameObject gameObject, float fadeOut, LeanTweenType fadeType)
     {
-        instance._inAudioEventWorker.StopAll(gameObject, fadeOut, fadeType);
+        if(instance != null && gameObject != null)
+        { 
+            instance._inAudioEventWorker.StopAll(gameObject, 0, LeanTweenType.notUsed);
+        }
+        else
+        {
+            InDebug.MissingArguments("StopAll (on GameObject)", gameObject, null);
+        }
     }
 
     #endregion
@@ -375,6 +464,10 @@ public class InAudio : MonoBehaviour
         {
             return instance._inAudioEventWorker.GetPlayers(gameObject);
         }
+        else
+        {
+            InDebug.MissingArguments("PlayersOnGO", gameObject, null);
+        }
         return null;
     }
 
@@ -385,9 +478,20 @@ public class InAudio : MonoBehaviour
     /// <param name="copyToList">If the list is too short, the partial list will be copied</param>
     public static void PlayersOnGO(GameObject gameObject, IList<InPlayer> copyToList)
     {
-        if (instance != null && gameObject != null)
+        if (instance != null && gameObject != null && copyToList != null)
         {
             instance._inAudioEventWorker.GetPlayers(gameObject, copyToList);
+        }
+        else
+        {
+            if (copyToList == null)
+            {
+                Debug.LogWarning("InAudio: Missing argument CopyToList on function PlayersOnGO");
+            }
+            else
+            {
+                InDebug.MissingArguments("PlayersOnGO", gameObject, null);    
+            }
         }
     }
 
@@ -405,9 +509,13 @@ public class InAudio : MonoBehaviour
     /// <param name="volume"></param>
     public static void SetVolumeForNode(GameObject gameObject, InAudioNode audioNode, float volume)
     {
-        if (instance != null)
+        if (instance != null && gameObject != null && audioNode != null)
         {
             instance._inAudioEventWorker.SetVolumeForNode(gameObject, audioNode, volume);
+        }
+        else
+        {
+            InDebug.MissingArguments("SetVolumeForNode", gameObject, audioNode);
         }
     }
 
@@ -418,9 +526,13 @@ public class InAudio : MonoBehaviour
     /// <param name="volume"></param>
     public static void SetVolumeForAll(GameObject gameObject, float volume)
     {
-        if (instance != null)
+        if (instance != null && gameObject != null)
         {
             instance._inAudioEventWorker.SetVolumeForGameObject(gameObject, volume);
+        }
+        else
+        {
+            InDebug.MissingArguments("SetVolumeForAll", gameObject, null);
         }
     }
 
@@ -636,7 +748,7 @@ public class InAudio : MonoBehaviour
         }
         else
         {
-            InDebug.LogWarning("InAudio: Could not try to find event with id " + id + " as no InAudio instance was found");
+            Debug.LogWarning("InAudio: Could not try to find event with id " + id + " as no InAudio instance was found");
         }
         return postEvent;
     }
@@ -657,7 +769,7 @@ public class InAudio : MonoBehaviour
         }
         else
         {
-            InDebug.LogWarning("InAudio: Could not bus with id " + id);
+            Debug.LogWarning("InAudio: Could not bus with id " + id);
         }
         return null;
     }
@@ -818,7 +930,7 @@ public class InAudio : MonoBehaviour
                                 musicFade.TweenType);
                             break;
                         default:
-                            InDebug.LogError("InAudio: Unsuported action at end of fade");
+                            Debug.LogError("InAudio: Unsuported action at end of fade");
                             break;
                     }
                 }
@@ -1167,7 +1279,7 @@ public class InAudio : MonoBehaviour
             }
             else
             {
-                InDebug.LogError(
+                Debug.LogError(
                     "InAudio: There was a problem loading the InAudio project. Have you created one?");
             }
         }
@@ -1190,6 +1302,8 @@ public class InAudio : MonoBehaviour
         }
     }
 
+
+    
 
 #if UNITY_EDITOR
     void OnApplicationQuit()

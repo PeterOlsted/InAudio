@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Serialization;
 
 namespace InAudioSystem
 {
@@ -32,20 +31,45 @@ namespace InAudioSystem
 
         public InMusicNode _parent;
 
-        public InMusicNode _getParent { get { return _parent; } set { _parent = value; } }
-        public List<InMusicNode> _getChildren { get { return _children; }}
+        public InMusicNode _getParent
+        {
+            get { return _parent; }
+            set { _parent = value; }
+        }
+
+        public List<InMusicNode> _getChildren
+        {
+            get { return _children; }
+        }
 
         public bool IsRoot
         {
             get { return _type == MusicNodeType.Root; }
         }
 
-        public string GetName { get { return _name; }  }
-        public int _ID { get { return _guid; } set { _guid = value; } }
+        public string GetName
+        {
+            get { return _name; }
+        }
+
+        public int _ID
+        {
+            get { return _guid; }
+            set { _guid = value; }
+        }
 
 #if UNITY_EDITOR
-        public bool IsFoldedOut { get { return FoldedOut; } set { FoldedOut = value; } }
-        public bool IsFiltered { get { return Filtered; } set { Filtered = value; } }
+        public bool IsFoldedOut
+        {
+            get { return FoldedOut; }
+            set { FoldedOut = value; }
+        }
+
+        public bool IsFiltered
+        {
+            get { return Filtered; }
+            set { Filtered = value; }
+        }
 #endif
 
         public bool IsRootOrFolder
@@ -68,31 +92,13 @@ namespace InAudioSystem
             }
         }
 
-
-        public void _deattachFromParent()
-        {
-            _parent._getChildren.Remove(this);
-        }
-
-        public void _assignToParent(InMusicNode newParent, int index = -1)
-        {
-            if (index == -1)
-            {
-                newParent._children.Add(this);
-            }
-            else
-            {
-                newParent._children.Insert(index, this);
-            }
-            _parent = newParent;
-        }
+        
     }
-
-
     public enum MusicNodeType
     {
         Root = 0,
         Folder = 1,
         Music = 2,
-    }
+    }   
+
 }

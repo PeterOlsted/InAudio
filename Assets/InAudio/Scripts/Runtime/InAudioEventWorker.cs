@@ -21,8 +21,7 @@ namespace InAudioSystem.Internal
             var runtimePlayer = InAudioInstanceFinder.RuntimePlayerControllerPool.GetObject();
             if (runtimePlayer == null)
             {
-                Debug.LogWarning(
-                    "InAudio: A pooled objected was not initialized. Try to restart play mode. If the problem persists, please submit a bug report.");
+                Debug.LogWarning("InAudio: A pooled objected was not initialized. Try to restart play mode. If the problem persists, please submit a bug report.");
             }
             currentInstances.Add(new InstanceInfo(AudioSettings.dspTime, runtimePlayer));
             runtimePlayer.transform.parent = attachedTo.transform;

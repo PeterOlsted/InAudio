@@ -28,7 +28,7 @@ public class InAudioEventHook : MonoBehaviour
         InAudio.PostEvent(gameObject, onEnable);
         if (onEnableMusic != null)
         {
-            HandleMusic(onEnableMusic);
+            HandleMusic(onEnableMusic, "OnEnable");
         }
     }
 
@@ -37,7 +37,7 @@ public class InAudioEventHook : MonoBehaviour
         InAudio.PostEvent(gameObject, onStart);
         if (onEnableMusic != null)
         {
-            HandleMusic(onStartMusic);
+            HandleMusic(onStartMusic, "OnStart");
         }
     }
 
@@ -46,7 +46,7 @@ public class InAudioEventHook : MonoBehaviour
         InAudio.PostEvent(gameObject, onDisable);
         if (onDisableMusic != null)
         {
-            HandleMusic(onDisableMusic);
+            HandleMusic(onDisableMusic, "OnDisable");
         }
     }
 
@@ -55,7 +55,7 @@ public class InAudioEventHook : MonoBehaviour
         InAudio.PostEvent(gameObject, onDestroy);
         if (onDestroyMusic != null)
         {
-            HandleMusic(onDestroyMusic);
+            HandleMusic(onDestroyMusic, "OnDestroy");
         }
     }
 
@@ -157,9 +157,9 @@ public class InAudioEventHook : MonoBehaviour
         }
     }
 
-    private void HandleMusic(InHookMusicControl InMusicControl)
+    private void HandleMusic(InHookMusicControl musicControl, string eventType)
     {
-        var controls = InMusicControl.MusicControls;
+        var controls = musicControl.MusicControls;
         int count = controls.Count;
         for (int i = 0; i < count; i++)
         {
@@ -168,7 +168,7 @@ public class InAudioEventHook : MonoBehaviour
             var music = control.MusicGroup;
             if (music == null)
             {
-                Debug.LogError("InAudio: Cannot find Music Group on \"" + gameObject+"\"", gameObject);
+                Debug.LogWarning("InAudio: Event hook missing music entry " + i + " for " + eventType + " on game object \"" + gameObject.name + "\"", gameObject);
                 continue;
             }
             if (control.PlaybackControl == MusicState.Playing)

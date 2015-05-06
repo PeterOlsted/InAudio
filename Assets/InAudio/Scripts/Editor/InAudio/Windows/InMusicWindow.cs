@@ -18,7 +18,7 @@ namespace InAudioSystem.InAudioEditor
             if (musicCreatorGUI == null)
             {
                 musicCreatorGUI = new MusicCreatorGUI(this);
-
+                autoRepaintOnSceneChange = true;
             }
             musicCreatorGUI.OnEnable();
         }

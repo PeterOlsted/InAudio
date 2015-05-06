@@ -4,77 +4,102 @@ namespace InAudioSystem.Runtime
 {
     public class InDebug
     {
-        public bool DoLog = true;
-
-        public System.Action<object> Log;
-        public System.Action<object> LogWarning;
-        public System.Action<object> LogError;
-
         public InDebug()
         {
-            Log  = o =>
-            {
-                if(DoLog)
-                    Debug.Log(o);
-            };
-            LogWarning = o =>
-            {
-                if(DoLog)
-                    Debug.LogWarning(o);
-            };
-            LogError = o =>
-            {
-                if (DoLog)
-                    Debug.LogError(o);
-            };
+            
         }
+
+        public bool DoLog { get; set; }
 
         public void CleanupInstance()
         {
-            LogWarning("InAudio: Could not run cleanup");
+            Debug.LogWarning("InAudio: Could not run cleanup");
         }
 
         public void UnusedActionType(GameObject controllingObject, AudioEventAction eventData)
         {
-            LogWarning("InAudio: Could not run action of type " + eventData._eventActionType + " on object " + controllingObject.name + " as the actionis not in use by InAudio yet");
+            Debug.LogWarning("InAudio: Could not run action of type " + eventData._eventActionType + " on object " + controllingObject.name + " as the actionis not in use by InAudio yet");
         }
 
         public void MissingActionTarget(GameObject controllingObject, AudioEventAction eventData)
         {
-            LogWarning("InAudio: Could not run action of type " + eventData._eventActionType + " on object " + controllingObject.name + "\nas the actions target is a null reference");
+            Debug.LogWarning("InAudio: Could not run action of type " + eventData._eventActionType + " on object " + controllingObject.name + "\nas the actions target is a null reference");
         }
 
         public void BankUnloadMissing()
         {
-            LogWarning("InAudio: Could not unload bank as the reference was null");
+            Debug.LogWarning("InAudio: Could not unload bank as the reference was null");
         }
 
         public void BankLoadMissing()
         {
-            LogWarning("InAudio: Could not load bank as the reference was null");
+            Debug.LogWarning("InAudio: Could not load bank as the reference was null");
         }
 
-        public void InAudioInstanceMissing(GameObject go)
+        public void InstanceMissing(string function)
         {
-            if (go != null)
-                LogWarning("InAudio: Could not post event(s) on " + go.name + " as the InAudio was not found");
+            Debug.LogWarning("InAudio: No instance of InAudio was found. Is the manager in the scene?\nCalled via "+function);
+        }
+
+        public void MissingArgumentsForNode(string functionName, InAudioNode node)
+        {
+            if (!InAudio.DoesExist)
+            {
+                InAudioInstanceMissing();
+            }
+            else if (node == null)
+            {
+                Debug.LogWarning("InAudio: Missing arguments on " + functionName);
+            }
             else
-                LogWarning("InAudio: Could not post event(s) as the InAudio was not found");
+            {
+                Debug.LogWarning("InAudio: Missing arguments on " + functionName);
+            }
+        }
+
+        public void MissingArguments(string functionName, GameObject gameObject, InAudioNode node)
+        {
+            if (!InAudio.DoesExist)
+            {
+                InAudioInstanceMissing();
+            }
+            else if (gameObject == null && node == null)
+            {
+                Debug.LogWarning("InAudio: Missing arguments on " + functionName);
+            } else if (gameObject == null)
+            {
+                Debug.LogWarning("InAudio: Missing arguments on " + functionName + " playing node " + node.GetName);
+            }
+            else
+            {
+                Debug.LogWarning("InAudio: Missing arguments on " + functionName + " on game object " + gameObject.name);
+            }
+        }
+
+        public void InAudioInstanceMissing(GameObject go = null)
+        {
+            if (DoLog)
+            {
+                if (go != null)
+                    Debug.LogWarning("InAudio: Could not post event(s) on " + go.name + " as the InAudio was not found");
+                else
+                    Debug.LogWarning("InAudio: Could not post event(s) as the InAudio was not found");
+            }
         }
 
         public void MissingControllingObject()
         {
-            LogWarning("InAudio: Could not post events as game object was a null reference");
+            Debug.LogWarning("InAudio: Could not post events as game object was a null reference");
         }
 
         public void MissingEventList(GameObject controllingObject)
         {
-            LogWarning("InAudio: Could not post event list on " + controllingObject.gameObject + " as the event list was null or list of events was null");
+            Debug.LogWarning("InAudio: Could not post event list on " + controllingObject.gameObject + " as the event list was null or list of events was null");
         }
 
         public void MissingEvent(GameObject controllingObject)
         {
-            LogWarning("InAudio: Could not post event on " + controllingObject.gameObject + " as the event list was null or list of events was null");
+            Debug.LogWarning("InAudio: Could not post event on " + controllingObject.gameObject + " as the event list was null or list of events was null");
         }
     }
 

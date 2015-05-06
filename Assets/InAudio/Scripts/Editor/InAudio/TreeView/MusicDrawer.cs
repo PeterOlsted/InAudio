@@ -23,6 +23,11 @@ namespace InAudioSystem.TreeDrawer
 
             GUILayout.Space(EditorGUI.indentLevel * 16);
 
+            if (group != null)
+            {
+                DrawVolume(fullArea, group);
+            }
+
             bool folded = node.IsFoldedOut;
 
             Texture picture;

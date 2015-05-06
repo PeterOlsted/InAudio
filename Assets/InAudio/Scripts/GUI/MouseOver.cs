@@ -22,8 +22,10 @@ namespace InAudioSystem
         {
             if (enabled)
             {
-                InAudio.PostEvent(gameObject, ActivateOnMouseOver);
-                InAudio.Play(gameObject, playNodeWhileMouseOver);
+                if (ActivateOnMouseOver != null)
+                    InAudio.PostEvent(gameObject, ActivateOnMouseOver);
+                if (playNodeWhileMouseOver != null)
+                    InAudio.Play(gameObject, playNodeWhileMouseOver);
             }
         }
 

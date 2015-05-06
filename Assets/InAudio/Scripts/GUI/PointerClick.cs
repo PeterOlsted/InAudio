@@ -18,8 +18,10 @@ namespace InAudioSystem
         {
             if (enabled)
             {
-                InAudio.PostEvent(gameObject, onClick);
-                InAudio.PlayPersistent(gameObject.transform.position, onClickSound);
+                if(onClick != null)
+                    InAudio.PostEvent(gameObject, onClick);
+                if(onClickSound != null)
+                    InAudio.PlayPersistent(gameObject.transform.position, onClickSound);
             }
             
         }

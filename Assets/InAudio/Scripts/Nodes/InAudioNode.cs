@@ -98,40 +98,6 @@ public class InAudioNode : MonoBehaviour, InITreeNode<InAudioNode>
             set { Filtered = value; }
         }
 #endif
-
-
-        public void _deattachFromParent()
-        {
-            
-            if (_parent._type == AudioNodeType.Random)
-            {
-                int currentIndexInParent = _parent._children.IndexOf(this);
-                (_parent._nodeData as RandomData).weights.RemoveAt(currentIndexInParent);
-            }
-            _parent._getChildren.Remove(this);
-        }
-
-        public void _assignToParent(InAudioNode newParent, int index = -1)
-        {
-            if (index == -1)
-            {
-                newParent._children.Add(this);
-                if (_parent._type == AudioNodeType.Random)
-                {
-                    (_parent._nodeData as RandomData).weights.Add(50);
-                }
-            }
-            else
-            {
-                newParent._children.Insert(index, this);
-                if (_parent._type == AudioNodeType.Random)
-                {
-                    (_parent._nodeData as RandomData).weights.Insert(index, 50);
-                }
-            }
-            _parent = newParent;
-        }
-
 }
 
 
