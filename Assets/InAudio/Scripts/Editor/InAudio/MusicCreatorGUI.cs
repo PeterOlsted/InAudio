@@ -39,6 +39,7 @@ namespace InAudioSystem.InAudioEditor
             EditorGUILayout.BeginVertical();
 
             isDirty |= treeDrawer.DrawTree(window.Manager.MusicTree, treeArea);
+            SelectedNode = treeDrawer.SelectedNode;
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
@@ -241,9 +242,15 @@ namespace InAudioSystem.InAudioEditor
             return InAudioInstanceFinder.DataManager.MusicTree;
         }
 
-        protected override GUIPrefs GUIData 
+        protected override GUIPrefs GUIData
         {
-            get { return InAudioInstanceFinder.InAudioGuiUserPrefs.AudioGUIData; }
+            get
+            {
+                if (InAudioInstanceFinder.InAudioGuiUserPrefs != null)
+                    return InAudioInstanceFinder.InAudioGuiUserPrefs.MusicGUIData;
+                else
+                    return null;
+            }
         }
     }
 }

@@ -73,6 +73,12 @@ namespace InAudioSystem.InAudioEditor
 
         protected bool HandleMissingData()
         {
+            if (InAudioInstanceFinder.InAudioGuiUserPrefs == null)
+            {
+                ErrorDrawer.MissingGuiUserPrefs();
+                return false;
+            }
+
             if (Manager == null)
             {
                 Manager = InAudioInstanceFinder.DataManager;

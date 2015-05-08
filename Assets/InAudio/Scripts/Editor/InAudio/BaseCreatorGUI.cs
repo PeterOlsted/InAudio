@@ -33,28 +33,35 @@ namespace InAudioSystem.InAudioEditor
 
         protected void OnScriptReloaded()
         {
-            int id = GUIData.SelectedNode;
-            var foundNode = TreeWalker.FindFirst(Root(), node => node._ID == id);
-            SelectedNode = foundNode;
-            treeDrawer.SelectedNode = foundNode;
-            treeDrawer.ScrollPosition = GUIData.Position;
+            if (GUIData != null)
+            {
+                int id = GUIData.SelectedNode;
+                var foundNode = TreeWalker.FindFirst(Root(), node => node._ID == id);
+                SelectedNode = foundNode;
+                treeDrawer.SelectedNode = foundNode;
+                treeDrawer.ScrollPosition = GUIData.Position;
+            }
         }
 
-        private char[] spliter = { '\n' };
+        private readonly char[] spliter = { '\n' };
         public void BaseOnGUI()
         {
-            if (PlayerPrefs.HasKey("InAudioVersion"))
+            if (PlayerPrefs.HasKey("InAudioUpdateInfo"))
             {
-                string version = PlayerPrefs.GetString("InAudioVersion");
-                
-                var split = version.Split(spliter);
-                if (split[0] != InAudio.CurrentVersion)
+                string info = PlayerPrefs.GetString("InAudioUpdateInfo");
+
+                string version = null;
+                if (PlayerPrefs.HasKey("InAudioStoredVersion"))
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    try
+                    version = PlayerPrefs.GetString("InAudioStoredVersion");
+                }
+                EditorGUILayout.BeginHorizontal();
+                try
+                {
+                    var split = info.Split(spliter);
+                    if (split[0] != version)
                     {
                         string text = split[1];
-
 
                         EditorGUILayout.LabelField(text, EditorStyles.boldLabel);
                         var rect = GUILayoutUtility.GetLastRect();
@@ -69,18 +76,15 @@ namespace InAudioSystem.InAudioEditor
                         dimensions.width = 30;
                         if (GUI.Button(dimensions, "X"))
                         {
-                            PlayerPrefs.SetString("InAudioVersion", InAudio.CurrentVersion);
+                            PlayerPrefs.SetString("InAudioStoredVersion", split[0]);
                         }
                     }
-                    catch (Exception)
-                    {
-
-
-                    }
-
-
-                    EditorGUILayout.EndHorizontal();
                 }
+                catch (Exception)
+                {
+                }
+                EditorGUILayout.EndHorizontal();
+                
             }
 
             isDirty = false;
@@ -94,11 +98,16 @@ namespace InAudioSystem.InAudioEditor
             if (InAudioInstanceFinder.Instance != null && InAudioInstanceFinder.DataManager != null && InAudioInstanceFinder.DataManager.Loaded)
             {
                 var root = Root();
-                int id = GUIData.SelectedNode;
-                var selectedNode = UpdateSelectedNode(root, id);
-                EditorUtility.SetDirty(InAudioInstanceFinder.InAudioGuiUserPrefs);
-                GUIData.SelectedNode = selectedNode != null ? selectedNode._ID : 0;
-                GUIData.Position = treeDrawer.ScrollPosition;
+                if (GUIData != null)
+                {
+                    int id = GUIData.SelectedNode;
+                    var selectedNode = UpdateSelectedNode(root, id);
+                    GUIData.SelectedNode = selectedNode != null ? selectedNode._ID : 0;
+                    GUIData.Position = treeDrawer.ScrollPosition;
+                    EditorUtility.SetDirty(InAudioInstanceFinder.InAudioGuiUserPrefs);
+                }
+                
+                
             }
         }
          

@@ -41,6 +41,7 @@ namespace InAudioSystem.InAudioEditor
             EditorGUILayout.BeginVertical();
 
             isDirty |= treeDrawer.DrawTree(InAudioInstanceFinder.DataManager.EventTree, treeArea);
+            SelectedNode = treeDrawer.SelectedNode;
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
@@ -173,7 +174,13 @@ namespace InAudioSystem.InAudioEditor
 
         protected override GUIPrefs GUIData
         {
-            get { return InAudioInstanceFinder.InAudioGuiUserPrefs.EventGUIData; }
+            get
+            {
+                if (InAudioInstanceFinder.InAudioGuiUserPrefs != null)
+                    return InAudioInstanceFinder.InAudioGuiUserPrefs.EventGUIData;
+                else
+                    return null;
+            }
         }
 
 

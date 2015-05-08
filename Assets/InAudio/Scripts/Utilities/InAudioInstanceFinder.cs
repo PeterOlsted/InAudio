@@ -223,8 +223,7 @@ namespace InAudioSystem.Internal
             {
                 if (_inAudioGuiUserPref == null)
                 {
-                    var prefGO =
-                        AssetDatabase.LoadAssetAtPath(FolderSettings.GUIUserPrefs, typeof (GameObject)) as GameObject;
+                    var prefGO = AssetDatabase.LoadAssetAtPath(FolderSettings.GUIUserPrefs, typeof (GameObject)) as GameObject;
                     if (prefGO != null)
                     {
                         _inAudioGuiUserPref = prefGO.GetComponent<InAudioGUIUserPrefs>();

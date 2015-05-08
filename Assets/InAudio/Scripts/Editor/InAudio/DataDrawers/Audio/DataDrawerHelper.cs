@@ -68,6 +68,13 @@ public static class DataDrawerHelper
                     new GUIContent("Parent Mixer Group"));
                 parentProp.ApplyModifiedProperties();
             }
+            else
+            {
+                var parentProp = new SerializedObject(node);
+                parentProp.Update();
+                EditorGUILayout.PropertyField(parentProp.FindProperty("_mixerGroup"), new GUIContent("Mixer Group"));
+                parentProp.ApplyModifiedProperties();
+            }
         }
 
         GUI.enabled = node.GetParentMixing() != null;

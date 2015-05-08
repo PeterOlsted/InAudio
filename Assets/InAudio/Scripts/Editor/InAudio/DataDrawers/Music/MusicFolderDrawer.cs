@@ -107,7 +107,7 @@ namespace InAudioSystem.InAudioEditor
             EditorGUILayout.Separator();
             EditorGUILayout.Separator();
 
-            #region Bus
+            #region Mixer
 
             DataDrawerHelper.DrawMixer(node, prop.FindProperty("_mixerGroup"));
 

@@ -50,6 +50,7 @@ namespace InAudioSystem.InAudioEditor
             treeArea.y -= 25;
 
             isDirty |= treeDrawer.DrawTree(InAudioInstanceFinder.DataManager.BankLinkTree, treeArea);
+            SelectedNode = treeDrawer.SelectedNode;
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
@@ -185,7 +186,13 @@ namespace InAudioSystem.InAudioEditor
 
         protected override GUIPrefs GUIData
         {
-            get { return InAudioInstanceFinder.InAudioGuiUserPrefs.BankGUIData; }
+            get
+            {
+                if (InAudioInstanceFinder.InAudioGuiUserPrefs != null)
+                    return InAudioInstanceFinder.InAudioGuiUserPrefs.BankGUIData;
+                else
+                    return null;
+            }
         }
 
 

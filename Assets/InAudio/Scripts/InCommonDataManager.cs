@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -105,17 +106,20 @@ namespace InAudioSystem.Internal
 
         private IEnumerator VersionCheck()
         {
+            
             WWW website = new WWW("http://innersystems.net/version.html");
             yield return website;
             if (website.error == null)
             {
-                PlayerPrefs.SetString("InAudioVersion", website.text);
+                PlayerPrefs.SetString("InAudioUpdateInfo", website.text);
+                PlayerPrefs.SetString("InAudioUpdateCheckTime", DateTime.Now.Date.DayOfYear.ToString(CultureInfo.InvariantCulture));
+                
             }
         }
 
         void Update()
         {
-            if (!checkVersion) //!PlayerPrefs.HasKey("InAudioVersion") && 
+            if (!checkVersion || !PlayerPrefs.HasKey("InAudioStoredVersion"))
             {
                 checkVersion = true;
                 StartCoroutine(VersionCheck());

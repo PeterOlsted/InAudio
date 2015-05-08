@@ -100,5 +100,17 @@ namespace  InAudioSystem.InAudioEditor
 
             return true;
         }
+
+        public static void MissingGuiUserPrefs()
+        {
+            EditorGUILayout.HelpBox("Missing GUI Layout settings", MessageType.Info);
+            if (GUILayout.Button("Create object"))
+            {
+                var go = new GameObject();
+                go.AddComponent<InAudioGUIUserPrefs>();
+                PrefabUtility.CreatePrefab(FolderSettings.GUIUserPrefs, go);
+                Object.DestroyImmediate(go);
+            }
+        }
     }   
 }
