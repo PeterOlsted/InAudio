@@ -59,18 +59,35 @@ public static class AudioEventDrawer
             if (Application.isPlaying)
             {
                 eventObjectTarget = EditorGUILayout.ObjectField("Event preview target", eventObjectTarget, typeof(GameObject), true) as GameObject;
-                if (eventObjectTarget != null)
+                
+                if (eventObjectTarget != null )
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    if (GUILayout.Button("Post event"))
+                    bool prefab = PrefabUtility.GetPrefabParent(eventObjectTarget) == null && PrefabUtility.GetPrefabObject(eventObjectTarget) != null;
+                    if (!prefab)
                     {
-                        InAudio.PostEvent(eventObjectTarget, audioevent);
+                        EditorGUILayout.BeginHorizontal();
+                        if (GUILayout.Button("Post event"))
+                        {
+                            InAudio.PostEvent(eventObjectTarget, audioevent);
+                        }
+                        if (GUILayout.Button("Stop All Sounds/Music in Event"))
+                        {
+                            InAudio.StopAll(eventObjectTarget);
+                            foreach (var eventAction in audioevent._actionList)
+                            {
+                                var music = eventAction.Target as InMusicGroup;
+                                if (music != null)
+                                {
+                                    InAudio.Music.Stop(music);
+                                }
+                            }
+                        }
+                        EditorGUILayout.EndHorizontal();
                     }
-                    if (GUILayout.Button("Stop All Sounds on Object"))
+                    else
                     {
-                        InAudio.StopAll(eventObjectTarget);
+                        EditorGUILayout.HelpBox("Cannot post events on Prefab", MessageType.Error);
                     }
-                    EditorGUILayout.EndHorizontal();
                 }
                 EditorGUILayout.Separator();
             }

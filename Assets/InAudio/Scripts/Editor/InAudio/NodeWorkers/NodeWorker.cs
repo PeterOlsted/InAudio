@@ -146,12 +146,12 @@ namespace InAudioSystem.InAudioEditor
             }
         }
 
-        public static void AssignToNodes(InAudioNode node, Action<InAudioNode> assignFunc)
+        public static void AssignToNodes<T>(T node, Action<T> assignFunc) where T : Component, InITreeNode<T>
         {
             assignFunc(node);
-            for (int i = 0; i < node._children.Count; ++i)
+            for (int i = 0; i < node._getChildren.Count; ++i)
             {
-                AssignToNodes(node._children[i], assignFunc);
+                AssignToNodes(node._getChildren[i], assignFunc);
             }
         }
 

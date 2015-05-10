@@ -116,15 +116,28 @@ namespace InAudioSystem.InAudioEditor
 
             var obj = objects[0];
             var dragged = obj as InMusicNode;
-            if (dragged == null || dragged.IsRoot || dragged == node || TreeWalker.IsParentOf(dragged, node))
-                return false;
+            if (dragged != null)
+            {
+                if (dragged.IsRoot || dragged == node || TreeWalker.IsParentOf(dragged, node))
+                    return false;
 
+
+                if (dragged.IsRoot)
+                    return false;
+
+                if (!node.IsRootOrFolder && dragged.IsRootOrFolder)
+                    return false;
+            }
+            else if(node._type == MusicNodeType.Music)
+            {
+                
+                var clips = objects.Convert(o => o as AudioClip).TakeNonNulls();
+                if (clips.Length > 0)
+                {
+                    return true;
+                }
+            }
             
-            if (dragged.IsRoot)
-                return false;
-
-            if(!node.IsRootOrFolder && dragged.IsRootOrFolder)
-                return false;
             return true;
 
         }
@@ -135,20 +148,41 @@ namespace InAudioSystem.InAudioEditor
                 return; 
 
             var dragged = objects[0] as InMusicNode;
-            if (dragged == null || dragged.IsRoot || dragged == newParent)
-                return;
 
-            UndoHelper.DoInGroup(() =>
+            if (dragged != null)
             {
-                var oldParent = dragged._parent;
-                UndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
+                if (dragged.IsRoot || dragged == newParent)
+                    return;
 
-                dragged.MoveToNewParent(newParent);
+                UndoHelper.DoInGroup(() =>
+                {
+                    var oldParent = dragged._parent;
+                    UndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
 
-                AudioBankWorker.RebuildBanks();
-                newParent.IsFoldedOut = true;
-                EditorEventUtil.UseEvent();
-            });
+                    dragged.MoveToNewParent(newParent);
+
+                    AudioBankWorker.RebuildBanks();
+                    newParent.IsFoldedOut = true;
+                    EditorEventUtil.UseEvent();
+                });
+            }
+            else if (newParent._type == MusicNodeType.Music)
+            {
+                var clips = objects.Convert(o => o as AudioClip).TakeNonNulls();
+                var musicGroup = newParent as InMusicGroup;
+                if (musicGroup != null)
+                {
+                    UndoHelper.DoInGroup(() =>
+                    {
+                        UndoHelper.RecordObject(newParent,"Music Clip Add");
+                        foreach (var audioClip in clips)
+                        {
+                            musicGroup._clips.Add(audioClip);
+                        }
+                    });
+                }
+
+            }
         }
 
         protected override void OnContext(InMusicNode node)

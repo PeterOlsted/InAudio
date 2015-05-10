@@ -66,15 +66,36 @@ namespace InAudioSystem
             EditorGUILayout.LabelField("Clips in node");
             if (Application.isPlaying)
             {
+
+                ReorderableListGUI.ListField(prop.FindProperty("_clips"), ReorderableListFlags.DisableDuplicateCommand | ReorderableListFlags.DisableReordering | ReorderableListFlags.HideRemoveButtons);
+                var rect = GUILayoutUtility.GetLastRect();
+                for (int i = 0; i < node._clips.Count; i++)
+                {
+                    var progress = rect;
+                    progress.height = 3;
+                    progress.x += 5;
+                    progress.width -= 30;
+                    progress.y += i*20+20;
+                    //GUI.DrawTexture(progress, EditorResources.Background);
+                    var item = node._clips[i];
+                    var player = node.PlayingInfo.Players.Find(s => s.clip == item);
+                    if (player != null)
+                    {
+                        EditorGUI.DrawRect(progress, Color.white);
+                        float pos = (float) player.ExactPosition();
+                        progress.width = progress.width*Mathf.Clamp01(pos/item.length);
+                        EditorGUI.DrawRect(progress, Color.green);
+                    }
+                    
+                }
                 
-                ReorderableListGUI.ListField(node._clips, (position, item) => DrawItem(node, prop, position, item),
-                    ReorderableListFlags.DisableDuplicateCommand | ReorderableListFlags.DisableReordering);
             }
             else
             {
-                ReorderableListGUI.ListField(node._clips, (position, item) => DrawItem(node, prop, position, item),
-                    ReorderableListFlags.DisableDuplicateCommand);
+                ReorderableListGUI.ListField(prop.FindProperty("_clips"), ReorderableListFlags.DisableDuplicateCommand);
             }
+
+
             if (prop.ApplyModifiedProperties())
             {
                 //AudioBankWorker.RebuildBanks();
@@ -96,27 +117,40 @@ namespace InAudioSystem
             EditorGUILayout.EndScrollView();
         }
 
-        private static AudioClip DrawItem(InMusicGroup node, SerializedObject obj, Rect position, AudioClip item)
-        {
-            var i = node._clips.FindIndex(item);
+        //private static AudioClip DrawItem(InMusicGroup node, SerializedObject obj, Rect position, AudioClip item)
+        //{
+        //    var i = node._clips.FindIndex(item);
+        //    position.width -= 30;
+        //    Rect removalButton = position;
+        //    removalButton.x += position.width;
+        //    removalButton.width = 25;
+            
 
-            var area = position;
-            area.height -= 3;
-            EditorGUI.PropertyField(area, obj.FindProperty("_clips").GetArrayElementAtIndex(i));
-            area.y += area.height;
-            area.height = 3;
-            if (item != null && Application.isPlaying)
-            {
-                var player = node.PlayingInfo.Players.Find(s => s.clip == item);
-                if (player != null)
-                {
-                    EditorGUI.DrawRect(area, Color.white);
-                    float pos = (float) player.ExactPosition();
-                    area.width = area.width*Mathf.Clamp01(pos/item.length);
-                    EditorGUI.DrawRect(area, Color.green);
-                }
-            }
-            return obj.FindProperty("_clips").GetArrayElementAtIndex(i).objectReferenceValue as AudioClip;
-        }
+
+        //    var area = position;
+        //    area.height -= 3;
+        //    EditorGUI.PropertyField(area, new SerializedObject(item));
+        //    area.y += area.height;
+        //    area.height = 3;
+            //if (item != null && Application.isPlaying)
+            //{
+            //    var player = node.PlayingInfo.Players.Find(s => s.clip == item);
+            //    if (player != null)
+            //    {
+            //        EditorGUI.DrawRect(area, Color.white);
+            //        float pos = (float) player.ExactPosition();
+            //        area.width = area.width*Mathf.Clamp01(pos/item.length);
+            //        EditorGUI.DrawRect(area, Color.green);
+            //    }
+            //}
+
+        //    var index = obj.FindProperty("_clips").GetArrayElementAtIndex(i).objectReferenceValue as AudioClip;
+        //    if (GUI.Button(removalButton, "X"))
+        //    {
+        //        obj.FindProperty("_clips").DeleteArrayElementAtIndex(i);
+        //    }
+
+        //    return index;
+        //}
     }
 }

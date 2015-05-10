@@ -154,10 +154,9 @@ public static class AudioEventWorker  {
 
         if (audioEvent._type == EventNodeType.Event)
         {
-            bool bankLinkDrop;
-            var audioNodeDrop = CanDropNonEvent(objects, out bankLinkDrop);
+            var nonEventDrop = CanDropNonEvent(objects);
 
-            return audioNodeDrop | bankLinkDrop;
+            return nonEventDrop;
         }
         else if (audioEvent._type == EventNodeType.Folder || audioEvent._type == EventNodeType.Root)
         {
@@ -173,10 +172,9 @@ public static class AudioEventWorker  {
             }
             else 
             {
-                bool bankLinkDrop;
-                var audioNodeDrop = CanDropNonEvent(objects, out bankLinkDrop);
+                var nonEventDrop = CanDropNonEvent(objects);
 
-                return audioNodeDrop | bankLinkDrop;
+                return nonEventDrop;
             }
         }
         else if (audioEvent._type == EventNodeType.EventGroup)
@@ -192,15 +190,18 @@ public static class AudioEventWorker  {
         return false;
     }
 
-    private static bool CanDropNonEvent(Object[] objects, out bool bankLinkDrop)
+    private static bool CanDropNonEvent(Object[] objects)
     {
         var audioNodes = GetConvertedList<InAudioNode>(objects.ToList());
         bool audioNodeDrop = audioNodes.TrueForAll(node => node != null && node.IsPlayable);
 
         var audioBankLinks = GetConvertedList<InAudioBankLink>(objects.ToList());
-        bankLinkDrop = audioBankLinks.TrueForAll(node => node != null && node._type == AudioBankTypes.Bank);
+        bool bankLinkDrop = audioBankLinks.TrueForAll(node => node != null && node._type == AudioBankTypes.Bank);
 
-        return audioNodeDrop;
+        var musicLinks = GetConvertedList<InMusicGroup>(objects.ToList());
+        bool musicDrop = musicLinks.TrueForAll(node => node != null && node._type == MusicNodeType.Music);
+
+        return audioNodeDrop | bankLinkDrop | musicDrop;
     }
 
     private static List<T> GetConvertedList<T>(List<Object> toConvert) where T : class
@@ -236,6 +237,17 @@ public static class AudioEventWorker  {
                     EventActionTypes.Play);
                 action.Node = audioNode;
  
+            }
+
+            var musicGroup = objects[0] as InMusicGroup;
+            if (musicGroup != null )
+            {
+
+                UndoHelper.RecordObjectFull(audioevent, "Adding of Music Action");
+                var action = AddEventAction<InEventMusicControl>(audioevent,
+                    EventActionTypes.PlayMusic);
+                action.MusicGroup = musicGroup;
+
             }
 
             var audioBank = objects[0] as InAudioBankLink;

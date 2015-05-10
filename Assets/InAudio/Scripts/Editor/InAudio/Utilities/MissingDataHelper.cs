@@ -1,4 +1,5 @@
 ﻿using System;
+using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
@@ -46,6 +47,13 @@ namespace InAudioSystem.InAudioEditor
                     var data = (node._nodeData as InFolderData);
                     if (data != null)
                         data.BankLink = Manager.BankLinkTree._getChildren[0];
+                });
+
+                NodeWorker.AssignToNodes(Manager.MusicTree, musicNode =>
+                {
+                    var folder = musicNode as InMusicFolder;
+                    if (folder != null)
+                        folder._bankLink = Manager.BankLinkTree._getChildren[0];
                 });
 
                 AssetDatabase.Refresh();
