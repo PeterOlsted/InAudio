@@ -20,6 +20,8 @@ namespace InAudioSystem.InAudioEditor
         private int leftWidth;
         private int height;
 
+
+
         public bool OnGUI(int leftWidth, int height)
         {
             BaseOnGUI();
@@ -90,6 +92,50 @@ namespace InAudioSystem.InAudioEditor
                 }
                 return true;
             };
+        }
+
+        public void ReceiveNode(InMusicGroup group)
+        {
+            if (SelectedNode != null)
+            {
+                UndoHelper.DoInGroup(() =>
+                {
+                    UndoHelper.RecordObject(SelectedNode, "Send to Event");                
+                    if (SelectedNode.IsRootOrFolder)
+                    {
+                        var myEvent = AudioEventWorker.CreateNode(SelectedNode, EventNodeType.Event);
+                        var myAction = AudioEventWorker.AddEventAction<InEventMusicControl>(myEvent, EventActionTypes.PlayMusic);
+                        myAction.Target = group;
+                    }
+                    else
+                    {
+                        var myAction = AudioEventWorker.AddEventAction<InEventMusicControl>(SelectedNode, EventActionTypes.PlayMusic);
+                        myAction.Target = group;
+                    }
+                });
+            }
+        }
+
+        public void ReceiveNode(InAudioNode node)
+        {
+            if (SelectedNode != null)
+            {
+                UndoHelper.DoInGroup(() =>
+                {
+                    UndoHelper.RecordObject(SelectedNode, "Send to Event");
+                    if (SelectedNode.IsRootOrFolder)
+                    {
+                        var myEvent = AudioEventWorker.CreateNode(SelectedNode, EventNodeType.Event);
+                        var myAction = AudioEventWorker.AddEventAction<InEventAudioAction>(myEvent, EventActionTypes.Play);
+                        myAction.Target = node;
+                    }
+                    else
+                    {
+                        var myAction = AudioEventWorker.AddEventAction<InEventAudioAction>(SelectedNode, EventActionTypes.Play);
+                        myAction.Target = node;
+                    }
+                });
+            }
         }
 
         protected override void OnDrop(InAudioEventNode audioevent, Object[] objects)
@@ -169,6 +215,10 @@ namespace InAudioSystem.InAudioEditor
 
         protected override InAudioEventNode Root()
         {
+            if (InAudioInstanceFinder.DataManager == null)
+            {
+                return null;
+            }
             return InAudioInstanceFinder.DataManager.EventTree;
         }
 

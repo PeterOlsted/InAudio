@@ -181,6 +181,10 @@ namespace InAudioSystem.InAudioEditor
 
         protected override InAudioBankLink Root()
         {
+            if (InAudioInstanceFinder.DataManager == null)
+            {
+                return null;
+            }
             return InAudioInstanceFinder.DataManager.BankLinkTree;
         }
 

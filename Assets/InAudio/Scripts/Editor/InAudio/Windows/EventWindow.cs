@@ -24,6 +24,16 @@ namespace InAudioSystem.InAudioEditor
             window.title = "Event Window";
         }
 
+        public void ReceiveNode(InMusicGroup group)
+        {
+            audioEventCreatorGUI.ReceiveNode(group);
+        }
+
+        public void ReceiveNode(InAudioNode node)
+        {
+            audioEventCreatorGUI.ReceiveNode(node);
+        }
+
         private void Update()
         {
             BaseUpdate();

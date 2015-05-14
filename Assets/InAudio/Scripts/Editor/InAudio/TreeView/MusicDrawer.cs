@@ -67,7 +67,7 @@ namespace InAudioSystem.TreeDrawer
 
 
             EditorGUILayout.EndHorizontal();
-            if (Event.current.ClickedWithin(fullArea, 0))
+            if (Event.current.ClickedWithin(fullArea))
             {
                 clicked = true;
             }

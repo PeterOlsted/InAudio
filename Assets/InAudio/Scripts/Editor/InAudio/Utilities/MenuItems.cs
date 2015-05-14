@@ -1,29 +1,30 @@
-﻿using UnityEditor;
+﻿using InAudioSystem.Internal;
+using UnityEditor;
 using UnityEngine;
 
 namespace InAudioSystem.InAudioEditor
 {
     public class MenuItems {
 
-        [MenuItem("Window/InAudio/Audio Window #&1")]
+        [MenuItem("Window/InAudio/Audio Window #&1", false, 1)]
         private static void ShowAudioWindow()
         {
             InAudioWindow.Launch();
         }
 
-        [MenuItem("Window/InAudio/Music Window #&2")]
+        [MenuItem("Window/InAudio/Music Window #&2", false, 2)]
         private static void ShowMusicWindow()
         {
             InMusicWindow.Launch();
         }
 
-        [MenuItem("Window/InAudio/Event Window #&3")]
+        [MenuItem("Window/InAudio/Event Window #&3", false, 3)]
         private static void ShowEventWindow()
         {
             EventWindow.Launch();
         }
 
-        [MenuItem("Window/InAudio/Banks Window #&4")]
+        [MenuItem("Window/InAudio/Banks Window #&4", false, 4)]
         private static void ShowBanksWindow()
         {
             AuxWindow.Launch();
@@ -34,26 +35,37 @@ namespace InAudioSystem.InAudioEditor
             }
         }
 
-        [MenuItem("Window/InAudio/Integrity Window #&5")]
+        [MenuItem("Window/InAudio/Integrity Window #&5", false, 5)]
         private static void ShowIntegrityWindow()
         {
             AuxWindow.Launch();
             AuxWindow window = EditorWindow.GetWindow(typeof(AuxWindow)) as AuxWindow;
-            if (window != null)
+            if (window != null) 
             {
                 window.SelectIntegrity();
             }
-
+             
         }
 
+        [MenuItem("Window/InAudio/Feedback Window #&6", false, 6)]
+        private static void ShowFeedbackWindow()
+        {
+            FeedbackWindow window = EditorWindow.GetWindow<FeedbackWindow>();
 
-        [MenuItem("Window/InAudio/Documentation (website)")]
+            window.Show();
+            window.minSize = new Vector2(100, 50);
+            window.title = "Feedback";
+        }
+     
+
+
+        [MenuItem("Window/InAudio/Documentation (website)", false, 10)]
         private static void ShowDocumentation()
         {
             Application.OpenURL("http://innersystems.net/wiki");
         }
 
-        [MenuItem("Window/InAudio/Forum (website)")]
+        [MenuItem("Window/InAudio/Forum (website)", false, 11)]
         private static void ShowForum()
         {
             Application.OpenURL("http://forum.unity3d.com/threads/232490-InAudio-Advanced-Audio-for-Unity");

@@ -66,7 +66,7 @@ namespace InAudioSystem.TreeDrawer
             EditorGUI.LabelField(labelArea, node.Name);
 
             EditorGUILayout.EndHorizontal();
-            if (Event.current.ClickedWithin(fullArea, 0))
+            if (Event.current.ClickedWithin(fullArea))
             {
                 clicked = true;
             }

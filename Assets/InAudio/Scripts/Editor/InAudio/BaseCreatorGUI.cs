@@ -36,10 +36,14 @@ namespace InAudioSystem.InAudioEditor
             if (GUIData != null)
             {
                 int id = GUIData.SelectedNode;
-                var foundNode = TreeWalker.FindFirst(Root(), node => node._ID == id);
-                SelectedNode = foundNode;
-                treeDrawer.SelectedNode = foundNode;
-                treeDrawer.ScrollPosition = GUIData.Position;
+                var root = Root();
+                if (root != null)
+                {
+                    var foundNode = TreeWalker.FindFirst(Root(), node => node._ID == id);
+                    SelectedNode = foundNode;
+                    treeDrawer.SelectedNode = foundNode;
+                    treeDrawer.ScrollPosition = GUIData.Position;
+                }
             }
         }
 

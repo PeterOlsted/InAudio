@@ -8,7 +8,7 @@ namespace InAudioSystem.InAudioEditor
 
     public abstract class InAudioBaseWindow : EditorWindow
     {
-        public InCommonDataManager Manager;
+        protected InCommonDataManager Manager;
 
         protected int topHeight = 0;
         protected int LeftWidth = 350;

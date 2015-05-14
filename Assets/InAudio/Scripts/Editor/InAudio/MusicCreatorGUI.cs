@@ -38,7 +38,7 @@ namespace InAudioSystem.InAudioEditor
 
             EditorGUILayout.BeginVertical();
 
-            isDirty |= treeDrawer.DrawTree(window.Manager.MusicTree, treeArea);
+            isDirty |= treeDrawer.DrawTree(InAudioInstanceFinder.DataManager.MusicTree, treeArea);
             SelectedNode = treeDrawer.SelectedNode;
 
             EditorGUILayout.EndVertical();
@@ -203,6 +203,22 @@ namespace InAudioSystem.InAudioEditor
             }
             menu.AddSeparator("");
 
+            #region Send to event
+
+
+            if (!node.IsRootOrFolder)
+            {
+                EditorWindow.GetWindow<EventWindow>().ReceiveNode(node as InMusicGroup);
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent("Send to Event Window"));
+            }
+
+            #endregion
+
+            menu.AddSeparator("");
+
             if (node.IsRoot)
             {
                 menu.AddDisabledItem(new GUIContent("Delete"));
@@ -273,6 +289,10 @@ namespace InAudioSystem.InAudioEditor
 
         protected override InMusicNode Root()
         {
+            if (InAudioInstanceFinder.DataManager == null)
+            {
+                return null;
+            }
             return InAudioInstanceFinder.DataManager.MusicTree;
         }
 

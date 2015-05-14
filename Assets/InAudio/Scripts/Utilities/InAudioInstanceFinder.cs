@@ -28,7 +28,7 @@ namespace InAudioSystem.Internal
         }
 
         public static bool IsValid
-        {
+        { 
             get { return instance != null; }
         }
 

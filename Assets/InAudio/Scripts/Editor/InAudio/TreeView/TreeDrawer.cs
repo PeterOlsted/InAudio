@@ -271,11 +271,14 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
                 }
             }
 
-            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && area.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
+            if (Event.current.type == EventType.MouseDown && area.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
             {
-                DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new Object[] { node };
-                DragAndDrop.StartDrag("Music Node Drag");
+                if (Event.current.button == 0)
+                {
+                    DragAndDrop.PrepareStartDrag();
+                    DragAndDrop.objectReferences = new Object[] {node};
+                    DragAndDrop.StartDrag("Music Node Drag");
+                }
                 Event.current.UseEvent();
             }
 
