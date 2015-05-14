@@ -67,7 +67,7 @@ namespace InAudioSystem
             if (Application.isPlaying)
             {
 
-                ReorderableListGUI.ListField(prop.FindProperty("_clips"), ReorderableListFlags.DisableDuplicateCommand | ReorderableListFlags.DisableReordering | ReorderableListFlags.HideRemoveButtons);
+                ReorderableListGUI.ListField(prop.FindProperty("_clips"), ReorderableListFlags.DisableDuplicateCommand | ReorderableListFlags.DisableContextMenu | ReorderableListFlags.DisableReordering | ReorderableListFlags.HideRemoveButtons);
                 var rect = GUILayoutUtility.GetLastRect();
                 for (int i = 0; i < node._clips.Count; i++)
                 {
