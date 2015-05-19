@@ -121,16 +121,12 @@ namespace InAudioSystem.InAudioEditor
                 if (dragged.IsRoot || dragged == node || TreeWalker.IsParentOf(dragged, node))
                     return false;
 
-
-                if (dragged.IsRoot)
-                    return false;
-
                 if (!node.IsRootOrFolder && dragged.IsRootOrFolder)
                     return false;
+                return true;
             }
             else if(node._type == MusicNodeType.Music)
             {
-                
                 var clips = objects.Convert(o => o as AudioClip).TakeNonNulls();
                 if (clips.Length > 0)
                 {
@@ -138,7 +134,7 @@ namespace InAudioSystem.InAudioEditor
                 }
             }
             
-            return true;
+            return false;
 
         }
 
@@ -163,7 +159,7 @@ namespace InAudioSystem.InAudioEditor
 
                     AudioBankWorker.RebuildBanks();
                     newParent.IsFoldedOut = true;
-                    EditorEventUtil.UseEvent();
+                    Event.current.UseEvent();
                 });
             }
             else if (newParent._type == MusicNodeType.Music)
@@ -208,7 +204,7 @@ namespace InAudioSystem.InAudioEditor
 
             if (!node.IsRootOrFolder)
             {
-                EditorWindow.GetWindow<EventWindow>().ReceiveNode(node as InMusicGroup);
+                menu.AddItem(new GUIContent("Send to Event Window"), false, () => EventWindow.Launch().ReceiveNode(node as InMusicGroup));
             }
             else
             {

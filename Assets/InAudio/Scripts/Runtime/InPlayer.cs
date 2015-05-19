@@ -6,6 +6,7 @@ using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace InAudioSystem.Runtime
 {
@@ -23,7 +24,7 @@ namespace InAudioSystem.Runtime
         {
             if (node.IsRootOrFolder)
             {
-                Debug.LogError("InAudio: Cannot play Folder node " + node.Name);
+                Debug.LogWarning("InAudio: Cannot play Folder node \"" + node.Name + "\"");
                 return;
             }
             dspPool = InAudioInstanceFinder.DSPTimePool;
@@ -350,7 +351,7 @@ namespace InAudioSystem.Runtime
 
         public ReadOnlyCollection<InRuntimePlayer> PlayingSources
         {
-            get { return audioSources.AsReadOnly(); }
+            get { return new ReadOnlyCollection<InRuntimePlayer>(audioSources); }
         }
 
         private InRuntimePlayer Current
@@ -418,12 +419,12 @@ namespace InAudioSystem.Runtime
                     {
                         PlayNode(current, endTime, preOffset, audioData);
                         if (!firstPlay)
-                            yield return
-                                new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime) - 0.5f);
+                        {
+                            yield return new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime) - 0.5f);
+                        }
                         else
                         {
-                            yield return new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime)/2f)
-                                ;
+                            yield return new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime)/2f);
                         }
                         firstPlay = false;
                     }
@@ -434,15 +435,24 @@ namespace InAudioSystem.Runtime
                     var randomData = nodeData as RandomData;
                     if (current._children.Count != randomData.weights.Count)
                     {
-                        Debug.LogError("InAudio: There is a problem with the random weights in the node " +
-                                                 current.Name + ", id=" + current._ID +
+                        Debug.LogWarning("InAudio: There is a problem with the random weights in the node \"" +
+                                                 current.Name + "\", id=" + current._ID +
                                                  ". \nPlease open the audio window for the node and follow instructions");
                     }
 
                     if (current._children.Count > 0)
                     {
                         int next = RuntimeHelper.SelectRandom(randomData);
-                        yield return StartCoroutine(NextNode(current._children[next], endTime, sampleOffset));
+                        if (next != -1)
+                        {
+                            yield return StartCoroutine(NextNode(current._children[next], endTime, sampleOffset));
+                        }
+                        else
+                        {
+                            Debug.LogWarning("InAudio: Cannot pick random as node \"" +
+                                                 current.Name + "\", id=" + current._ID +
+                                                 " has no children.\n");
+                        }
                     }
                 }
                 else if (current._type == AudioNodeType.Sequence)
@@ -519,7 +529,7 @@ namespace InAudioSystem.Runtime
             float length = PlayScheduled(ParentFolder, current, audioData, playTime,
                 offset, out nodeVolume);
 
-            Current.AudioSource.outputAudioMixerGroup = current.MixerGroup;
+     
 
             endTime.CurrentEndTime += length;
             endTime.Player = Current.AudioSource;
@@ -554,7 +564,7 @@ namespace InAudioSystem.Runtime
                 source.spatialBlend = RuntimeHelper.CalcBlend(startNode, currentNode);
                 source.pitch = RuntimeHelper.CalcPitch(startNode, currentNode);
                 source.rolloffMode = RuntimeHelper.CalcAttentutation(startNode, currentNode, source);
-
+                source.outputAudioMixerGroup = currentNode.GetMixerGroup();
                 length = RuntimeHelper.LengthFromPitch(length, source.pitch);
                 Current.EndTime = playAtDSPTime + length;
                 Current.StartTime = playAtDSPTime;
@@ -565,6 +575,10 @@ namespace InAudioSystem.Runtime
                 source.spatialBlend *= _spatialBlend;
                 source.timeSamples = (int) (lengthOffset);
                 source.PlayScheduled(playAtDSPTime);
+            }
+            else
+            {
+                Debug.LogWarning("InAudio: Audio clip missing on audio node \"" + currentNode.Name + "\", id=" + currentNode._ID);
             }
             return length;
         }

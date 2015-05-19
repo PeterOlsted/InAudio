@@ -115,6 +115,7 @@ namespace InAudioSystem.Internal
                 PlayerPrefs.SetString("InAudioUpdateCheckTime", DateTime.Now.Date.DayOfYear.ToString(CultureInfo.InvariantCulture));
                 
             }
+            website.Dispose();
         }
 
         void Update()

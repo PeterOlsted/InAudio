@@ -97,7 +97,7 @@ namespace InAudioSystem.InAudioEditor
             {
                 if (window != null)
                     window.Close();
-                EditorEventUtil.UseEvent();
+                Event.current.UseEvent();
             }
             if (InAudioInstanceFinder.Instance != null && InAudioInstanceFinder.DataManager != null && InAudioInstanceFinder.DataManager.Loaded)
             {

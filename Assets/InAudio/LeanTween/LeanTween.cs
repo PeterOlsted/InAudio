@@ -14,7 +14,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -703,11 +703,8 @@ namespace InAudioLeanTween
         public Vector3[] pts;
         public bool orientToPath;
         public bool orientToPath2d;
-        private float[] lengthRatio;
-        private float[] lengths;
         private int numSections;
         private int currPt;
-        private float totalLength;
 
         public LTSpline(params Vector3[] pts)
         {
@@ -2183,14 +2180,11 @@ private static float previousRealTime;
         private static float timeTotal;
         private static TweenAction tweenAction;
         private static float ratioPassed;
-        private static float from;
         //private static float to = 1.0f;
         private static float val;
         private static bool isTweenFinished;
         private static int maxTweenReached;
         private static Vector3 newVect;
-        private static GameObject target;
-        private static GameObject customTarget;
 
         public static void update()
         {

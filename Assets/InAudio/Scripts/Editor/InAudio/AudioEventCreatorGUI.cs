@@ -100,12 +100,15 @@ namespace InAudioSystem.InAudioEditor
             {
                 UndoHelper.DoInGroup(() =>
                 {
+                    TreeWalker.ForEachParent(SelectedNode, n => n.FoldedOut = true);
                     UndoHelper.RecordObject(SelectedNode, "Send to Event");                
                     if (SelectedNode.IsRootOrFolder)
                     {
                         var myEvent = AudioEventWorker.CreateNode(SelectedNode, EventNodeType.Event);
                         var myAction = AudioEventWorker.AddEventAction<InEventMusicControl>(myEvent, EventActionTypes.PlayMusic);
                         myAction.Target = group;
+                        SelectedNode = myEvent;
+                        treeDrawer.SelectedNode = myEvent;
                     }
                     else
                     {
@@ -122,18 +125,22 @@ namespace InAudioSystem.InAudioEditor
             {
                 UndoHelper.DoInGroup(() =>
                 {
+                    TreeWalker.ForEachParent(SelectedNode, n => n.FoldedOut = true);
                     UndoHelper.RecordObject(SelectedNode, "Send to Event");
                     if (SelectedNode.IsRootOrFolder)
                     {
                         var myEvent = AudioEventWorker.CreateNode(SelectedNode, EventNodeType.Event);
                         var myAction = AudioEventWorker.AddEventAction<InEventAudioAction>(myEvent, EventActionTypes.Play);
                         myAction.Target = node;
+                        SelectedNode = myEvent;
+                        treeDrawer.SelectedNode = myEvent;
                     }
                     else
                     {
                         var myAction = AudioEventWorker.AddEventAction<InEventAudioAction>(SelectedNode, EventActionTypes.Play);
                         myAction.Target = node;
                     }
+                    
                 });
             }
         }
@@ -155,7 +162,6 @@ namespace InAudioSystem.InAudioEditor
 
             #region Duplicate
 
-#if !UNITY_4_1 && !UNITY_4_2
             if (!node.IsRoot)
                 menu.AddItem(new GUIContent("Duplicate"), false,
                     data => AudioEventWorker.Duplicate(data as InAudioEventNode),
@@ -163,7 +169,6 @@ namespace InAudioSystem.InAudioEditor
             else
                 menu.AddDisabledItem(new GUIContent("Duplicate"));
             menu.AddSeparator("");
-#endif
 
             #endregion
 

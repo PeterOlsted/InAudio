@@ -30,13 +30,17 @@ namespace InAudioSystem.ExtensionMethods
         public static AudioMixerGroup GetMixerGroup(this InAudioNode node)
         {
             if (node == null)
+            {
                 return null;
+            }
             if (node.OverrideParentMixerGroup || node.IsRoot)
             {
                 return node.MixerGroup;
             }
             else
+            {
                 return GetMixerGroup(node._parent);
+            }
         }
 
         public static InAudioNode GetParentMixerGroup(this InAudioNode node)

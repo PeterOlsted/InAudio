@@ -67,7 +67,7 @@ namespace InAudioSystem.InAudioEditor
             if (Event.current.IsKeyDown(KeyCode.W) && Event.current.modifiers == EventModifiers.Control)
             {
                 Close();
-                EditorEventUtil.UseEvent();
+                Event.current.UseEvent();
             }
         }
 

@@ -38,7 +38,7 @@ namespace InAudioSystem.TreeDrawer
                 if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height), GUILayout.Width(EditorResources.Minus.width)))
                 {
                     node.IsFoldedOut = !node.IsFoldedOut;
-                    EditorEventUtil.UseEvent();
+                    Event.current.UseEvent();
                 }
           
                 TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), EditorResources.Folder, noMargain);

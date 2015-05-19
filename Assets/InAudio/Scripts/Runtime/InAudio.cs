@@ -1224,10 +1224,11 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.1";
+    public const string CurrentVersion = "2.2";
 
     void OnLevelWasLoaded()
     {
+       
         if (activeAudioListener == null)
             activeAudioListener = FindActiveListener();
     }

@@ -10,18 +10,18 @@ namespace InAudioSystem.InAudioEditor
         private void OnEnable()
         {
             BaseEnable();
-
+            title = "Event Window";
             if (audioEventCreatorGUI == null)
                 audioEventCreatorGUI = new AudioEventCreatorGUI(this);
             audioEventCreatorGUI.OnEnable();
         }
 
-        public static void Launch()
+        public static EventWindow Launch()
         {
-            EditorWindow window = EditorWindow.GetWindow(typeof (EventWindow));
+            EventWindow window = GetWindow <EventWindow>();
             window.Show();
-
-            window.title = "Event Window";
+            
+            return window;
         }
 
         public void ReceiveNode(InMusicGroup group)

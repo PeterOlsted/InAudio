@@ -152,8 +152,7 @@ public static class TrackDataDrawer
                     DragAndDrop.AcceptDrag();
                     if (afterDrag != null)
                         afterDrag(layer, item, evt.mousePosition);
-                    EditorEventUtil.UseEvent();
-                    EditorEventUtil.UseEvent();
+                    Event.current.UseEvent();
                 }
                 
                 break;

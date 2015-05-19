@@ -38,14 +38,14 @@ namespace InAudioSystem.InAudioEditor
             }
         }
 
-        public static void Launch()
+        public static InMusicWindow Launch()
         {
-            EditorWindow window = EditorWindow.GetWindow(typeof (InMusicWindow));
+            InMusicWindow window = GetWindow<InMusicWindow>();
             window.Show();
 
             //window.minSize = new Vector2(800, 200);
             window.title = "Music Window";
-
+            return window;
         }
 
         private GameObject cleanupGO;

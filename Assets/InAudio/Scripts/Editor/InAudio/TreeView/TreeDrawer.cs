@@ -96,15 +96,36 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
             dirty = true;
         }
 
-        if (EditorWindow.focusedWindow == Window && DragAndDrop.objectReferences.FirstOrDefault() as T != null)
+        if (EditorWindow.focusedWindow == Window)
         {
-            foreach (var rect in toDrawArea)
+            foreach (var drawArea in toDrawArea)
             {
-                if (rect.Area.Contains(Event.current.mousePosition)) 
+                var fullArea = drawArea.Big;
+                var smallArea = drawArea.Small;
+                if (DragAndDrop.objectReferences.FirstOrDefault() as T != null)
                 {
-                    GUIDrawRect(rect.Area, EditorResources.Background.GetPixel(0,0) * 0.9f);
+                    if (smallArea.Contains(Event.current.mousePosition))
+                    {
+                        GUIDrawRect(smallArea, EditorResources.Background.GetPixel(0, 0)*0.7f);
+                        break;
+                    }
+                    else if (fullArea.Contains(Event.current.mousePosition))
+                    {
+                        DrawAround(area, smallArea, fullArea);
+                        break;
+                    }
+                }
+                else if (CanDropObjects(drawArea.Node, DragAndDrop.objectReferences) && fullArea.Contains(Event.current.mousePosition))
+                {
+                    
+                        DrawAround(area, smallArea, fullArea);
+                        break;
+                    
                 }
             }
+            
+
+            
 
         }
 
@@ -119,6 +140,26 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
 
         EditorGUI.indentLevel = startIndent;
         return dirty;
+    }
+
+    private void DrawAround(Rect treeArea, Rect smallArea, Rect nodeArea)
+    {
+        Rect top = smallArea;
+        top.y += 4;
+        top.height = 3;
+        GUIDrawRect(top, EditorResources.Background.GetPixel(0, 0)*0.7f);
+        var bottom = top;
+        bottom.y -= nodeArea.height;
+        GUIDrawRect(bottom, EditorResources.Background.GetPixel(0, 0)*0.7f);
+        Rect left = bottom;
+        left.width = 3;
+        left.height = nodeArea.height;
+        left.x += 2 + ScrollPosition.x;
+        var right = left;
+        right.x += treeArea.width - 20 + ScrollPosition.x;
+
+        GUIDrawRect(left, EditorResources.Background.GetPixel(0, 0)*0.7f);
+        GUIDrawRect(right, EditorResources.Background.GetPixel(0, 0)*0.7f);
     }
 
     public void Filter(Func<T, bool> filter)
@@ -183,8 +224,16 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         }
         else 
         {
-            int newIndex = p._getParent._getChildren.IndexOf(p) + 1;
-            AssignNewParent(p._getParent, n, newIndex);
+            if (!p.IsRoot)
+            {
+                int newIndex = p._getParent._getChildren.IndexOf(p) + 1;
+                AssignNewParent(p._getParent, n, newIndex);
+            }
+            else
+            {
+                int newIndex = p._getChildren.IndexOf(p) + 1;
+                AssignNewParent(p, n, newIndex);
+            }
         }
     }
 
@@ -215,19 +264,15 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
             bool clicked;
             //Draw node
             node.IsFoldedOut = OnNodeDraw(node, node == selectedNode, out clicked);
-            if (clicked)
-            {
-                selectedNode = node;
-                GUIUtility.keyboardControl = 0;
-            }
+           
 
             Rect area = GUILayoutUtility.GetLastRect();
 
             Rect drawArea = area;
             drawArea.y += area.height - 5;
-            drawArea.height = 10;  
-            
-            toDrawArea.Add(new DrawArea(drawArea));
+            drawArea.height = 10;
+
+            toDrawArea.Add(new DrawArea(node, area, drawArea));
 
             if (node == selectedNode && focusOnSelectedNode && Event.current.type == EventType.Repaint)
             {
@@ -262,7 +307,7 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
                     {
                         genericPlaceHere(node, DragAndDrop.objectReferences[0] as T);
                     }
-                    EditorEventUtil.UseEvent();
+                    Event.current.UseEvent();
                 }
                 else if (Event.current.Contains(area) && CanDropObjects(node, DragAndDrop.objectReferences))
                 {
@@ -271,25 +316,48 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
                 }
             }
 
-            if (Event.current.type == EventType.MouseDown && area.Contains(Event.current.mousePosition) && DragAndDrop.objectReferences.Length == 0)
+            if (area.Contains(Event.current.mousePosition))
             {
-                if (Event.current.button == 0)
+                if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
                 {
                     DragAndDrop.PrepareStartDrag();
-                    DragAndDrop.objectReferences = new Object[] {node};
-                    DragAndDrop.StartDrag("Music Node Drag");
+                    DragAndDrop.SetGenericData(node._ID.ToString(), new Object[] { node });
+                    Event.current.UseEvent();
+
                 }
+                if (Event.current.type == EventType.MouseDrag)
+                {
+                    var genericData = DragAndDrop.GetGenericData(node._ID.ToString()) as Object[];
+                    if (genericData != null)
+                    {
+                        var data = genericData.FirstOrDefault() as T;
+                        if (data != null && data == node)
+                        {
+                            DragAndDrop.objectReferences = new Object[] { node };
+                            DragAndDrop.StartDrag("Dragging Node Element");
+                            Event.current.UseEvent();
+                        }
+                    }
+                }
+            }
+            if (clicked)
+            {
+                selectedNode = node;
+                GUIUtility.keyboardControl = 0;
                 Event.current.UseEvent();
+            }
+
+            if (Event.current.MouseUpWithin(area, 1))
+            {
+
+                OnContext(node);
+
+                SelectedNode = node;
             }
 
             EditorGUI.indentLevel = indentLevel - 1;
 
-            if (Event.current.MouseUpWithin(area, 1))
-            {
-                OnContext(node);
-                SelectedNode = node;
-                EditorEventUtil.UseEvent();
-            }
+            
             
             if(Event.current.type == EventType.Layout)
                 NodeWorker.RemoveNullChildren(node);
@@ -320,13 +388,13 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         {
             selectedNode = TreeWalker.FindPreviousUnfoldedNode(selectedNode, arg => !arg.IsFiltered);
             FocusOnSelectedNode();
-            EditorEventUtil.UseEvent();
+            Event.current.UseEvent();
         }
         if (Event.current.IsKeyDown(KeyCode.DownArrow))
         {
             selectedNode = TreeWalker.FindNextNode(SelectedNode, arg => !arg.IsFiltered );
             FocusOnSelectedNode();
-            EditorEventUtil.UseEvent();
+            Event.current.UseEvent();
         }
         if (Event.current.IsKeyDown(KeyCode.Home))
         {
@@ -414,11 +482,15 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
 
     private struct DrawArea
     {
-        public Rect Area;
+        public Rect Big;
+        public Rect Small;
+        public T Node;
 
-        public DrawArea(Rect area)
+        public DrawArea(T node,Rect big, Rect small)
         {
-            Area = area;
+            this.Node = node;
+            Big = big;
+            Small = small;
         }
     }
 }

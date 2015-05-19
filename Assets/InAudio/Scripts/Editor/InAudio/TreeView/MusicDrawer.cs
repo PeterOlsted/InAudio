@@ -40,7 +40,7 @@ namespace InAudioSystem.TreeDrawer
                 GUILayout.Width(EditorResources.Minus.width)))
             {
                 node.IsFoldedOut = !node.IsFoldedOut;
-                EditorEventUtil.UseEvent();
+                Event.current.UseEvent();
             }
 
             Texture icon = LookUpIcon(node);

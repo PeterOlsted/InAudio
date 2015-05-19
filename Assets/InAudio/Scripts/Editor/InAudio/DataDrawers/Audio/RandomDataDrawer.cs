@@ -26,7 +26,7 @@ namespace InAudioSystem.InAudioEditor
                 var weights = randomData.weights;
 
                 UndoHelper.GUIUndo(node._nodeData, "Do Not Repeat Last #", ref randomData.doNotRepeat, () => Mathf.Max(0,EditorGUILayout.IntField("Do Not Repeat Last #", randomData.doNotRepeat)));
-                if (randomData.doNotRepeat >= weights.Count)
+                if (randomData.doNotRepeat >= weights.Count && weights.Count > 0)
                 {
                     EditorGUILayout.HelpBox("The number of random elements that should be repeated exceeds the number of nodes.\nThe number will be clambed to "+(randomData.weights.Count-1)+".", MessageType.Info);
                 }
@@ -44,6 +44,10 @@ namespace InAudioSystem.InAudioEditor
                             () => EditorGUILayout.IntSlider(child.Name, weights[index], 0, 100), i1 =>
                                 weights[index] = i1);
 
+                    }
+                    if (node._children.Count == 0)
+                    {
+                        EditorGUILayout.HelpBox("Node has no children to weight.", MessageType.None);
                     }
                 }
                 else

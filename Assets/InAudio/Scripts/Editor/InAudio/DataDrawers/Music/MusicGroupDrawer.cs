@@ -17,8 +17,8 @@ namespace InAudioSystem
             var prop = new SerializedObject(node);
             prop.Update();
 
-            EditorGUIHelper.DrawID(node._guid);
             EditorGUILayout.PropertyField(prop.FindProperty("_name"));
+            
 
             if(!Application.isPlaying)
                 UndoHelper.GUIUndo(node, "Volume", ref node._minVolume, () => EditorGUILayout.Slider("Initial Volume",node._minVolume, 0f, 1f));
@@ -83,8 +83,11 @@ namespace InAudioSystem
                     {
                         EditorGUI.DrawRect(progress, Color.white);
                         float pos = (float) player.ExactPosition();
-                        progress.width = progress.width*Mathf.Clamp01(pos/item.length);
-                        EditorGUI.DrawRect(progress, Color.green);
+                        if (node.PlayingInfo.State == MusicState.Playing || node.PlayingInfo.State == MusicState.Paused)
+                        {
+                            progress.width = progress.width*Mathf.Clamp01(pos/item.length);
+                            EditorGUI.DrawRect(progress, Color.green);
+                        }
                     }
                     
                 }

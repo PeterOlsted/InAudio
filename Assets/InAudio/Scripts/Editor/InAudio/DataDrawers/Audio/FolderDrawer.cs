@@ -101,7 +101,7 @@ public static class FolderDrawer
 
         EditorGUILayout.Separator();
         EditorGUILayout.Separator();
-        #region Bus
+        #region Mixer
         DataDrawerHelper.DrawMixer(node);
         #endregion
 

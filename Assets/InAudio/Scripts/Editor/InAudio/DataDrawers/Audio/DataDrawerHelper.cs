@@ -25,12 +25,21 @@ public static class DataDrawerHelper
             if (!node.OverrideParentMixerGroup)
                 GUI.enabled = false;
         }
+        
         EditorGUILayout.BeginHorizontal();
 
-        if (node.OverrideParentMixerGroup)
+        if (node.IsRoot)
+        {
             EditorGUILayout.PropertyField(serialized.FindProperty("MixerGroup"), new GUIContent("Mixer Group"));
+        }
+        else if (node.OverrideParentMixerGroup)
+        {
+            EditorGUILayout.PropertyField(serialized.FindProperty("MixerGroup"), new GUIContent("Mixer Group"));
+        }
         else
+        {
             EditorGUILayout.PropertyField(new SerializedObject(node.GetParentMixerGroup()).FindProperty("MixerGroup"), new GUIContent("Parent Mixer Group"));
+        }
 
         GUI.enabled = node.GetMixerGroup() != null;
         if (GUILayout.Button("Find", GUILayout.Width(40)))

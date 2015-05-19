@@ -57,21 +57,13 @@ namespace InAudioSystem.Runtime
                 if (group.Playing && checkPlayer)
                 {
                     var players = playingInfo.Players;
-                    var playerCount = players.Count;
+                    
                     if (players.Count > 0)
                     {
                         var player = players[0];
                         if (!player.isPlaying)
                         {
-                            for (int i = 0; i < playerCount; i++)
-                            {
-                                player = players[i];
-                                player.clip = null;
-                                playingInfo.State = MusicState.Stopped;
-                                playingInfo.Fading = false;
-                                InAudioInstanceFinder.InMusicPlayerPool.ImmidiateRelease(player);
-                            }
-                            players.Clear();
+                            CleanupMusicNode(group);
                         }
                     }
                 }
@@ -132,6 +124,23 @@ namespace InAudioSystem.Runtime
             {
                 UpdateVolumePitch(children[i], volume, pitch, areAnySolo);
             }
+        }
+
+        //Only handles one node, remember to clear its children
+        public static void CleanupMusicNode(InMusicGroup musicGroup)
+        {
+            AudioSource player;
+            var playingInfo = musicGroup.PlayingInfo;
+            var players = playingInfo.Players;
+            for (int i = 0; i < players.Count; i++)
+            {
+                player = players[i];
+                player.clip = null;
+                playingInfo.State = MusicState.Stopped;
+                playingInfo.Fading = false;
+                InAudioInstanceFinder.InMusicPlayerPool.ImmidiateRelease(player);
+            }
+            players.Clear();
         }
 
         public static float GetVolume(InMusicGroup group)

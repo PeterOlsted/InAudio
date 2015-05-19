@@ -13,12 +13,12 @@ public static class SearchHelper
         var audioAction = action as InEventAudioAction;
         if (audioAction != null && audioAction.Node != null)
         {
-            EditorWindow.GetWindow<InAudioWindow>().Find(audioAction.Node);
+            InAudioWindow.Launch().Find(audioAction.Node);
         }
         var bankAction = action as InEventBankLoadingAction;
         if (bankAction != null && bankAction.BankLink != null)
         {
-            EditorWindow.GetWindow<AuxWindow>().FindBank(bankAction.BankLink);
+            AuxWindow.Launch().FindBank(bankAction.BankLink);
         }
         var musicControl = action as InEventMusicControl;
         if (musicControl != null && musicControl.Target != null)
@@ -63,18 +63,18 @@ public static class SearchHelper
 
     public static void SearchFor(InAudioBankLink bank)
     {
-        EditorWindow.GetWindow<AuxWindow>().FindBank(bank);
+        AuxWindow.Launch().FindBank(bank);
 
     }
 
     public static void SearchFor(InAudioNode node)
     {
-        EditorWindow.GetWindow<InAudioWindow>().Find(node);
+        InAudioWindow.Launch().Find(node);
     }
 
     public static void SearchFor(InMusicNode node)
     {
-        EditorWindow.GetWindow<InMusicWindow>().Find(node);
+        InMusicWindow.Launch().Find(node);
     }
 
     public static void SearchForObject<T>(T node) where T : Object, InITreeNode<T>

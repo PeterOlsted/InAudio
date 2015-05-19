@@ -172,7 +172,7 @@ public static class AudioEventWorker  {
             }
             else 
             {
-                var nonEventDrop = CanDropNonEvent(objects);
+                var nonEventDrop = CanDropNonEvent(objects) && !audioEvent.IsRootOrFolder;
 
                 return nonEventDrop;
             }
@@ -258,7 +258,7 @@ public static class AudioEventWorker  {
                     EventActionTypes.BankLoading);
                 action.BankLink = audioBank;
             }
-            EditorEventUtil.UseEvent();
+            Event.current.UseEvent();
         });
         return true;
     }

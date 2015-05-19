@@ -18,14 +18,14 @@ namespace InAudioSystem.InAudioEditor
         private AudioBankCreatorGUI bankGUI;
         private IntegrityGUI integrityGUI;
 
-        public static void Launch()
+        public static AuxWindow Launch()
         {
-            EditorWindow window = EditorWindow.GetWindow(typeof (AuxWindow));
+            AuxWindow window = GetWindow<AuxWindow>(typeof(AuxWindow));
 
             window.Show();
             window.minSize = new Vector2(400, 400);
             window.title = "Aux Window";
-
+            return window;
         }
 
         public void OnEnable()
@@ -157,6 +157,13 @@ namespace InAudioSystem.InAudioEditor
                                 var data = (node._nodeData as InFolderData);
                                 if (data != null)
                                     data.BankLink = Manager.BankLinkTree._getChildren[0];
+                            });
+                        if (Manager.MusicTree != null && Manager.BankLinkTree != null)
+                            NodeWorker.AssignToNodes(Manager.MusicTree, node =>
+                            {
+                                var folder = (node as InMusicFolder);
+                                if (folder != null)
+                                    folder._bankLink = Manager.BankLinkTree._getChildren[0];
                             });
 
                         EditorApplication.SaveCurrentSceneIfUserWantsTo();

@@ -233,7 +233,7 @@ namespace InAudioSystem.InAudioEditor
 
                     NodeWorker.ReasignNodeParent(nodeToMove, node);
                     AudioBankWorker.RebuildBanks();
-                    EditorEventUtil.UseEvent();
+                    Event.current.UseEvent();
                 });
                 
             }
@@ -268,7 +268,7 @@ namespace InAudioSystem.InAudioEditor
                         audioData._clip = clip;
 
                         AudioBankWorker.AddNodeToBank(child);
-                        EditorEventUtil.UseEvent();
+                        Event.current.UseEvent();
                     }
                 });
                 
@@ -284,7 +284,7 @@ namespace InAudioSystem.InAudioEditor
                         nodeData._clip = objects[0] as AudioClip;
                     }
                 });
-                EditorEventUtil.UseEvent();
+                Event.current.UseEvent();
 
             }
         }

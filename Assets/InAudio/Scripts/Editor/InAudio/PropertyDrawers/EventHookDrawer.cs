@@ -17,15 +17,17 @@ namespace InAudioSystem.InAudioEditor
             hookObj.Update();
             EditorGUI.BeginChangeCheck();
 
-            EditorGUILayout.PropertyField(hookObj.FindProperty("onEnableMusic"));
-            EditorGUILayout.PropertyField(hookObj.FindProperty("onStartMusic"));
-            EditorGUILayout.PropertyField(hookObj.FindProperty("onDisableMusic"));
-            EditorGUILayout.PropertyField(hookObj.FindProperty("onDestroyMusic"));
-            EditorGUILayout.Separator();
+            
+            
             EditorGUILayout.PropertyField(hookObj.FindProperty("onEnable"));
             EditorGUILayout.PropertyField(hookObj.FindProperty("onStart"));
             EditorGUILayout.PropertyField(hookObj.FindProperty("onDisable"));
             EditorGUILayout.PropertyField(hookObj.FindProperty("onDestroy"));
+            EditorGUILayout.Separator();
+            EditorGUILayout.PropertyField(hookObj.FindProperty("onEnableMusic"));
+            EditorGUILayout.PropertyField(hookObj.FindProperty("onStartMusic"));
+            EditorGUILayout.PropertyField(hookObj.FindProperty("onDisableMusic"));
+            EditorGUILayout.PropertyField(hookObj.FindProperty("onDestroyMusic"));
 
             if (!HasCollision())
                 EditorGUILayout.HelpBox("No colliders found on this object.", MessageType.Info, true);

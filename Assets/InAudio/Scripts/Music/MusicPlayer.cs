@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
+using InAudioSystem.Runtime;
 using UnityEngine;
 
 namespace InAudioSystem
@@ -51,7 +52,24 @@ namespace InAudioSystem
                 return;
 
             double playTime = absoluteDSPTime;
-            PlayMusicGroup(musicGroup, playTime);
+            PlayMusicGroup(musicGroup, playTime, 0);
+        }
+
+        public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime, int skipSamples)
+        {
+            if (musicGroup == null)
+            {
+                Debug.LogError("InAudio: Cannot play 'Null' music group");
+                return;
+            }
+
+            var parent = GetParent(musicGroup);
+            var playingInfo = parent.PlayingInfo;
+            if (HandleExcistingPlay(parent, ref playingInfo))
+                return;
+
+            double playTime = absoluteDSPTime;
+            PlayMusicGroup(musicGroup, playTime, skipSamples);
         }
 
         #endregion
@@ -162,7 +180,7 @@ namespace InAudioSystem
             var playingInfo = musicGroup.PlayingInfo;
             if (playingInfo != null)
             {
-                StopPlayersAt(GetParent(musicGroup), AudioSettings.dspTime);
+                StopPlayersNow(GetParent(musicGroup));
             }
         }
 
@@ -375,7 +393,7 @@ namespace InAudioSystem
         {
             if (playingInfo.State == MusicState.Playing)
             {
-                StopPlayersAt(musicGroup, AudioSettings.dspTime);
+                StopPlayersNow(musicGroup);
             }
             else if (playingInfo.State == MusicState.Paused)
             {
@@ -386,7 +404,7 @@ namespace InAudioSystem
             return false;
         }
 
-        private static void PlayMusicGroup(InMusicGroup toPlay, double playTime)
+        private static void PlayMusicGroup(InMusicGroup toPlay, double playTime, int skipSamples)
         {
             var musicPool = InAudioInstanceFinder.InMusicPlayerPool;
             var mixer = toPlay.GetUsedMixerGroup();
@@ -401,6 +419,7 @@ namespace InAudioSystem
                 toPlay.PlayingInfo.Players.Add(player);
                 player.clip = editorClips[j];
                 player.loop = toPlay._loop;
+                player.timeSamples = skipSamples;
                 player.outputAudioMixerGroup = mixer;
                 player.PlayScheduled(playTime);
             }
@@ -408,7 +427,27 @@ namespace InAudioSystem
 
             for (int i = 0; i < toPlay._children.Count; i++)
             {
-                PlayMusicGroup(toPlay._children[i] as InMusicGroup, playTime);
+                PlayMusicGroup(toPlay._children[i] as InMusicGroup, playTime, skipSamples);
+            }
+        }
+
+        private static void StopPlayersNow(InMusicGroup musicGroup)
+        {
+            var playingInfo = musicGroup.PlayingInfo;
+            if (playingInfo.State != MusicState.Stopped)
+            {
+                playingInfo.State = MusicState.Stopped;
+                var playing = playingInfo.Players;
+                for (int i = 0; i < playing.Count; i++)
+                {
+                    playing[i].Stop();
+                    MusicVolumeUpdater.CleanupMusicNode(musicGroup);
+                    
+                }
+            }
+            for (int i = 0; i < musicGroup._children.Count; i++)
+            {
+                StopPlayersNow(musicGroup._children[i] as InMusicGroup);
             }
         }
 

@@ -43,7 +43,7 @@ public static  class DrawerHelper  {
                     arrEvent.objectReferenceValue = DragAndDrop.objectReferences[0];
                     arrEvent.serializedObject.ApplyModifiedProperties();
                     GUI.changed = true;
-                    EditorEventUtil.UseEvent();
+                    Event.current.UseEvent();
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace InAudioSystem.InAudioEditor
             }
 
             GUI.skin.label.wordWrap = true;
-            GUILayout.Label("Your feedback is appreciated for all aspect of InAudio.\nIf you are reporting a bug, please be as detailed as possible and include any error messages. \nDo not send confidential information.");
+            GUILayout.Label("Your feedback is appreciated for all aspect of InAudio.\nIf you are reporting a bug, please include reproduction steps and any error messages. \nDo not send confidential information.");
             EditorGUILayout.Separator();
             emailTitle = EditorGUILayout.TextField("Title", emailTitle);
             @from = EditorGUILayout.TextField("Contact Email", @from);
@@ -68,23 +68,24 @@ namespace InAudioSystem.InAudioEditor
                 {
                     if (EditorUtility.DisplayDialog("Email", "The from email does not look like a valid email. It will be send from anonymous@nobody.com", "Ok", "Cancel"))
                     {
-                        Send();
+                        Send("anonymous@nobody.com");
                         
                     }
                 }
                 else
                 {
-                    Send();
+                    Send(from);
+                    
                 }
             }
             GUI.enabled = true;
         }
 
-        private void Send()
+        private void Send(string email)
         {
             try
             {
-                FeedbackSender.Send(@from, content, title);
+                FeedbackSender.Send(email, content, emailTitle, Application.unityVersion, InAudio.CurrentVersion);
                 send = SendingStatus.Send;
             }
             catch (Exception)
