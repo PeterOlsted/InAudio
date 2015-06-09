@@ -415,6 +415,7 @@ namespace InAudioSystem
             {
                 var playingInfo = toPlay.PlayingInfo;
                 playingInfo.State = MusicState.Playing;
+				playingInfo.DoAtEnd = MusicState.Nothing;
                 var player = musicPool.GetObject();
                 toPlay.PlayingInfo.Players.Add(player);
                 player.clip = editorClips[j];

@@ -19,3 +19,9 @@ Assets/UnityVS/*
 Assets/InAudio/Resources/InAudio/*InAudio*
 NonInAudio*
 AssetStoreTools*
+*firstpass*
+*CSharp.dll*
+*CSharp.pdb*
+*UnityVS*
+*ProjectSettings.asset*
+*ProjectVersion.txt*
