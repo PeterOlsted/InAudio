@@ -1,6 +1,7 @@
 using InAudioSystem;
 using InAudioSystem.InAudioEditor;
 using InAudioSystem.Internal;
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -64,9 +65,10 @@ namespace InAudioSystem.InAudioEditor
                 bool missingaudioEvent = Manager.EventTree == null;
                 bool missingBank = Manager.BankLinkTree == null;
                 bool missingMusic = Manager.MusicTree == null;
+                bool missingInteractiveMusic = Manager.InteractiveMusicTree == null;
 
-                bool areAllMissing = missingaudio && missingaudioEvent && missingBank && missingMusic;
-                bool areAnyMissing = missingaudio || missingaudioEvent || missingBank || missingMusic;
+                bool areAllMissing = missingaudio && missingaudioEvent && missingBank && missingMusic && missingInteractiveMusic;
+                bool areAnyMissing = missingaudio || missingaudioEvent || missingBank || missingMusic || missingInteractiveMusic;
 
                 if (areAllMissing)
                 {
@@ -118,22 +120,23 @@ namespace InAudioSystem.InAudioEditor
             bool missingaudioEvent = Manager.EventTree == null;
             bool missingbankLink = Manager.BankLinkTree == null;
             bool missingMusic = Manager.MusicTree == null;
+            bool missingInteractiveMusic = Manager.InteractiveMusicTree == null;
 
 
-            bool areAnyMissing = missingaudio | missingaudioEvent | missingbankLink | missingMusic;
+            bool areAnyMissing = missingaudio | missingaudioEvent | missingbankLink | missingMusic | missingInteractiveMusic;
             if (areAnyMissing)
             {
                 string missingAudioInfo = missingaudio ? "Audio Data\n" : "";
                 string missingEventInfo = missingaudioEvent ? "Event Data\n" : "";
                 string missingBankInfo = missingbankLink ? "BankLink Data\n" : "";
                 string missingMusicInfo = missingMusic ? "Music Data\n" : "";
+                string missingInteractiveMusicInfo = missingInteractiveMusic ? "Interactive Music Data\n" : "";
 
                 EditorGUILayout.BeginVertical();
-                EditorGUILayout.HelpBox(
-                    missingAudioInfo + missingEventInfo + missingMusicInfo + missingBankInfo + "is missing.",
+                EditorGUILayout.HelpBox(missingAudioInfo + missingEventInfo + missingMusicInfo + missingBankInfo + missingInteractiveMusicInfo + "is missing.\nThis may be because of new project data is required in this version of InAudio",
                     MessageType.Error, true);
 
-                bool areAllMissing = missingaudio && missingaudioEvent && missingbankLink && missingMusic;
+                bool areAllMissing = missingaudio && missingaudioEvent && missingbankLink && missingMusic && missingInteractiveMusic;
                 if (!areAllMissing)
                 {
 
@@ -149,6 +152,8 @@ namespace InAudioSystem.InAudioEditor
                             CreateBankLinkPrefab();
                         if (missingMusic)
                             CreateMusicPrefab(levelSize);
+                        if (missingInteractiveMusic)
+                            CreateInteractiveMusicPrefab(0);
                         Manager.Load(true);
 
                         if (Manager.AudioTree != null && Manager.BankLinkTree != null)
@@ -166,6 +171,7 @@ namespace InAudioSystem.InAudioEditor
                                     folder._bankLink = Manager.BankLinkTree._getChildren[0];
                             });
 
+                        EditorApplication.MarkSceneDirty();
                         EditorApplication.SaveCurrentSceneIfUserWantsTo();
                     }
                 }
@@ -181,7 +187,8 @@ namespace InAudioSystem.InAudioEditor
             bool missingaudioEvent = Manager.EventTree == null;
             bool missingbankLink = Manager.BankLinkTree == null;
             bool missingMusic = Manager.MusicTree == null;
-            return missingaudio && missingaudioEvent && missingbankLink && missingMusic;
+            bool missingInteractiveMusic = Manager.InteractiveMusicTree == null;
+            return missingaudio && missingaudioEvent && missingbankLink && missingMusic && missingInteractiveMusic;
         }
 
         private void DrawStartFromScratch()
@@ -247,6 +254,13 @@ namespace InAudioSystem.InAudioEditor
             GameObject go = new GameObject();
             Manager.MusicTree = MusicWorker.CreateTree(go, levelSize);
             SaveAndLoad.CreateMusicRootPrefab(go);
+        }
+
+        private void CreateInteractiveMusicPrefab(int levelSize)
+        {
+            GameObject go = new GameObject();
+            Manager.InteractiveMusicTree = InteractiveMusicWorker.CreateTree(go, levelSize);
+            SaveAndLoad.CreateInteractiveMusicRootPrefab(go);
         }
 
         private void CreateAudioPrefab(int levelSize)

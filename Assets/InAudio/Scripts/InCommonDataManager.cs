@@ -12,6 +12,7 @@ namespace InAudioSystem.Internal
         private InAudioEventNode EventRoot;
         private InAudioBankLink BankLinkRoot;
         private InMusicNode MusicRoot;
+        private InInteractiveMusic InteractiveMusicRoot;
 
         public InAudioNode AudioTree
         {
@@ -37,21 +38,29 @@ namespace InAudioSystem.Internal
             set { MusicRoot = value; }
         }
 
+        public InInteractiveMusic InteractiveMusicTree
+        {
+            get { return InteractiveMusicRoot; }
+            set { InteractiveMusicRoot = value; }
+        }
 
         public void Load(bool forceReload = false)
         {
-            if (AudioRoot == null || BankLinkRoot == null || EventRoot == null || MusicRoot == null || forceReload)
+            if (AudioRoot == null || BankLinkRoot == null || EventRoot == null || MusicRoot == null || InteractiveMusicRoot == null || forceReload)
             {
                 Component[] audioData;
                 Component[] eventData;
                 Component[] bankLinkData;
                 Component[] musicData;
+                Component[] interactiveMusicData;
 
-                SaveAndLoad.LoadManagerData(out audioData, out eventData, out musicData, out bankLinkData);
+                SaveAndLoad.LoadManagerData(out audioData, out eventData, out musicData, out bankLinkData, out interactiveMusicData);
                 AudioRoot = CheckData<InAudioNode>(audioData);
                 EventRoot = CheckData<InAudioEventNode>(eventData);
                 BankLinkTree = CheckData<InAudioBankLink>(bankLinkData);
                 MusicTree = CheckData<InMusicNode>(musicData);
+                InteractiveMusicTree = CheckData<InInteractiveMusic>(interactiveMusicData);
+                
             }
         }
 

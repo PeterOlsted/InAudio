@@ -1,7 +1,6 @@
 ﻿using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEngine;
-using System.Collections;
 
 namespace InAudioSystem.InAudioEditor
 {
@@ -28,8 +27,7 @@ namespace InAudioSystem.InAudioEditor
             node._overrideParentBank = true;
             node.FoldedOut = true;
             node._name = "Music Root";
-            TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.BankLinkTree,
-                link => link._type == AudioBankTypes.Bank);
+            TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.BankLinkTree, link => link._type == AudioBankTypes.Bank);
             return node;
         }
 

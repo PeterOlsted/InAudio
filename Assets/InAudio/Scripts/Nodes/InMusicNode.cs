@@ -92,7 +92,66 @@ namespace InAudioSystem
             }
         }
 
-        
+        public float Volume
+        {
+            get
+            {
+                return runtimeVolume;
+            }
+            set
+            {
+                runtimeVolume = Mathf.Clamp01(value);
+            }
+        }
+
+        public float Pitch
+        {
+            get { return runtimePitch; }
+            set
+            {
+                runtimePitch = Mathf.Clamp(value, 0, 3);
+            }
+        }
+
+        public bool Solo
+        {
+            get
+            {
+                return runtimeSolo;
+            }
+            set
+            {
+                runtimeSolo = value;
+            }
+        }
+
+        public bool Mute
+        {
+            get
+            {
+                return runtimeMute;
+            }
+            set
+            {
+                runtimeMute = value;
+            }
+        }
+
+        #region Runtime
+        [System.NonSerialized] //This class may change at any time, you should not dependent on it for your programming.
+        public PlayingMusicInfo PlayingInfo = new PlayingMusicInfo();
+
+        public float runtimeVolume; //Only used during runtime. Should be able to be safely modified, but using InAudio.Music is recommended
+        public float runtimePitch;
+        public bool runtimeSolo;
+        public bool runtimeMute;
+
+        #endregion
+
+        public bool _solo;
+        public bool _mute;
+
+
     }
     public enum MusicNodeType
     {

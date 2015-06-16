@@ -1,6 +1,5 @@
 ﻿using InAudioSystem.ExtensionMethods;
 using InAudioSystem.InAudioEditor;
-using InAudioSystem.Internal;
 using InAudioSystem.Runtime;
 using UnityEditor;
 using UnityEngine;
@@ -23,10 +22,9 @@ namespace InAudioSystem.TreeDrawer
 
             GUILayout.Space(EditorGUI.indentLevel * 16);
 
-            if (group != null)
-            {
-                DrawVolume(fullArea, group);
-            }
+            
+            DrawVolume(fullArea, node);
+            
 
             bool folded = node.IsFoldedOut;
 
@@ -36,8 +34,7 @@ namespace InAudioSystem.TreeDrawer
             else
                 picture = EditorResources.Plus;
 
-            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height),
-                GUILayout.Width(EditorResources.Minus.width)))
+            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height), GUILayout.Width(EditorResources.Minus.width)))
             {
                 node.IsFoldedOut = !node.IsFoldedOut;
                 Event.current.UseEvent();
@@ -54,16 +51,14 @@ namespace InAudioSystem.TreeDrawer
             labelArea.x += 60;
             EditorGUI.LabelField(labelArea, node.GetName);
 
-
-
             if (group != null)
             {
                 if (!Application.isPlaying)
                     GUI.enabled = false;
                 DrawPlayStop(fullArea, group);
                 GUI.enabled = true;
-                DrawMuteSolo(fullArea, group);
             }
+            DrawMuteSolo(fullArea, node);
 
 
             EditorGUILayout.EndHorizontal();
@@ -81,7 +76,7 @@ namespace InAudioSystem.TreeDrawer
             butArea.width = 16;
             butArea.height = 12;
             butArea.y += 3;
-            butArea.x += EditorGUI.indentLevel * 5 - 5;
+            butArea.x += EditorGUI.indentLevel * 5 - 10;
 
             Texture playing;
             
@@ -115,7 +110,7 @@ namespace InAudioSystem.TreeDrawer
             GUI.enabled = true;
         }
 
-        private static void DrawVolume(Rect fullArea, InMusicGroup @group)
+        private static void DrawVolume(Rect fullArea, InMusicNode @group)
         {
             GUI.enabled = false;
             Rect sliderRect = fullArea;
@@ -128,35 +123,34 @@ namespace InAudioSystem.TreeDrawer
             GUI.enabled = true;
         }
 
-        private static void DrawMuteSolo(Rect fullArea, InMusicGroup group)
+        private static void DrawMuteSolo(Rect fullArea, InMusicNode node)
         {
             Rect butArea = fullArea;
             butArea.width = 16;
             butArea.height = 12;
             butArea.y += 3;
-            butArea.x += EditorGUI.indentLevel*5 + 10;
+            butArea.x += EditorGUI.indentLevel*5 + 5;
 
-            Texture mute = MusicVolumeUpdater.IsMute(group) ? EditorResources.Muted : EditorResources.NotMute;
+            Texture mute = MusicVolumeUpdater.IsMute(node) ? EditorResources.Muted : EditorResources.NotMute;
 
             if (GUI.Button(butArea, mute, GUIStyle.none))
             {
-                UndoHelper.RegisterUndo(group, "Mute");
-                MusicVolumeUpdater.FlipMute(group);
+                UndoHelper.RegisterUndo(node, "Mute");
+                MusicVolumeUpdater.FlipMute(node);
             }
 
             butArea.y += 14;
-            Texture solo = MusicVolumeUpdater.IsSolo(group) ? EditorResources.Soloed : EditorResources.NotSolo;
+            Texture solo = MusicVolumeUpdater.IsSolo(node) ? EditorResources.Soloed : EditorResources.NotSolo;
 
             if (GUI.Button(butArea, solo, GUIStyle.none))
             {
-                UndoHelper.RegisterUndo(group, "Solo");
-                MusicVolumeUpdater.FlipSolo(group);
+                UndoHelper.RegisterUndo(node, "Solo");
+                MusicVolumeUpdater.FlipSolo(node);
             }
         }
 
         public static Texture LookUpIcon(InMusicNode node)
         {
-
              var group = node as InMusicGroup;
             if (!Application.isPlaying || group == null)
             {

@@ -10,6 +10,7 @@ namespace InAudioSystem.InAudioEditor
         /// <param name="currentEvent"></param>
         public static void UseEvent(this Event currentEvent)
         {
+            //Debug.Log(currentEvent.type);
             currentEvent.Use();
         }
     }

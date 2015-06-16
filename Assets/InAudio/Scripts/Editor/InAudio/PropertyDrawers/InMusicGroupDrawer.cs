@@ -3,12 +3,11 @@ using UnityEngine;
 
 namespace InAudioSystem.InAudioEditor
 {
-    [CustomPropertyDrawer(typeof(InMusicGroup))]
-    public class InMusicGroupDrawer : PropertyDrawer
+    internal static class MusicDrawerHelper
     {
-        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
+        internal static float GetPropertyHeight(SerializedProperty prop)
         {
-            var node = prop.objectReferenceValue as InMusicGroup;
+            var node = prop.objectReferenceValue as InMusicNode;
             if (node == null)
             {
                 return EditorGUIUtility.singleLineHeight;
@@ -19,16 +18,15 @@ namespace InAudioSystem.InAudioEditor
             }
         }
 
-        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
+        internal static void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
-
             EditorGUI.BeginChangeCheck();
 
             Rect originalPos = pos;
             float width = pos.width;
             pos.height = EditorGUIUtility.singleLineHeight;
 
-            var node = prop.objectReferenceValue as InMusicGroup;
+            var node = prop.objectReferenceValue as InMusicNode;
 
             EditorGUI.PropertyField(pos, prop, label);
             pos.y += 15;
@@ -39,21 +37,13 @@ namespace InAudioSystem.InAudioEditor
 
             if (node != null)
             {
-                if (!node.IsRootOrFolder)
-                {
-                    pos.x = 160;
-                    EditorGUI.LabelField(pos, node._name);
-                    pos.x -= 80;
-                    EditorGUI.LabelField(pos, "Node name:");
-                }
-                else
-                {
-                    Rect warningArea = originalPos;
-                    warningArea.height = EditorGUIUtility.singleLineHeight;
-                    warningArea.width -= 40;
-                    warningArea.y = pos.y;
-                    EditorGUI.HelpBox(warningArea, "Cannot play Folder node", MessageType.Error);
-                }
+                Rect labelPos = originalPos;
+                pos.height = EditorGUIUtility.singleLineHeight;
+                labelPos.y = labelPos.y + EditorGUIUtility.singleLineHeight;
+                labelPos.x += 20;
+                EditorGUI.LabelField(labelPos, "Node name:");
+                labelPos.x += 100;
+                EditorGUI.LabelField(labelPos, node.GetName);
 
                 pos.x = width - 25;
                 pos.width = 40;
@@ -67,6 +57,36 @@ namespace InAudioSystem.InAudioEditor
                 prop.serializedObject.ApplyModifiedProperties();
             }
         }
+    }
+
+    [CustomPropertyDrawer(typeof(InMusicNode))]
+    public class InMusicNodeDrawer : PropertyDrawer
+    {
+        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
+            {return MusicDrawerHelper.GetPropertyHeight(prop);}
+
+        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
+            {MusicDrawerHelper.OnGUI(pos, prop, label);}
+    }
+
+    [CustomPropertyDrawer(typeof(InMusicGroup))]
+    public class InMusicGroupDrawer : PropertyDrawer
+    {
+        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
+        { return MusicDrawerHelper.GetPropertyHeight(prop); }
+
+        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
+        { MusicDrawerHelper.OnGUI(pos, prop, label); }
+    }
+
+    [CustomPropertyDrawer(typeof(InMusicFolder))]
+    public class InMusicFolderDrawer : PropertyDrawer
+    {
+        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
+        { return MusicDrawerHelper.GetPropertyHeight(prop); }
+
+        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
+        { MusicDrawerHelper.OnGUI(pos, prop, label); }
     }
 
 }

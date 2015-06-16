@@ -6,7 +6,6 @@ using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace InAudioSystem.Runtime
 {
@@ -31,7 +30,14 @@ namespace InAudioSystem.Runtime
             breakLoop = false;
 
             controlling = controllingObject;
-            ParentFolder = TreeWalker.FindParentBeforeFolder(node);
+            ParentBeforeFolder = TreeWalker.FindParentBeforeFolder(node);
+            ParentFolder = ParentBeforeFolder._parent._nodeData as InFolderData;
+            folderVolume = 1.0f;
+            if (ParentFolder != null)
+            {
+                folderVolume = ParentFolder.runtimeVolume;
+                ParentFolder.runtimePlayers.Add(this);
+            }
 
             //This is to queue the next playing node, as the first clip will not yield a waitforseconds
             //firstClip = true;
@@ -152,6 +158,18 @@ namespace InAudioSystem.Runtime
             this.cleanup = cleanup;
         }
 
+        public void internalSetFolderVolume(float volume)
+        {
+            folderVolume = volume;
+            for (int i = 0; i < audioSources.Count; i++)
+            {
+                if (audioSources == null)
+                    continue;
+                var source = audioSources[i];
+                SetVolume(source);
+            }
+        }
+
         public void internalUpdateFalloff(Vector3 listenerPos)
         {
             if (audioSources == null)
@@ -245,11 +263,9 @@ namespace InAudioSystem.Runtime
 
         private float SetVolume(InRuntimePlayer source)
         {
-            float vol = source.OriginalVolume*volume*source.Rolloff*fadeVolume;
-            //Debug.Log(source.OriginalVolume + " " + volume + " " + source.Rolloff + " " + fadeVolume);
+            float vol = source.OriginalVolume*volume*source.Rolloff*fadeVolume* folderVolume;
             return source.AudioSource.SetLoudness(vol);
         }
-
 
         private void SetFadeVolume(float newFadeVolume)
         {
@@ -258,16 +274,11 @@ namespace InAudioSystem.Runtime
                 if (audioSources == null)
                     continue;
                 var source = audioSources[i];
-                float vol = source.OriginalVolume*newFadeVolume;
+                float vol = source.OriginalVolume*newFadeVolume*folderVolume;
                 source.AudioSource.SetLoudness(vol);
             }
         }
 
-        //public void SetNewMixerGroup(AudioMixerGroup bus)
-        //{
-        //    //TODO fix
-        //    attachedToMixer = bus;
-        //}
 
         private void StopFast()
         {
@@ -297,8 +308,7 @@ namespace InAudioSystem.Runtime
             }
             else
             {
-                var tween = LeanTween.value(gameObject, (f, o) => (o as InPlayer).Volume = f, volume*fadeVolume, 0.0f,
-                    fadeOutTime);
+                var tween = LeanTween.value(gameObject, (f, o) => (o as InPlayer).Volume = f, volume*fadeVolume, 0.0f, fadeOutTime);
                 tween.onUpdateParam = this;
                 tween.tweenType = tweenType;
                 tween.onComplete = FinalCleanup;
@@ -327,10 +337,13 @@ namespace InAudioSystem.Runtime
         private float spread;
         private float _panStereo;
 
+        private float folderVolume = 1.0f;
+
         private GameObject controlling;
 
         private InAudioNode PlayingNode;
-        private InAudioNode ParentFolder; //The nearest folder or root
+        private InAudioNode ParentBeforeFolder; //The nearest folder or root
+        private InFolderData ParentFolder; //The nearest folder or root
 
         private readonly List<InRuntimePlayer> audioSources = new List<InRuntimePlayer>(1);
 
@@ -526,10 +539,8 @@ namespace InAudioSystem.Runtime
                 }
             }
 
-            float length = PlayScheduled(ParentFolder, current, audioData, playTime,
+            float length = PlayScheduled(ParentBeforeFolder, current, audioData, playTime,
                 offset, out nodeVolume);
-
-     
 
             endTime.CurrentEndTime += length;
             endTime.Player = Current.AudioSource;
@@ -620,6 +631,11 @@ namespace InAudioSystem.Runtime
 
         private void Cleanup()
         {
+            if(ParentFolder != null && ParentFolder.runtimePlayers != null)
+            {
+                ParentFolder.runtimePlayers.Remove(this);
+            }
+
             if (OnCompleted != null)
             {
                 OnCompleted(controlling, NodePlaying);

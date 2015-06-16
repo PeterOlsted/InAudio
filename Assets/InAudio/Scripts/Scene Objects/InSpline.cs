@@ -6,7 +6,7 @@ using UnityEngine;
 [AddComponentMenu("InAudio/Spline/Audio Spline")]
 public class InSpline : MonoBehaviour
 {
-    [InEventName("Spline Audio")] public InAudioEvent SplineAudioEvent;
+    public InAudioEvent SplineAudioEvent;
 
     public List<InSplineNode> Nodes = new List<InSplineNode>();
     public List<InSplineConnection> Connections = new List<InSplineConnection>();

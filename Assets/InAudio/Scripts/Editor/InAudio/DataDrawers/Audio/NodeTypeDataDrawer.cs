@@ -56,220 +56,198 @@ public static class NodeTypeDataDrawer
         Seperators(2);
 
         if (baseData.SelectedArea == 0)
-        {
-            EditorGUIHelper.DrawID(node._guid);
-
-            #region Volume
-
-            UndoHelper.GUIUndo(baseData, "Random Volume", ref baseData.RandomVolume, () =>
-                EditorGUILayout.Toggle("Random Volume", baseData.RandomVolume));
-
-            if (!baseData.RandomVolume)
             {
-                UndoHelper.GUIUndo(baseData, "Volume", () =>
-                    EditorGUILayout.Slider("Volume", baseData.MinVolume, 0, 1),
-                    v =>
-                    {
-                        baseData.MinVolume = v;
-                        if (baseData.MinVolume > baseData.MaxVolume)
-                            baseData.MaxVolume = baseData.MinVolume + 0.1f;
-                    });
-            }
-            else
-            {
-                UndoHelper.GUIUndo(baseData, "Random Volume", ref baseData.MinVolume, ref baseData.MaxVolume, (out float minVolume, out float maxVolume) =>
+                EditorGUIHelper.DrawID(node._guid);
+
+                #region Volume
+
+                DataDrawerHelper.DrawVolume(baseData, ref baseData.MinVolume, ref baseData.MaxVolume, ref baseData.RandomVolume);
+                #endregion
+
+                Seperators(2);
+
+                #region Parent pitch
+
+                SetPitch(baseData);
+
+                #endregion
+                Seperators(2);
+                #region Spatial blend
+
+                SetSpatialBlend(baseData);
+
+                #endregion
+
+                Seperators(2);
+
+                #region Delay
+
+                GUILayout.BeginHorizontal();
+
+                GUILayout.BeginVertical();
+
+                UndoHelper.GUIUndo(baseData, "Randomize Delay", ref baseData.RandomizeDelay, () =>
+                    EditorGUILayout.Toggle("Randomize Delay", baseData.RandomizeDelay));
+                if (baseData.RandomizeDelay)
                 {
-                    EditorGUILayout.MinMaxSlider(new GUIContent("Volume"), ref baseData.MinVolume, ref baseData.MaxVolume, 0, 1);
-                    minVolume = Mathf.Clamp(EditorGUILayout.FloatField("Min volume", baseData.MinVolume), 0, baseData.MaxVolume);
-                    maxVolume = Mathf.Clamp(EditorGUILayout.FloatField("Max volume", baseData.MaxVolume), baseData.MinVolume, 1);
-                });
-            }
-            #endregion
+                    UndoHelper.GUIUndo(baseData, "Delay Change", ref baseData.InitialDelayMin, ref baseData.InitialDelayMax,
+                        (out float v1, out float v2) =>
+                        {
+                            v1 = Mathf.Clamp(EditorGUILayout.FloatField("Min delay", baseData.InitialDelayMin), 0, baseData.InitialDelayMax);
+                            v2 = Mathf.Clamp(EditorGUILayout.FloatField("Max delay", baseData.InitialDelayMax), baseData.InitialDelayMin, float.MaxValue);
+                        });
 
-            Seperators(2);
-
-            #region Parent pitch
-
-            SetPitch(baseData);
-
-            #endregion
-            Seperators(2);
-            #region Spatial blend
-
-            SetSpatialBlend(baseData);
-
-            #endregion
-
-            Seperators(2);
-
-            #region Delay
-
-            GUILayout.BeginHorizontal();
-
-            GUILayout.BeginVertical();
-
-            UndoHelper.GUIUndo(baseData, "Randomize Delay", ref baseData.RandomizeDelay, () => 
-                EditorGUILayout.Toggle("Randomize Delay", baseData.RandomizeDelay));
-            if (baseData.RandomizeDelay)
-            {
-                UndoHelper.GUIUndo(baseData, "Delay Change", ref baseData.InitialDelayMin, ref baseData.InitialDelayMax,
-                    (out float v1, out float v2) =>
-                    {
-                        v1 = Mathf.Clamp(EditorGUILayout.FloatField("Min delay", baseData.InitialDelayMin), 0, baseData.InitialDelayMax);
-                        v2 = Mathf.Clamp(EditorGUILayout.FloatField("Max delay", baseData.InitialDelayMax), baseData.InitialDelayMin, float.MaxValue);        
-                    });
-                
-            }
-            else
-            {
-                UndoHelper.GUIUndo(baseData, "Delay", ref baseData.InitialDelayMin, () =>
-                {
-                    float delay = Mathf.Max(EditorGUILayout.FloatField("Initial delay", baseData.InitialDelayMin), 0);
-                    if (delay > baseData.InitialDelayMax)
-                        baseData.InitialDelayMax = baseData.InitialDelayMin + 0.001f;
-                    return delay;
-                });
-                
-            }
-
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical();
-
-            GUILayout.EndVertical();
-
-            GUILayout.EndHorizontal();
-            #endregion
-
-            Seperators(2);
-
-            #region Audio bus
-
-            DataDrawerHelper.DrawMixer(node);
-
-            #endregion
-
-            Seperators(2);
-
-            #region Loops
-
-            GUI.enabled = true;
-            GUILayout.BeginVertical();
-
-            UndoHelper.GUIUndo(baseData, "Use looping", ref baseData.Loop, () => EditorGUILayout.Toggle("Loop", baseData.Loop));
-            if (baseData.Loop)
-            {
-                GUI.enabled = baseData.Loop;
-
-                UndoHelper.GUIUndo(baseData, "Loop Infinite", ref baseData.LoopInfinite, 
-                    () => EditorGUILayout.Toggle("Loop Infinite", baseData.LoopInfinite));
-                if (baseData.Loop)
-                    GUI.enabled = !baseData.LoopInfinite;
-
-                UndoHelper.GUIUndo(baseData, "Loop Randomize", ref baseData.RandomizeLoops,
-                    () => EditorGUILayout.Toggle("Randomize Loop Count", baseData.RandomizeLoops));
-
-                if (!baseData.RandomizeLoops)
-                {
-                    UndoHelper.GUIUndo(baseData, "Loop Count", 
-                        ref baseData.MinIterations, () => (byte) Mathf.Clamp(EditorGUILayout.IntField("Loop Count", baseData.MinIterations), 0, 255));
                 }
                 else
                 {
-                    GUILayout.BeginHorizontal();
-                    UndoHelper.GUIUndo(baseData, "Loop Count", ref baseData.MinIterations, ref baseData.MaxIterations,
-                        (out byte v1, out byte v2) =>
-                        {
-                            v1 = (byte)Mathf.Clamp(EditorGUILayout.IntField("Min Loop Count", baseData.MinIterations), 0, 255);
-                            v2 = (byte)Mathf.Clamp(EditorGUILayout.IntField("Max Loop Count", baseData.MaxIterations), 0, 255);
+                    UndoHelper.GUIUndo(baseData, "Delay", ref baseData.InitialDelayMin, () =>
+                    {
+                        float delay = Mathf.Max(EditorGUILayout.FloatField("Initial delay", baseData.InitialDelayMin), 0);
+                        if (delay > baseData.InitialDelayMax)
+                            baseData.InitialDelayMax = baseData.InitialDelayMin + 0.001f;
+                        return delay;
+                    });
+
+                }
+
+                GUILayout.EndVertical();
+
+                GUILayout.BeginVertical();
+
+                GUILayout.EndVertical();
+
+                GUILayout.EndHorizontal();
+                #endregion
+
+                Seperators(2);
+
+                #region Audio bus
+
+                DataDrawerHelper.DrawMixer(node);
+
+                #endregion
+
+                Seperators(2);
+
+                #region Loops
+
+                GUI.enabled = true;
+                GUILayout.BeginVertical();
+
+                UndoHelper.GUIUndo(baseData, "Use looping", ref baseData.Loop, () => EditorGUILayout.Toggle("Loop", baseData.Loop));
+                if (baseData.Loop)
+                {
+                    GUI.enabled = baseData.Loop;
+
+                    UndoHelper.GUIUndo(baseData, "Loop Infinite", ref baseData.LoopInfinite,
+                        () => EditorGUILayout.Toggle("Loop Infinite", baseData.LoopInfinite));
+                    if (baseData.Loop)
+                        GUI.enabled = !baseData.LoopInfinite;
+
+                    UndoHelper.GUIUndo(baseData, "Loop Randomize", ref baseData.RandomizeLoops,
+                        () => EditorGUILayout.Toggle("Randomize Loop Count", baseData.RandomizeLoops));
+
+                    if (!baseData.RandomizeLoops)
+                    {
+                        UndoHelper.GUIUndo(baseData, "Loop Count",
+                            ref baseData.MinIterations, () => (byte)Mathf.Clamp(EditorGUILayout.IntField("Loop Count", baseData.MinIterations), 0, 255));
+                    }
+                    else
+                    {
+                        GUILayout.BeginHorizontal();
+                        UndoHelper.GUIUndo(baseData, "Loop Count", ref baseData.MinIterations, ref baseData.MaxIterations,
+                            (out byte v1, out byte v2) =>
+                            {
+                                v1 = (byte)Mathf.Clamp(EditorGUILayout.IntField("Min Loop Count", baseData.MinIterations), 0, 255);
+                                v2 = (byte)Mathf.Clamp(EditorGUILayout.IntField("Max Loop Count", baseData.MaxIterations), 0, 255);
 
                             //Clamp to 0-255 and so that min/max doesn't overlap
                             v2 = (byte)Mathf.Clamp(v2, v1, 255);
-                            v1 = (byte)Mathf.Clamp(v1, 0, v2);        
+                                v1 = (byte)Mathf.Clamp(v1, 0, v2);
+                            });
+
+                        GUILayout.EndHorizontal();
+                    }
+
+                }
+
+                GUI.enabled = true;
+
+                GUILayout.EndVertical();
+
+                #endregion
+
+                Seperators(2);
+
+                #region Instance limiting
+                UndoHelper.GUIUndo(baseData, "Limit Instances (Global)", ref baseData.LimitInstances, () => EditorGUILayout.Toggle("Limit Instances", baseData.LimitInstances));
+                GUI.enabled = baseData.LimitInstances;
+                if (baseData.LimitInstances)
+                {
+                    UndoHelper.GUIUndo(baseData, "Max Instance Cont", ref baseData.MaxInstances, () => Math.Max(EditorGUILayout.IntField("Max Instance Count", baseData.MaxInstances), 0));
+                    UndoHelper.GUIUndo(baseData, "Stealing Type", ref baseData.InstanceStealingTypes, () => (InstanceStealingTypes)EditorGUILayout.EnumPopup("Stealing Type", baseData.InstanceStealingTypes));
+                }
+                GUI.enabled = true;
+
+                #endregion
+
+                Seperators(2);
+
+                #region Priority
+                UndoHelper.GUIUndo(baseData, "Priority", ref baseData.Priority, () => EditorGUILayout.IntSlider("Priority", baseData.Priority, 0, 255));
+                #endregion
+
+                Seperators(2);
+
+                #region Sample offset
+                UndoHelper.GUIUndo(baseData, "Random Sample Offset", ref baseData.RandomSecondsOffset, () =>
+                   EditorGUILayout.Toggle("Random Sample Offset", baseData.RandomSecondsOffset));
+
+                if (baseData.RandomSecondsOffset)
+                {
+                    UndoHelper.GUIUndo(baseData, "First item offset", ref baseData.MinSecondsOffset, ref baseData.MaxSecondsOffset,
+                        (out float v1, out float v2) =>
+                        {
+                            v1 = Mathf.Clamp(EditorGUILayout.FloatField("Min offset", baseData.MinSecondsOffset), 0, baseData.MaxSecondsOffset);
+                            v2 = Mathf.Clamp(EditorGUILayout.FloatField("Max offset", baseData.MaxSecondsOffset), baseData.MinSecondsOffset, float.MaxValue);
                         });
 
-                    GUILayout.EndHorizontal();
                 }
-
-            }
-
-            GUI.enabled = true;
-
-            GUILayout.EndVertical();
-
-            #endregion
-
-            Seperators(2);
-
-            #region Instance limiting
-            UndoHelper.GUIUndo(baseData, "Limit Instances (Global)", ref baseData.LimitInstances, () => EditorGUILayout.Toggle("Limit Instances", baseData.LimitInstances));
-            GUI.enabled = baseData.LimitInstances;
-            if (baseData.LimitInstances)
-            {
-                UndoHelper.GUIUndo(baseData, "Max Instance Cont", ref baseData.MaxInstances, () => Math.Max(EditorGUILayout.IntField("Max Instance Count", baseData.MaxInstances), 0));
-                UndoHelper.GUIUndo(baseData, "Stealing Type", ref baseData.InstanceStealingTypes, () => (InstanceStealingTypes)EditorGUILayout.EnumPopup("Stealing Type", baseData.InstanceStealingTypes));            
-            }
-            GUI.enabled = true;
-
-            #endregion
-
-            Seperators(2);
-
-            #region Priority
-            UndoHelper.GUIUndo(baseData, "Priority", ref baseData.Priority, () => EditorGUILayout.IntSlider("Priority", baseData.Priority, 0, 255));
-            #endregion
-
-            Seperators(2);
-
-            #region Sample offset
-            UndoHelper.GUIUndo(baseData, "Random Sample Offset", ref baseData.RandomSecondsOffset, () =>
-               EditorGUILayout.Toggle("Random Sample Offset", baseData.RandomSecondsOffset));
-
-            if (baseData.RandomSecondsOffset)
-            {
-                UndoHelper.GUIUndo(baseData, "First item offset", ref baseData.MinSecondsOffset, ref baseData.MaxSecondsOffset,
-                    (out float v1, out float v2) =>
+                else
+                {
+                    UndoHelper.GUIUndo(baseData, "Delay", ref baseData.MinSecondsOffset, () =>
                     {
-                        v1 = Mathf.Clamp(EditorGUILayout.FloatField("Min offset", baseData.MinSecondsOffset), 0, baseData.MaxSecondsOffset);
-                        v2 = Mathf.Clamp(EditorGUILayout.FloatField("Max offset", baseData.MaxSecondsOffset), baseData.MinSecondsOffset, float.MaxValue);
+                        var delay = Mathf.Max(EditorGUILayout.FloatField("First clip offset", baseData.MinSecondsOffset), 0);
+                        if (delay > baseData.MaxSecondsOffset)
+                            baseData.MaxSecondsOffset = baseData.MinSecondsOffset + 1;
+                        return delay;
                     });
 
-            }
-            else
-            {
-                UndoHelper.GUIUndo(baseData, "Delay", ref baseData.MinSecondsOffset, () =>
-                {
-                    var delay = Mathf.Max(EditorGUILayout.FloatField("First clip offset", baseData.MinSecondsOffset), 0);
-                    if (delay > baseData.MaxSecondsOffset)
-                        baseData.MaxSecondsOffset = baseData.MinSecondsOffset + 1;
-                    return delay;
-                });
+                }
 
-            }
-            
-            if (node._type == AudioNodeType.Audio)
-            {
-                var nodeData = node._nodeData as InAudioData;
-                if (nodeData._clip != null)
+                if (node._type == AudioNodeType.Audio)
                 {
-                    float length = nodeData._clip.ExactLength();
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.PrefixLabel("Clip length");
-                    EditorGUILayout.SelectableLabel(length.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                    EditorGUILayout.EndHorizontal();
-                    if (baseData.RandomSecondsOffset && (baseData.MinSecondsOffset > length || baseData.MaxSecondsOffset > length))
+                    var nodeData = node._nodeData as InAudioData;
+                    if (nodeData._clip != null)
                     {
-                        EditorGUILayout.HelpBox("Offset exceeds sound clip length", MessageType.Warning);
-                    }
-                    else if (baseData.MinSecondsOffset > length)
-                    {
-                        EditorGUILayout.HelpBox("Offset exceeds sound clip length", MessageType.Warning);
+                        float length = nodeData._clip.ExactLength();
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.PrefixLabel("Clip length");
+                        EditorGUILayout.SelectableLabel(length.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                        EditorGUILayout.EndHorizontal();
+                        if (baseData.RandomSecondsOffset && (baseData.MinSecondsOffset > length || baseData.MaxSecondsOffset > length))
+                        {
+                            EditorGUILayout.HelpBox("Offset exceeds sound clip length", MessageType.Warning);
+                        }
+                        else if (baseData.MinSecondsOffset > length)
+                        {
+                            EditorGUILayout.HelpBox("Offset exceeds sound clip length", MessageType.Warning);
+                        }
                     }
                 }
+                #endregion
             }
-            #endregion
-        }
-        else
+            else
         {
             #region Attenuation
 
@@ -360,6 +338,9 @@ public static class NodeTypeDataDrawer
             GUI.enabled = true;
         }
     }
+
+    
+
 
     private static void SetPitch(InAudioNodeData baseData)
     {

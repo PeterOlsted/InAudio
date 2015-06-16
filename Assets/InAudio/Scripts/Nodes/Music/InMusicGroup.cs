@@ -26,26 +26,7 @@ public class InMusicGroup : InMusicNode
         
     #region Properties
 
-    public float Volume
-    {
-        get
-        {
-            return runtimeVolume;
-        }
-        set
-        {
-            runtimeVolume = Mathf.Clamp01(value);
-        }
-    }
-
-    public float Pitch
-    {
-        get { return runtimePitch; }
-        set
-        {
-            runtimePitch = Mathf.Clamp(value, 0, 3);
-        }
-    }
+    
 
     public bool AffectedByMute
     {
@@ -53,42 +34,10 @@ public class InMusicGroup : InMusicNode
         //set automatically depending if the parent is muted. See InAudio.Update()
     }
 
-    public bool Solo
-    {
-        get
-        {
-            return runtimeSolo;
-        }
-        set
-        {
-            runtimeSolo = value;
-        }
-    }
-
-    public bool Mute
-    {
-        get
-        {
-            return runtimeMute;
-        }
-        set
-        {
-            runtimeMute = value;
-        }
-    }
+    
 #endregion        
 
-    #region Runtime
-    [System.NonSerialized]
-    //This class may change at any time, you should not dependent on it for your programming.
-    public PlayingMusicInfo PlayingInfo = new PlayingMusicInfo();
-
-    public float runtimeVolume; //Only used during runtime. Should be able to be safely modified, but using InAudio.Music is recommended
-    public float runtimePitch;
-    public bool runtimeSolo;
-    public bool runtimeMute;
-
-    #endregion
+   
 
     #region Private data
     //IMPORTANT!
@@ -98,10 +47,7 @@ public class InMusicGroup : InMusicNode
     public bool _loop = true;
 
     public bool _autoStart = false;
-    public float _pitch = 1.0f;
 
-    public bool _solo;
-    public bool _mute;
 
     [FormerlySerializedAs("_editorClips")]
     public List<AudioClip> _clips = new List<AudioClip>();

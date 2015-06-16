@@ -1,3 +1,4 @@
+using InAudioSystem.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,6 +67,16 @@ namespace InAudioSystem
             if (node._parent._type == AudioNodeType.Folder || node._parent._type == AudioNodeType.Root)
                 return node;
             return FindParentBeforeFolder(node._parent);
+        }
+
+        public static InAudioNode FindRoot()
+        {
+            if(InAudioInstanceFinder.DataManager != null)
+            {
+                return FindParentBeforeFolder(InAudioInstanceFinder.DataManager.AudioTree);
+            }
+            return null;
+            
         }
 
         public static T Max<T, U>(T node, Func<T, U> predicate, out U currentMax)

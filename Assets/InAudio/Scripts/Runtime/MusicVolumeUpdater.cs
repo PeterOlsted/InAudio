@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using InAudioSystem.ExtensionMethods;
+﻿using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEngine;
 
@@ -9,16 +8,15 @@ namespace InAudioSystem.Runtime
     {
         public static void SetInitialSettings(InMusicNode node, float parentVolume, float parentPitch)
         {
-            var group = node as InMusicGroup;
             float volume = node._minVolume * parentVolume;
             float pitch = node._minPitch * parentPitch;
-            if (group != null && Application.isPlaying)
+            if (Application.isPlaying)
             {
-                group.runtimeMute = group._mute;
-                group.runtimeSolo = group._solo;
-                group.runtimeVolume = node._minVolume;
-                group.runtimePitch = node._minPitch;
-                var playingInfo = group.PlayingInfo;
+                node.runtimeMute = node._mute;
+                node.runtimeSolo = node._solo;
+                node.runtimeVolume = node._minVolume;
+                node.runtimePitch = node._minPitch;
+                var playingInfo = node.PlayingInfo;
                 var sources = playingInfo.Players;
                 int sourceCount = sources.Count;
                 for (int i = 0; i < sourceCount; i++)
@@ -43,10 +41,9 @@ namespace InAudioSystem.Runtime
             int childCount = children.Count;
             float volume = 1f;
             float pitch = 1f;
+            var playingInfo = node.PlayingInfo;
             if (group != null)
             {
-                var playingInfo = group.PlayingInfo;
-
                 bool checkPlayer;
 #if UNITY_EDITOR
                 checkPlayer = Application.isPlaying;
@@ -57,7 +54,7 @@ namespace InAudioSystem.Runtime
                 if (group.Playing && checkPlayer)
                 {
                     var players = playingInfo.Players;
-                    
+
                     if (players.Count > 0)
                     {
                         var player = players[0];
@@ -67,14 +64,18 @@ namespace InAudioSystem.Runtime
                         }
                     }
                 }
+            }
 
-                if (playingInfo.Fading)
+            if (playingInfo.Fading)
+            {
+                float currentTime = Time.time;
+                if (currentTime >= playingInfo.EndTime)
                 {
-                    float currentTime = Time.time;
-                    if (currentTime >= playingInfo.EndTime)
+                    group.runtimeVolume = playingInfo.TargetVolume;
+                    playingInfo.Fading = false;
+
+                    if (group != null)
                     {
-                        group.runtimeVolume = playingInfo.TargetVolume;
-                        playingInfo.Fading = false;
                         if (playingInfo.DoAtEnd == MusicState.Stopped)
                         {
                             InAudio.Music.Stop(group);
@@ -84,46 +85,99 @@ namespace InAudioSystem.Runtime
                             InAudio.Music.Pause(group);
                         }
                     }
-                    else
-                    {
-                        var duration = playingInfo.EndTime - playingInfo.StartTime;
-                        var left = playingInfo.EndTime - currentTime;
-                        group.runtimeVolume = AudioTween.DirectTween(playingInfo.TweenType, playingInfo.StartVolume, playingInfo.TargetVolume, 1 - left / duration);
-                    }
                 }
-                
-                if(!playingInfo.AffectedByMute)
-                    volume = GetVolume(group) * parentVolume;
                 else
-                    volume = 0f;
-
-                if (areAnySolo && !playingInfo.IsSoloed && !playingInfo.HasSoloedChild)
                 {
-                    volume = 0;
+                    var duration = playingInfo.EndTime - playingInfo.StartTime;
+                    var left = playingInfo.EndTime - currentTime;
+                    node.runtimeVolume = AudioTween.DirectTween(playingInfo.TweenType, playingInfo.StartVolume, playingInfo.TargetVolume, 1 - left / duration);
                 }
-
-                var sources = playingInfo.Players;
-                int sourceCount = sources.Count;
-
-
-                pitch = GetPitch(group) * parentPitch;
-                if (Application.isPlaying)
-                {
-                    for (int i = 0; i < sourceCount; i++)
-                    {
-                        sources[i].pitch = pitch;
-                        sources[i].SetLoudness(volume);
-                    }
-                }
-                playingInfo.FinalVolume = volume;
-
-                
             }
+                
+            if(!playingInfo.AffectedByMute)
+                volume = GetVolume(node) * parentVolume;
+            else
+                volume = 0f;
+
+            if (areAnySolo && !playingInfo.IsSoloed && !playingInfo.HasSoloedChild)
+            {
+                volume = 0;
+            }
+
+            var sources = playingInfo.Players;
+            int sourceCount = sources.Count;
+
+            pitch = GetPitch(node) * parentPitch;
+            if (Application.isPlaying)
+            {
+                for (int i = 0; i < sourceCount; i++)
+                {
+                    sources[i].pitch = pitch;
+                    sources[i].SetLoudness(volume);
+                }
+            }
+            playingInfo.FinalVolume = volume;
 
             for (int i = 0; i < childCount; i++)
             {
                 UpdateVolumePitch(children[i], volume, pitch, areAnySolo);
             }
+        }
+
+        public static void AudioTreeInitialVolume(InAudioNode node, float parentVolume)
+        {
+            var folderData = node._nodeData as InFolderData;
+            var children = node._children;
+            int childCount = children.Count;
+
+            if (folderData != null)
+            {
+                folderData.runtimeVolume = folderData.VolumeMin;
+                folderData.hiearchyVolume = folderData.runtimeVolume * parentVolume;
+                
+
+                for (int i = 0; i < childCount; i++)
+                {
+                    AudioTreeUpdateVolume(children[i], folderData.hiearchyVolume);
+                }
+            }
+        }
+
+        public static void AudioTreeUpdateVolume(InAudioNode node, float parentVolume)
+        {
+            var folderData = node._nodeData as InFolderData;
+            var children = node._children;
+            int childCount = children.Count;
+            
+            
+            if (folderData != null)
+            {
+#if UNITY_EDITOR
+                bool checkPlayer = Application.isPlaying;
+                if(!Application.isPlaying)
+                {
+                    folderData.runtimeVolume = folderData.VolumeMin;
+                }
+#else
+                bool checkPlayer = true;
+#endif
+                float volume = folderData.runtimeVolume * parentVolume;
+                folderData.hiearchyVolume = volume;
+
+                for (int i = 0; i < childCount; i++)
+                {
+                    AudioTreeUpdateVolume(children[i], volume);
+                }
+
+                if(checkPlayer)
+                {
+                    for(int i = 0; i < folderData.runtimePlayers.Count; i++)
+                    {
+                        var player = folderData.runtimePlayers[i];
+                        player.internalSetFolderVolume(folderData.hiearchyVolume);
+                    }
+                }
+            }           
         }
 
         //Only handles one node, remember to clear its children
@@ -143,33 +197,33 @@ namespace InAudioSystem.Runtime
             players.Clear();
         }
 
-        public static float GetVolume(InMusicGroup group)
+        public static float GetVolume(InMusicNode node)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
-                return group.runtimeVolume;
+                return node.runtimeVolume;
             else
-                return group._minVolume;
+                return node._minVolume;
 #else 
-            return group.runtimeVolume;
+            return node.runtimeVolume;
 #endif
 
         }
 
-        public static bool IsMute(InMusicGroup group)
+        public static bool IsMute(InMusicNode node)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
-                return group.runtimeMute;
+                return node.runtimeMute;
             else
-                return group._mute;
+                return node._mute;
 #else 
-            return group.runtimeMute;
+            return node.runtimeMute;
 #endif
 
         }
 
-        public static void SetMute(InMusicGroup group, bool value)
+        public static void SetMute(InMusicNode group, bool value)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
@@ -182,7 +236,7 @@ namespace InAudioSystem.Runtime
 
         }
 
-        public static void FlipMute(InMusicGroup group)
+        public static void FlipMute(InMusicNode group)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
@@ -195,7 +249,7 @@ namespace InAudioSystem.Runtime
 
         }
 
-        public static bool IsSolo(InMusicGroup group)
+        public static bool IsSolo(InMusicNode group)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
@@ -208,7 +262,7 @@ namespace InAudioSystem.Runtime
 
         }
 
-        public static void SetSolo(InMusicGroup group, bool value)
+        public static void SetSolo(InMusicNode group, bool value)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
@@ -221,7 +275,7 @@ namespace InAudioSystem.Runtime
 
         }
 
-        public static void FlipSolo(InMusicGroup group)
+        public static void FlipSolo(InMusicNode group)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
@@ -234,15 +288,15 @@ namespace InAudioSystem.Runtime
 
         }
 
-        public static float GetPitch(InMusicGroup group)
+        public static float GetPitch(InMusicNode node)
         {
 #if UNITY_EDITOR
             if (Application.isPlaying)
-                return group.runtimePitch;
+                return node.runtimePitch;
             else
-                return group._minPitch;
+                return node._minPitch;
 #else 
-            return group.runtimePitch;
+            return node.runtimePitch;
 #endif
 
         }
@@ -258,16 +312,13 @@ namespace InAudioSystem.Runtime
 
         private static void UpdateMute(InMusicNode node, bool mutedParent)
         {
-            var group = node as InMusicGroup;
             var children = node._children;
             int childCount = children.Count;
             bool muted = false;
-            if (group != null)
-            {
-                muted = IsMute(group) | mutedParent;
-                group.PlayingInfo.AffectedByMute = muted;
+
+            muted = IsMute(node) | mutedParent;
+            node.PlayingInfo.AffectedByMute = muted;
                 
-            }
 
             for (int i = 0; i < childCount; i++)
             {
@@ -277,18 +328,16 @@ namespace InAudioSystem.Runtime
 
         private static void UpdateSolo(InMusicNode node, bool soloedParent, ref bool anySoloed, out bool hasSoloedChild)
         {
-            var group = node as InMusicGroup;
             var children = node._children;
             int childCount = children.Count;
 
             bool solo = soloedParent;
-            if (group != null)
-            {
-                var playingInfo = group.PlayingInfo;
-                solo = soloedParent | IsSolo(group);
-                playingInfo.IsSoloed = solo;
-                anySoloed |= solo;
-            }
+            
+            var playingInfo = node.PlayingInfo;
+            solo = soloedParent | IsSolo(node);
+            playingInfo.IsSoloed = solo;
+            anySoloed |= solo;
+            
             bool solodChild = false;
             for (int i = 0; i < childCount; i++)
             {
@@ -297,10 +346,9 @@ namespace InAudioSystem.Runtime
                 solodChild |= solod;
             }
             hasSoloedChild = solo | solodChild;
-            if (group != null && solodChild)
+            if (solodChild)
             {
-                var playingInfo = group.PlayingInfo;
-                playingInfo.HasSoloedChild = true;
+                node.PlayingInfo.HasSoloedChild = true;
             }
         }
     }

@@ -13,7 +13,8 @@ namespace InAudioSystem
         public const string AudioLoadData       = RelativePathResources + "InAudio AudioSave";
         public const string EventLoadData       = RelativePathResources + "InAudio EventSave";
         public const string BankLinkLoadData    = RelativePathResources + "InAudio BankLinkSave";
-        public const string MusicLoadData = RelativePathResources + "InAudio MusicSave";
+        public const string MusicLoadData       = RelativePathResources + "InAudio MusicSave";
+        public const string InteractiveMusicLoadData       = RelativePathResources + "InAudio InteractiveMusicSave";
                
         public const string ComponentPathInternal = "InAudio/Internal/";
         public const string ComponentPathInternalPools = "InAudio/Internal/Pools/";
@@ -33,11 +34,12 @@ namespace InAudioSystem
         public readonly static string EmptyTemplatePath     = AssetFolder + Name + "/Prefabs/PrefabTemplate.prefab";
 
         //Data
-        public readonly static string AudioSaveDataPath     = FullPathResources + "InAudio AudioSave.prefab";
-        public readonly static string EventSaveDataPath     = FullPathResources + "InAudio EventSave.prefab";
-        public readonly static string MusicSaveDataPath     = FullPathResources + "InAudio MusicSave.prefab";
-        public readonly static string BankLinkSaveDataPath  = FullPathResources + "InAudio BankLinkSave.prefab";
-        public readonly static string AudioDataPath         = FullPathResources + "AudioData/";
+        public readonly static string AudioSaveDataPath                 = FullPathResources + "InAudio AudioSave.prefab";
+        public readonly static string EventSaveDataPath                 = FullPathResources + "InAudio EventSave.prefab";
+        public readonly static string MusicSaveDataPath                 = FullPathResources + "InAudio MusicSave.prefab";
+        public readonly static string InteractiveMusicSaveDataPath      = FullPathResources + "InAudio InteractiveMusicSave.prefab";
+        public readonly static string BankLinkSaveDataPath              = FullPathResources + "InAudio BankLinkSave.prefab";
+        public readonly static string AudioDataPath                     = FullPathResources + "AudioData/";
 
         //Creating the folders
         public static readonly string CreateFolderResources = AssetFolder + Name + "/Resources/" + Name + "/";

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
@@ -7,62 +6,69 @@ using UnityEditor;
 
 namespace InAudioSystem
 {
-public static class SaveAndLoad  
-{
-    private static Component[] GetComponents(GameObject go)
+    public static class SaveAndLoad
     {
-        if (go != null)
+        private static Component[] GetComponents(GameObject go)
         {
-            return go.GetComponentsInChildren(typeof(MonoBehaviour), true);
+            if (go != null)
+            {
+                return go.GetComponentsInChildren(typeof(MonoBehaviour), true);
+            }
+            return null;
         }
-        return null;
-    }
 
-    public static void LoadManagerData(out Component[] audioData, out Component[] eventData, out Component[] musicData,  out Component[] bankLinkData)
-    {
-        
-        GameObject eventDataGO      = Resources.Load(FolderSettings.EventLoadData) as GameObject;
-        GameObject bankLinkDataGO   = Resources.Load(FolderSettings.BankLinkLoadData) as GameObject;
-        GameObject audioDataGO      = Resources.Load(FolderSettings.AudioLoadData) as GameObject;
-        GameObject musicDataGO      = Resources.Load(FolderSettings.MusicLoadData) as GameObject;
+        public static void LoadManagerData(out Component[] audioData, out Component[] eventData, out Component[] musicData, out Component[] bankLinkData, out Component[] interactiveMusicData)
+        {
+            GameObject eventDataGO = Resources.Load(FolderSettings.EventLoadData) as GameObject;
+            GameObject bankLinkDataGO = Resources.Load(FolderSettings.BankLinkLoadData) as GameObject;
+            GameObject audioDataGO = Resources.Load(FolderSettings.AudioLoadData) as GameObject;
+            GameObject musicDataGO = Resources.Load(FolderSettings.MusicLoadData) as GameObject;
+            GameObject interactiveMusicDataGO = Resources.Load(FolderSettings.InteractiveMusicLoadData) as GameObject;
 
-        audioData = GetComponents(audioDataGO);
-        eventData = GetComponents(eventDataGO);
-        bankLinkData = GetComponents(bankLinkDataGO);
-        musicData = GetComponents(musicDataGO);
-    }
+            audioData = GetComponents(audioDataGO);
+            eventData = GetComponents(eventDataGO);
+            bankLinkData = GetComponents(bankLinkDataGO);
+            musicData = GetComponents(musicDataGO);
+            interactiveMusicData = GetComponents(interactiveMusicDataGO);
+        }
 
-    #if UNITY_EDITOR    
-    public static void CreateDataPrefabs(GameObject AudioRoot, GameObject MusicRoot, GameObject EventRoot, GameObject BankLinkRoot)
-    {
-        CreateMusicRootPrefab(MusicRoot);
-        CreateAudioNodeRootPrefab(AudioRoot);
-        CreateAudioEventRootPrefab(EventRoot);
-        CreateAudioBankLinkPrefab(BankLinkRoot);
-    }
+#if UNITY_EDITOR
+        public static void CreateDataPrefabs(GameObject AudioRoot, GameObject MusicRoot, GameObject EventRoot, GameObject BankLinkRoot, GameObject InteractiveMusicRoot)
+        {
+            CreateMusicRootPrefab(MusicRoot);
+            CreateAudioNodeRootPrefab(AudioRoot);
+            CreateAudioEventRootPrefab(EventRoot);
+            CreateAudioBankLinkPrefab(BankLinkRoot);
+            CreateInteractiveMusicRootPrefab(InteractiveMusicRoot);
+        }
 
-    public static void CreateAudioNodeRootPrefab(GameObject root)
-    {
-        PrefabUtility.CreatePrefab(FolderSettings.AudioSaveDataPath, root);
-        Object.DestroyImmediate(root);
-    }
-    public static void CreateAudioEventRootPrefab(GameObject root)
-    {
-        PrefabUtility.CreatePrefab(FolderSettings.EventSaveDataPath, root);
-        Object.DestroyImmediate(root);
-    }
-    public static void CreateAudioBankLinkPrefab(GameObject root)
-    {
-        PrefabUtility.CreatePrefab(FolderSettings.BankLinkSaveDataPath, root);
-        Object.DestroyImmediate(root);
-    }
-    public static void CreateMusicRootPrefab(GameObject root)
-    {
-        PrefabUtility.CreatePrefab(FolderSettings.MusicSaveDataPath, root);
-        Object.DestroyImmediate(root);
-    }
+        public static void CreateAudioNodeRootPrefab(GameObject root)
+        {
+            PrefabUtility.CreatePrefab(FolderSettings.AudioSaveDataPath, root);
+            Object.DestroyImmediate(root);
+        }
+        public static void CreateAudioEventRootPrefab(GameObject root)
+        {
+            PrefabUtility.CreatePrefab(FolderSettings.EventSaveDataPath, root);
+            Object.DestroyImmediate(root);
+        }
+        public static void CreateAudioBankLinkPrefab(GameObject root)
+        {
+            PrefabUtility.CreatePrefab(FolderSettings.BankLinkSaveDataPath, root);
+            Object.DestroyImmediate(root);
+        }
+        public static void CreateMusicRootPrefab(GameObject root)
+        {
+            PrefabUtility.CreatePrefab(FolderSettings.MusicSaveDataPath, root);
+            Object.DestroyImmediate(root);
+        }
+        public static void CreateInteractiveMusicRootPrefab(GameObject root)
+        {
+            PrefabUtility.CreatePrefab(FolderSettings.InteractiveMusicSaveDataPath, root);
+            Object.DestroyImmediate(root);
+        }
 
 
-    #endif
-}
+#endif
+    }
 }

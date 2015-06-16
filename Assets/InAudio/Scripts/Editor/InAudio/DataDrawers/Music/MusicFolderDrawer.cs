@@ -112,6 +112,18 @@ namespace InAudioSystem.InAudioEditor
             DataDrawerHelper.DrawMixer(node, prop.FindProperty("_mixerGroup"));
 
             #endregion
+            EditorGUILayout.Separator();
+            #region Volume & Pitch
+            if (!Application.isPlaying)
+                UndoHelper.GUIUndo(node, "Volume", ref node._minVolume, () => EditorGUILayout.Slider("Initial Volume", node._minVolume, 0f, 1f));
+            else
+                UndoHelper.GUIUndo(node, "Volume", ref node.runtimeVolume, () => EditorGUILayout.Slider("Current Volume", node.runtimeVolume, 0f, 1f));
+
+            if (!Application.isPlaying)
+                UndoHelper.GUIUndo(node, "Pitch", ref node._minPitch, () => EditorGUILayout.Slider("Initial Pitch", node._minPitch, 0f, 3f));
+            else
+                UndoHelper.GUIUndo(node, "Pitch", ref node.runtimePitch, () => EditorGUILayout.Slider("Current Pitch", node.runtimePitch, 0f, 3f));
+            #endregion
 
             EditorGUILayout.EndVertical();
             prop.ApplyModifiedProperties();

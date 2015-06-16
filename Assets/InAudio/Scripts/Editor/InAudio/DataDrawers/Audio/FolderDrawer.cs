@@ -8,13 +8,14 @@ public static class FolderDrawer
 {
     public static void Draw(InAudioNode node)
     {
+            var nodeData = node._nodeData;
         EditorGUILayout.BeginVertical();
+            var data = node._nodeData as InFolderData;
+            #region Bank 
 
-        #region Bank 
-
-        UndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
+            UndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
             EditorGUILayout.TextField("Name", node.Name));
-        var data = node._nodeData as InFolderData;
+       
         if (node._type == AudioNodeType.Folder)
         {
             bool overrideparent = EditorGUILayout.Toggle("Override Parent Bank", data.OverrideParentBank);
@@ -100,10 +101,22 @@ public static class FolderDrawer
 #endregion
 
         EditorGUILayout.Separator();
-        EditorGUILayout.Separator();
+        
         #region Mixer
         DataDrawerHelper.DrawMixer(node);
         #endregion
+        EditorGUILayout.Separator();
+        #region Volume
+        if (Application.isPlaying)
+        {
+            UndoHelper.GUIUndo(nodeData, "Folder volume", ref data.runtimeVolume, () => EditorGUILayout.Slider("Runtime Volume", data.runtimeVolume, 0, 1));
+        }
+        else
+        {
+            UndoHelper.GUIUndo(nodeData, "Folder volume", ref data.VolumeMin, () => EditorGUILayout.Slider("Initial Volume", data.VolumeMin, 0, 1));
+                
+        }
+        #endregion 
 
         EditorGUILayout.EndVertical();
     } 

@@ -13,21 +13,6 @@ public class InAudioEventDrawer : PropertyDrawer
     private const float DragHeight = 20;
     private GUIStyle eventTypeStyle;
 
-    private InEventName fieldName;
-
-    private InEventName FieldName
-    {
-        get
-        {
-            if (fieldName == null)
-            {
-                var attributes = fieldInfo.GetCustomAttributes(typeof (InEventName), false);
-                fieldName = attributes.FirstOrDefault() as InEventName;
-            }
-            return fieldName;
-        }
-    }
-
     public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
     {
         SerializedProperty array = prop.FindPropertyRelative("Events");
@@ -62,10 +47,9 @@ public class InAudioEventDrawer : PropertyDrawer
         EditorStyles.foldout.fontStyle = FontStyle.Bold;
         Rect nameRect = labelPos;
 
-        if(FieldName == null)
-            prop.isExpanded = EditorGUI.Foldout(nameRect, prop.isExpanded, "Event " + ObjectNames.NicifyVariableName( fieldInfo.Name ), true);
-        else
-            prop.isExpanded = EditorGUI.Foldout(nameRect, prop.isExpanded, "Event " + FieldName.EventType, true);
+        
+        prop.isExpanded = EditorGUI.Foldout(nameRect, prop.isExpanded, "Event " + ObjectNames.NicifyVariableName( fieldInfo.Name ), true);
+        
         
         EditorStyles.foldout.fontStyle = FontStyle.Normal;
 
@@ -130,14 +114,9 @@ public class InAudioEventDrawer : PropertyDrawer
                 GUI.skin.label.alignment = TextAnchor.MiddleCenter;
                 GUI.color = backgroundColor;
 
-                if (FieldName == null)
-                    GUI.Button(labelPos,
-                        "Drag event here to add " + ObjectNames.NicifyVariableName(fieldInfo.Name) + " event");
-                else
-                {
-                    GUI.Button(labelPos,
-                        "Drag event here to add " + FieldName.EventType + " event");
-                }
+                
+                GUI.Button(labelPos, "Drag event here to add " + ObjectNames.NicifyVariableName(fieldInfo.Name) + " event");
+                
                 
                 if (labelPos.Contains(Event.current.mousePosition))
                 {

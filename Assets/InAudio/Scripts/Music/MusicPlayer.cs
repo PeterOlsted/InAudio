@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
@@ -55,7 +54,7 @@ namespace InAudioSystem
             PlayMusicGroup(musicGroup, playTime, 0);
         }
 
-        public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime, int skipSamples)
+        public void PlayAtBar(InMusicGroup musicGroup)
         {
             if (musicGroup == null)
             {
@@ -68,6 +67,59 @@ namespace InAudioSystem
             if (HandleExcistingPlay(parent, ref playingInfo))
                 return;
 
+            //double playTime = absoluteDSPTime;
+            PlayMusicGroup(musicGroup, 0, 0);
+        }
+
+        //private SignaturePlayer signaturePlayer;
+        //public SignaturePlayer Signature
+        //{
+        //    get
+        //    {
+        //        if(signaturePlayer == null)
+        //        {
+        //            signaturePlayer = new SignaturePlayer();
+        //        }
+        //        return signaturePlayer;
+        //    }
+        //}
+
+        public class SignaturePlayer
+        {
+            public void PlayAtBeat(InMusicGroup musicGroup)
+            {
+                if (musicGroup == null)
+                {
+                    Debug.LogError("InAudio: Cannot play 'Null' music group");
+                    return;
+                }
+
+                var parent = GetParent(musicGroup);
+                var playingInfo = parent.PlayingInfo;
+                if (HandleExcistingPlay(parent, ref playingInfo))
+                    return;
+
+                //double playTime = absoluteDSPTime;
+                PlayMusicGroup(musicGroup, 0, 0);
+            }
+        }
+        
+
+        public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime, int skipSamples)
+        {
+            if (musicGroup == null)
+            {
+                Debug.LogError("InAudio: Cannot play 'Null' music group");
+                return;
+            }
+
+            var parent = GetParent(musicGroup);
+            var playingInfo = parent.PlayingInfo;
+            if (HandleExcistingPlay(parent, ref playingInfo))
+            {
+                return;
+            }
+
             double playTime = absoluteDSPTime;
             PlayMusicGroup(musicGroup, playTime, skipSamples);
         }
@@ -76,39 +128,39 @@ namespace InAudioSystem
 
         #region Volume
 
-        public void SetVolume(InMusicGroup musicGroup, float volume)
+        public void SetVolume(InMusicNode musicNode, float volume)
         {
-            musicGroup.Volume = volume;
+            musicNode.Volume = volume;
             //Is updated in the beginning of the next frame in InAudio.Update via the MusicVolumeUpdater class
         }
 
-        public float GetVolume(InMusicGroup musicGroup)
+        public float GetVolume(InMusicNode musicNode)
         {
-            return musicGroup.Volume;
+            return musicNode.Volume;
         }
 
         /// <summary>
         /// Get the initial volume of this node, independent from the volume while playing and the hierarchy
         /// </summary>
-        /// <param name="musicGroup"></param>
+        /// <param name="musicNode"></param>
         /// <returns></returns>
-        public float GetInitialVolume(InMusicGroup musicGroup)
+        public float GetInitialVolume(InMusicNode musicNode)
         {
             //Do not change this value, except from the GUI as it will change the prefab, even in Play mode.
-            return musicGroup._minVolume;
+            return musicNode._minVolume;
         }
 
         /// <summary>
         /// Gets the parent of the musicGroup, and fades all other nodes out than the parameter
         /// </summary>
-        /// <param name="musicGroup">The child to focus on</param>
+        /// <param name="musicNode">The child to focus on</param>
         /// <param name="targetVolume">The new volume of it</param>
         /// <param name="otherTargetVolume">The volume of the other nodes than the musicGroup parameter</param>
         /// <param name="duration">How long it should take to fade to it</param>
         /// <param name="twenType">How to tween the values</param>
-        public void FocusOn(InMusicGroup musicGroup, float targetVolume, float otherTargetVolume, float duration, LeanTweenType twenType = LeanTweenType.easeInOutQuad)
+        public void FocusOn(InMusicNode musicNode, float targetVolume, float otherTargetVolume, float duration, LeanTweenType twenType = LeanTweenType.easeInOutQuad)
         {
-            var parent = musicGroup._parent;
+            var parent = musicNode._parent;
             if (parent.IsRootOrFolder)
             {
                 throw new ArgumentException("InAudio: Cannot pass MusicGroup which parent is not a Music Group");
@@ -117,7 +169,7 @@ namespace InAudioSystem
             for (int i = 0; i < parent._children.Count; i++)
             {
                 var child = parent._children[i];
-                if (child != musicGroup)
+                if (child != musicNode)
                 {
                     FadeVolume(child as InMusicGroup, otherTargetVolume, duration);
                 }
@@ -128,11 +180,11 @@ namespace InAudioSystem
             }
         }
 
-        public void SetVolumeOfAllChildren(InMusicGroup musicGroup, float targetVolume, float duration, LeanTweenType twenType = LeanTweenType.easeInOutQuad)
+        public void SetVolumeOfAllChildren(InMusicNode musicNode, float targetVolume, float duration, LeanTweenType twenType = LeanTweenType.easeInOutQuad)
         {
-            for (int i = 0; i < musicGroup._children.Count; i++)
+            for (int i = 0; i < musicNode._children.Count; i++)
             {
-                FadeVolume(musicGroup._children[i] as InMusicGroup, targetVolume, duration);
+                FadeVolume(musicNode._children[i], targetVolume, duration);
             }
         }
 
@@ -170,7 +222,9 @@ namespace InAudioSystem
         public void Pause(InMusicGroup musicGroup)
         {
             if (musicGroup == null)
-                    return;
+            {
+                return;
+            }
 
             PausePlayers(GetParent(musicGroup));
         }
@@ -260,54 +314,54 @@ namespace InAudioSystem
             stopFade.PlayingInfo.Fading = false;
         }
 
-        public void FadeVolume(InMusicGroup toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void FadeVolume(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             //There are no guarantees that the music is playing, 
             Fade(toFade, targetVolume, duration, tweenType);
         }
 
-        public void FadeAndStop(InMusicGroup toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void FadeAndStop(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             Fade(toFade, targetVolume, duration, tweenType);
             toFade.PlayingInfo.DoAtEnd = MusicState.Stopped;
         }
 
-        public void FadeAndStop(InMusicGroup toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void FadeAndStop(InMusicNode toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             Fade(toFade, 0f, duration, tweenType);
             toFade.PlayingInfo.DoAtEnd = MusicState.Stopped;
         }
 
-        public void FadeAndPause(InMusicGroup toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void FadeAndPause(InMusicNode toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             Fade(toFade, 0f, duration, tweenType);
             toFade.PlayingInfo.DoAtEnd = MusicState.Paused;
         }
 
-        public void FadeAndPause(InMusicGroup toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void FadeAndPause(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             Fade(toFade, targetVolume, duration, tweenType);
             toFade.PlayingInfo.DoAtEnd = MusicState.Paused;
         }
 
-        public void FadeToInitialVolume(InMusicGroup musicGroup, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void FadeToInitialVolume(InMusicNode toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(musicGroup, musicGroup._minVolume, duration, tweenType);
+            Fade(toFade, toFade._minVolume, duration, tweenType);
         }
 
-        public void CrossfadeVolume(InMusicGroup from, InMusicGroup to, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void CrossfadeVolume(InMusicNode from, InMusicGroup to, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             Fade(from, 0f, duration, tweenType);
             Fade(to, targetVolume, duration, tweenType);
         }
 
-        public void SwapCrossfadeVolume(InMusicGroup from, InMusicGroup to, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void SwapCrossfadeVolume(InMusicNode from, InMusicGroup to, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             Fade(from, to.Volume, duration, tweenType);
             Fade(to, from.Volume, duration, tweenType);
         }
 
-        public void CrossfadeVolume(InMusicGroup from, InMusicGroup to, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        public void CrossfadeVolume(InMusicNode from, InMusicGroup to, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             Fade(from, 0f, duration, tweenType);
             Fade(to, 1f, duration, tweenType);
@@ -371,7 +425,7 @@ namespace InAudioSystem
                 return GetParent(group._parent as InMusicGroup);
         }
 
-        private static void Fade(InMusicGroup toFade, float targetVolume, float duration, LeanTweenType tweenType)
+        private static void Fade(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType)
         {
             if (tweenType == LeanTweenType.animationCurve)
             {
@@ -541,6 +595,8 @@ namespace InAudioSystem
         //    }
         //    return end;
         //}
+        
+        
 
         #endregion
     }

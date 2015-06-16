@@ -48,6 +48,7 @@ public static class DataDrawerHelper
         }
         EditorGUILayout.EndHorizontal();
         serialized.ApplyModifiedProperties();
+            GUI.enabled = true;
     }
 
     public static void DrawMixer(InMusicNode node, SerializedProperty prop)
@@ -94,5 +95,40 @@ public static class DataDrawerHelper
         EditorGUILayout.EndHorizontal();
         GUI.enabled = true;
     }
-}
+
+       
+        public static void DrawVolume(Object undoObj, ref float refMinVolume, ref float refMaxVolume, ref bool refRandomVolume)
+        {
+
+            float minVolume = refMinVolume;
+            float maxVolume = refMaxVolume;
+            bool randomVolume = refRandomVolume;
+
+            UndoHelper.GUIUndo(undoObj, "Random Volume", ref randomVolume, () => EditorGUILayout.Toggle("Random Volume", randomVolume));
+
+            if (!randomVolume)
+            {
+                UndoHelper.GUIUndo(undoObj, "Volume", () => EditorGUILayout.Slider("Volume", minVolume, 0, 1), v =>
+                {
+                    minVolume = v;
+                    if (minVolume > maxVolume)
+                    {
+                        maxVolume = Mathf.Clamp01(minVolume + 0.1f);
+                    }
+                });
+            }
+            else
+            {
+                UndoHelper.GUIUndo(undoObj, "Random Volume", ref minVolume, ref maxVolume, (out float newMinVolume, out float newMaxVolume) =>
+                {
+                    EditorGUILayout.MinMaxSlider(new GUIContent("Volume"), ref minVolume, ref maxVolume, 0, 1);
+                    newMinVolume = Mathf.Clamp(EditorGUILayout.FloatField("Min volume", minVolume), 0, maxVolume);
+                    newMaxVolume = Mathf.Clamp(EditorGUILayout.FloatField("Max volume", maxVolume), minVolume, 1);
+                });
+            }
+            refMinVolume = minVolume;
+            refMaxVolume = maxVolume;
+            refRandomVolume = randomVolume;
+        }
+    }
 }

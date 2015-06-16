@@ -9,6 +9,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 #if UNITY_EDITOR
+
 [ExecuteInEditMode]
 #endif
 public class InAudio : MonoBehaviour
@@ -511,11 +512,38 @@ public class InAudio : MonoBehaviour
     {
         if (instance != null && gameObject != null && audioNode != null)
         {
-            instance._inAudioEventWorker.SetVolumeForNode(gameObject, audioNode, volume);
+            if (!audioNode.IsRootOrFolder)
+            {
+                instance._inAudioEventWorker.SetVolumeForNode(gameObject, audioNode, volume);
+            }
+            else
+            {
+                Debug.LogWarning("InAudio: Cannot change volume for audio folders here, use SetVolumeForAudioFolder() instead.");
+            }
         }
         else
         {
             InDebug.MissingArguments("SetVolumeForNode", gameObject, audioNode);
+        }
+    }
+
+    public static void SetVolumeForAudioFolder(InAudioNode folderNode, float volume)
+    {
+        if (instance != null && folderNode != null && folderNode.IsRootOrFolder)
+        {
+            var data = folderNode._nodeData as InFolderData;
+            if(data != null)
+            {
+                data.runtimeVolume = Mathf.Clamp01(volume);
+            }
+            else
+            {
+                Debug.LogWarning("InAudio: Cannot set folder volume node that isn't a folder");
+            }
+        }
+        else
+        {
+            InDebug.MissingArgumentsForNode("SetVolumeForNode", folderNode);
         }
     }
 
@@ -1205,6 +1233,7 @@ public class InAudio : MonoBehaviour
             bool anySolo = MusicVolumeUpdater.UpdateSoloMute(musicTree);
 
             MusicVolumeUpdater.UpdateVolumePitch(musicTree, 1.0f, 1.0f, anySolo);
+            MusicVolumeUpdater.AudioTreeUpdateVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
         }
 #if UNITY_EDITOR //Remove condition in player, always update in build
         if (Application.isPlaying)
@@ -1224,7 +1253,7 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.2.2";
+    public const string CurrentVersion = "2.3";
 
     void OnLevelWasLoaded()
     {
@@ -1277,6 +1306,7 @@ public class InAudio : MonoBehaviour
 
                 CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
                 MusicVolumeUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
+                MusicVolumeUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
             }
             else
             {

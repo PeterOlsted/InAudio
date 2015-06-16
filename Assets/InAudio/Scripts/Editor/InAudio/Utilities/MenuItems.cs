@@ -56,7 +56,17 @@ namespace InAudioSystem.InAudioEditor
             window.minSize = new Vector2(100, 50);
             window.title = "Feedback";
         }
-     
+
+        //[MenuItem("Window/InAudio/Music Settings#&6", false, 7)]
+        //private static void InteractiveMusic()
+        //{
+        //    InteractiveMusicWindow window = EditorWindow.GetWindow<InteractiveMusicWindow>();
+
+        //    window.Show();
+        //    window.minSize = new Vector2(100, 50);
+        //    window.title = "Music Settings";
+        //}
+
 
 
         [MenuItem("Window/InAudio/Documentation (website)", false, 10)]

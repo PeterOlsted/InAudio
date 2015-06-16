@@ -38,21 +38,15 @@ namespace InAudioSystem.InAudioEditor
 
             if (node != null)
             {
-                if (!node.IsRootOrFolder)
-                {
-                    pos.x = 160;
-                    EditorGUI.LabelField(pos, node.Name);
-                    pos.x -= 80;
-                    EditorGUI.LabelField(pos, "Node name:");
-                }
-                else
-                {
-                    Rect warningArea = originalPos;
-                    warningArea.height = EditorGUIUtility.singleLineHeight;
-                    warningArea.width -= 40;
-                    warningArea.y = pos.y;
-                    EditorGUI.HelpBox(warningArea, "Cannot play Folder node", MessageType.Error);
-                }
+                
+                Rect labelPos = originalPos;
+                pos.height = EditorGUIUtility.singleLineHeight;
+                labelPos.y = labelPos.y + EditorGUIUtility.singleLineHeight;
+                labelPos.x += 20;
+                EditorGUI.LabelField(labelPos, "Node name:");
+                labelPos.x += 100;
+                EditorGUI.LabelField(labelPos, node.Name);
+
 
                 pos.x = width - 25;
                 pos.width = 40;

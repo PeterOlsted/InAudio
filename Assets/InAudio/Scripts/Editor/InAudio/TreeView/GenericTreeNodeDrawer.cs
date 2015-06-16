@@ -14,7 +14,10 @@ namespace InAudioSystem.TreeDrawer
             Rect fullArea = EditorGUILayout.BeginHorizontal();
             Rect area = EditorGUILayout.BeginHorizontal();
             if (isSelected)
+            {
                 GUI.DrawTexture(area, EditorResources.Background);
+            }
+
 
             GUILayout.Space(EditorGUI.indentLevel * 16);
 
@@ -41,6 +44,12 @@ namespace InAudioSystem.TreeDrawer
 
             EditorGUILayout.EndHorizontal();
             Rect labelArea = GUILayoutUtility.GetLastRect();
+
+            var audioNode = node as InAudioNode;
+            if(audioNode != null)
+            {
+                TreeNodeDrawerHelper.DrawVolume(fullArea, audioNode._nodeData as InFolderData);
+            }
             
             labelArea.y += 6;
             labelArea.x += 60;
@@ -59,6 +68,21 @@ namespace InAudioSystem.TreeDrawer
 
     public static class TreeNodeDrawerHelper
     {
+        public static void DrawVolume(Rect fullArea, InFolderData @group)
+        {
+            if (group == null)
+                return;
+            GUI.enabled = false;
+            Rect sliderRect = fullArea;
+            sliderRect.x = sliderRect.width - 30;
+            sliderRect.width = 20;
+            sliderRect.height -= 5;
+
+            GUI.VerticalSlider(sliderRect, @group.hiearchyVolume, 1f, 0f);
+
+            GUI.enabled = true;
+        }
+
         public static void DrawIcon(Rect lastArea, Texture icon, GUIStyle style)
         {
             Rect iconRect = GUILayoutUtility.GetLastRect();
