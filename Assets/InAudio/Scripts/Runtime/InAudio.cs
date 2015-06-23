@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using InAudioLeanTween;
@@ -57,11 +58,12 @@ public class InAudio : MonoBehaviour
     /// </summary>
     /// <param name="gameObject">The game object to attach to and be controlled by</param>
     /// <param name="audioNode">The node to play</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer Play(GameObject gameObject, InAudioNode audioNode)
+    public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, AudioParameters parameters = null)
     {
         if(instance != null && gameObject != null && audioNode != null)
-            return instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, gameObject);
+            return instance._inAudioEventWorker.PlayConnectedTo(gameObject, audioNode, gameObject, parameters);
         else
             InDebug.MissingArguments("Play", gameObject, audioNode);
         return null;
@@ -71,19 +73,41 @@ public class InAudio : MonoBehaviour
     /// <summary>
     /// Play an audio node directly, attached to another game object
     /// </summary>
-    /// <param name="gameObject">The game object to attach to and be controlled by</param>
+    /// <param name="gameObject">The game object to be controlled by</param>
     /// <param name="audioNode">The node to play</param>
     /// <param name="attachedTo">The object to be attached to</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo)
+    [Obsolete("Use PlayFollowing() instead.")]
+    public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo, AudioParameters parameters = null)
     {
         if (instance != null && gameObject != null && audioNode != null)
-            return instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, attachedTo);
+            return instance._inAudioEventWorker.PlayConnectedTo(gameObject, audioNode, attachedTo, parameters);
         else
             InDebug.MissingArguments("PlayAttachedTo", gameObject, audioNode);
         return null;
     }
 
+    /// <summary>
+    /// Play an audio node directly with a custom fade, following a game object and persists even if the GO is destroyed.
+    /// </summary>
+    /// <param name="gameObject">The game object to be controlled by and follow</param>
+    /// <param name="audioNode">The node to play</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
+    /// <returns>A controller for the playing node</returns>
+    public static InPlayer PlayFollowing(GameObject gameObject, InAudioNode audioNode, AudioParameters parameters = null)
+    {
+        if (instance == null || audioNode == null || audioNode.IsRootOrFolder || gameObject == null)
+        {
+            InDebug.MissingArguments("PlayFollowing", gameObject, audioNode);
+            return null;
+        }
+
+        InPlayer player = instance._inAudioEventWorker.PlayFollowing(gameObject, audioNode, parameters);
+
+        return player;
+    }
+    
 
     /// <summary>
     /// Play an audio node directly, at this position in world space
@@ -91,11 +115,12 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject">The game object to attach to and be controlled by</param>
     /// <param name="audioNode">The node to play</param>
     /// <param name="position">The world position to play at</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position)
+    public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position, AudioParameters parameters = null)
     {
         if (instance != null && gameObject != null && audioNode != null)
-            return instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position);
+            return instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position, parameters);
         else
             InDebug.MissingArguments("PlayAtPosition", gameObject, audioNode);
         return null;
@@ -109,8 +134,9 @@ public class InAudio : MonoBehaviour
     /// <param name="audioNode">The node to play</param>
     /// <param name="fadeTime">How long it should take to fade in from 0 to 1 in volume</param>
     /// <param name="tweeenType">The curve of fading</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType)
+    public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType, AudioParameters parameters = null)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
         {
@@ -118,7 +144,7 @@ public class InAudio : MonoBehaviour
             return null;
         }
 
-        InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, gameObject);
+        InPlayer player = instance._inAudioEventWorker.PlayConnectedTo(gameObject, audioNode, gameObject, parameters);
         player.Volume = 0.0f;
         LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, 0, 1.0f, fadeTime);
         tweever.onUpdateParam = player;
@@ -131,22 +157,52 @@ public class InAudio : MonoBehaviour
     /// <summary>
     /// Play an audio node directly with fade in time, attached to another game object
     /// </summary>
-    /// <param name="gameObject">The game object to attach to and be controlled by</param>
+    /// <param name="gameObject">The game object to be controlled by</param>
     /// <param name="audioNode">The node to play</param>
     /// <param name="attachedTo">The game object to attach to</param>
     /// <param name="fadeTime">How long it should take to fade in from 0 to 1 in volume</param>
     /// <param name="tweeenType">The curve of fading</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo, float fadeTime, LeanTweenType tweeenType)
+    [Obsolete("Use PlayFollowing() instead.")]
+    public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo, float fadeTime, LeanTweenType tweeenType, AudioParameters parameters = null)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
         {
             InDebug.MissingArguments("PlayAttachedTo (tween)", gameObject, audioNode);
         }
 
-        InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, attachedTo);
+        InPlayer player = instance._inAudioEventWorker.PlayConnectedTo(gameObject, audioNode, attachedTo, parameters);
         player.Volume = 0.0f;
         LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, 0, 1.0f, fadeTime);
+        tweever.onUpdateParam = player;
+
+        tweever.tweenType = tweeenType;
+
+        return player;
+    }
+
+
+    /// <summary>
+    /// Play an audio node directly with a fade, following a game object and persists even if the GO is destroyed.
+    /// </summary>
+    /// <param name="gameObject">The game object to be controlled by and follow</param>
+    /// <param name="audioNode">The node to play</param>
+    /// <param name="fadeTime">How long it should take to fade in from 0 to 1 in volume</param>
+    /// <param name="tweeenType">The curve of fading</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
+    /// <returns>A controller for the playing node</returns>
+    public static InPlayer PlayFollowing(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType, AudioParameters parameters = null)
+    {
+        if (instance == null || audioNode == null || audioNode.IsRootOrFolder || gameObject == null)
+        {
+            InDebug.MissingArguments("PlayFollowing (tween)", gameObject, audioNode);
+            return null;
+        }
+
+        InPlayer player = instance._inAudioEventWorker.PlayFollowing(gameObject, audioNode, parameters);
+        player.Volume = 0.0f;
+        LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, 0.0f, 1f, fadeTime);
         tweever.onUpdateParam = player;
 
         tweever.tweenType = tweeenType;
@@ -162,8 +218,9 @@ public class InAudio : MonoBehaviour
     /// <param name="position">The position in world space to play the audio</param>
     /// <param name="fadeTime">How long it should take to fade in from 0 to 1 in volume</param>
     /// <param name="tweeenType">The curve of fading</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position, float fadeTime, LeanTweenType tweeenType)
+    public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position, float fadeTime, LeanTweenType tweeenType, AudioParameters parameters = null)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
         {
@@ -171,7 +228,7 @@ public class InAudio : MonoBehaviour
             return null;
         }
 
-        InPlayer player = instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position);
+        InPlayer player = instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position, parameters);
         player.Volume = 0.0f;
         LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, 0, 1.0f, fadeTime);
         tweever.onUpdateParam = player;
@@ -191,8 +248,9 @@ public class InAudio : MonoBehaviour
     /// <param name="tweeenType">The curve of fading</param>
     /// <param name="startVolume">The starting volume</param>
     /// <param name="endVolume">The end volume</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume)
+    public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume, AudioParameters parameters = null)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
         {
@@ -200,7 +258,7 @@ public class InAudio : MonoBehaviour
             return null;
         }
 
-        InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, gameObject);
+        InPlayer player = instance._inAudioEventWorker.PlayConnectedTo(gameObject, audioNode, gameObject, parameters);
         player.Volume = startVolume;
         LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, startVolume, endVolume, fadeTime);
         tweever.onUpdateParam = player;
@@ -213,15 +271,17 @@ public class InAudio : MonoBehaviour
     /// <summary>
     /// Play an audio node directly with a custom fade, attached to another game object
     /// </summary>
-    /// <param name="gameObject">The game object to attach to and be controlled by</param>
+    /// <param name="gameObject">The game object to be controlled by</param>
     /// <param name="audioNode">The node to play</param>
     /// <param name="attachedTo">The game object to attach to</param>
     /// <param name="fadeTime">How long it should take to fade in from 0 to 1 in volume</param>
     /// <param name="tweeenType">The curve of fading</param>
     /// <param name="startVolume">The starting volume</param>
     /// <param name="endVolume">The end volume</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume)
+    [Obsolete("Use PlayFollowing() instead.")]
+    public static InPlayer PlayAttachedTo(GameObject gameObject, InAudioNode audioNode, GameObject attachedTo, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume, AudioParameters parameters = null)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
         {
@@ -229,7 +289,36 @@ public class InAudio : MonoBehaviour
             return null;
         }
 
-        InPlayer player = instance._inAudioEventWorker.PlayAttachedTo(gameObject, audioNode, attachedTo);
+        InPlayer player = instance._inAudioEventWorker.PlayConnectedTo(gameObject, audioNode, attachedTo, parameters);
+        player.Volume = startVolume;
+        LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, startVolume, endVolume, fadeTime);
+        tweever.onUpdateParam = player;
+
+        tweever.tweenType = tweeenType;
+
+        return player;
+    }
+
+    /// <summary>
+    /// Play an audio node directly with a custom fade, following a game object and persists even if the GO is destroyed.
+    /// </summary>
+    /// <param name="gameObject">The game object to be controlled by and follow</param>
+    /// <param name="audioNode">The node to play</param>
+    /// <param name="fadeTime">How long it should take to fade in from 0 to 1 in volume</param>
+    /// <param name="tweeenType">The curve of fading</param>
+    /// <param name="startVolume">The starting volume</param>
+    /// <param name="endVolume">The end volume</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
+    /// <returns>A controller for the playing node</returns>
+    public static InPlayer PlayFollowing(GameObject gameObject, InAudioNode audioNode, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume, AudioParameters parameters = null)
+    {
+        if (instance == null || audioNode == null || audioNode.IsRootOrFolder || gameObject == null)
+        {
+            InDebug.MissingArguments("PlayFollowing (tween specific)", gameObject, audioNode);
+            return null;
+        }
+
+        InPlayer player = instance._inAudioEventWorker.PlayFollowing(gameObject, audioNode, parameters);
         player.Volume = startVolume;
         LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, startVolume, endVolume, fadeTime);
         tweever.onUpdateParam = player;
@@ -249,8 +338,9 @@ public class InAudio : MonoBehaviour
     /// <param name="tweeenType">The curve of fading</param>
     /// <param name="startVolume">The starting volume</param>
     /// <param name="endVolume">The end volume</param>
+    /// <param name="parameters">Parameters to set initial values directly</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume)
+    public static InPlayer PlayAtPosition(GameObject gameObject, InAudioNode audioNode, Vector3 position, float fadeTime, LeanTweenType tweeenType, float startVolume, float endVolume, AudioParameters parameters = null)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
         {
@@ -258,7 +348,7 @@ public class InAudio : MonoBehaviour
             return null;
         }
 
-        InPlayer player = instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position);
+        InPlayer player = instance._inAudioEventWorker.PlayAtPosition(gameObject, audioNode, position, parameters);
         player.Volume = startVolume;
         LTDescr tweever = LeanTween.value(gameObject, (f, o) => { (o as InPlayer).Volume = f; }, startVolume, endVolume, fadeTime);
         tweever.onUpdateParam = player;
@@ -275,7 +365,8 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject">The game object to attach to and be controlled by</param>
     /// <param name="audioNode">The node to play</param>
     /// <returns>A controller for the playing node</returns>
-    public static InPlayer PlayPersistent(Vector3 position, InAudioNode audioNode)
+    /// <param name="parameters">Parameters to set initial values directly</param>
+    public static InPlayer PlayPersistent(Vector3 position, InAudioNode audioNode, AudioParameters parameters = null)
     {
         if (instance == null || audioNode == null || audioNode.IsRootOrFolder)
         {
@@ -284,7 +375,7 @@ public class InAudio : MonoBehaviour
         }
         
 
-        InPlayer player = instance._inAudioEventWorker.PlayAtPosition(instance.gameObject, audioNode, position);
+        InPlayer player = instance._inAudioEventWorker.PlayAtPosition(instance.gameObject, audioNode, position, parameters);
 
         return player;
     }
@@ -878,9 +969,9 @@ public class InAudio : MonoBehaviour
                 if (audioNode != null)
                 {
                     if (attachedTo != null)
-                        _inAudioEventWorker.PlayAttachedTo(controllingObject, audioNode, attachedTo, audioPlayData.Fadetime, audioPlayData.TweenType);
+                        _inAudioEventWorker.PlayConnectedTo(controllingObject, audioNode, attachedTo, null, audioPlayData.Fadetime, audioPlayData.TweenType);
                     else
-                        _inAudioEventWorker.PlayAtPosition(controllingObject, audioNode, playAt, audioPlayData.Fadetime, audioPlayData.TweenType);
+                        _inAudioEventWorker.PlayAtPosition(controllingObject, audioNode, playAt, null, audioPlayData.Fadetime, audioPlayData.TweenType);
                 }
                 break;
             case EventActionTypes.Stop:
@@ -1230,10 +1321,10 @@ public class InAudio : MonoBehaviour
         var musicTree = InAudioInstanceFinder.DataManager.MusicTree;
         if (musicTree != null)
         {
-            bool anySolo = MusicVolumeUpdater.UpdateSoloMute(musicTree);
+            bool anySolo = MusicUpdater.UpdateSoloMute(musicTree);
 
-            MusicVolumeUpdater.UpdateVolumePitch(musicTree, 1.0f, 1.0f, anySolo);
-            MusicVolumeUpdater.AudioTreeUpdateVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+            MusicUpdater.UpdateVolumePitch(musicTree, 1.0f, 1.0f, anySolo);
+            AudioUpdater.AudioTreeUpdate(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
         }
 #if UNITY_EDITOR //Remove condition in player, always update in build
         if (Application.isPlaying)
@@ -1253,7 +1344,7 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.3";
+    public const string CurrentVersion = "2.3.5";
 
     void OnLevelWasLoaded()
     {
@@ -1305,8 +1396,8 @@ public class InAudio : MonoBehaviour
                 runtimeData.UpdateEvents(InAudioInstanceFinder.DataManager.EventTree);
 
                 CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
-                MusicVolumeUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
-                MusicVolumeUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+                MusicUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
+                AudioUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
             }
             else
             {

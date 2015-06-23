@@ -59,7 +59,7 @@ namespace InAudioSystem.InAudioEditor
         }
     }
 
-    [CustomPropertyDrawer(typeof(InMusicNode))]
+    [CustomPropertyDrawer(typeof(InMusicNode), true)]
     public class InMusicNodeDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
@@ -68,25 +68,4 @@ namespace InAudioSystem.InAudioEditor
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
             {MusicDrawerHelper.OnGUI(pos, prop, label);}
     }
-
-    [CustomPropertyDrawer(typeof(InMusicGroup))]
-    public class InMusicGroupDrawer : PropertyDrawer
-    {
-        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
-        { return MusicDrawerHelper.GetPropertyHeight(prop); }
-
-        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
-        { MusicDrawerHelper.OnGUI(pos, prop, label); }
-    }
-
-    [CustomPropertyDrawer(typeof(InMusicFolder))]
-    public class InMusicFolderDrawer : PropertyDrawer
-    {
-        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
-        { return MusicDrawerHelper.GetPropertyHeight(prop); }
-
-        public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
-        { MusicDrawerHelper.OnGUI(pos, prop, label); }
-    }
-
 }

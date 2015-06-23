@@ -16,16 +16,139 @@ namespace InAudioSystem.Runtime
     public class InPlayer : MonoBehaviour
     {
         /// <summary>
+        /// To call when the audio is done playing
+        /// </summary>
+        public Action<GameObject, InAudioNode> OnCompleted;
+
+        /// <summary>
+        /// The volume of the player. This does not account for rolloff or if the playing nodes volumes.
+        /// </summary>
+        public float Volume
+        {
+            get { return audioParameters.Volume; }
+            set
+            {
+                audioParameters.StereoPan = Volume;
+                for (int i = 0; i < audioSources.Count; i++)
+                {
+                    if (audioSources == null)
+                        continue;
+                    var source = audioSources[i];
+                    SetVolume(source, audioParameters.Volume);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The node playing. Not including any children nodes.
+        /// </summary>
+        public InAudioNode NodePlaying
+        {
+            get { return PlayingNode; }
+        }
+
+        /// <summary>
+        /// Break any looping sounds
+        /// </summary>
+        public void Break()
+        {
+            breakLoop = true;
+        }
+
+        /// <summary>
+        /// 3D SpatialBlend as in Audio Sources
+        /// </summary>
+        public float SpatialBlend
+        {
+            get { return audioParameters.SpatialBlend; }
+            set
+            {
+                for (int i = 0; i < audioSources.Count; i++)
+                {
+                    audioSources[i].AudioSource.spatialBlend = value;
+                }
+                audioParameters.SpatialBlend = value;
+            }
+        }
+
+        /// <summary>
+        /// 3D Spread as in Audio Sources
+        /// </summary>
+        public float Spread
+        {
+            get { return _spread; }
+            set
+            {
+                for (int i = 0; i < audioSources.Count; i++)
+                {
+                    audioSources[i].AudioSource.spread = value;
+                }
+                _spread = value;
+            }
+        }
+
+        /// <summary>
+        /// 2D Pan as in Audio Sources
+        /// </summary>
+        public float PanStereo
+        {
+            get { return audioParameters.StereoPan; }
+            set
+            {
+                for (int i = 0; i < audioSources.Count; i++)
+                {
+                    audioSources[i].AudioSource.panStereo = value;
+                }
+                audioParameters.StereoPan = value;
+            }
+        }
+
+        /// <summary>
+        /// Stop the current playing sound
+        /// </summary>
+        public void Stop()
+        {
+            //Use a non zero amount to avoid any issues with sound glitching
+            StartCoroutine(StopAndMute(0.08f, LeanTweenType.notUsed));
+        }
+
+        /// <summary>
+        /// Stop with fade out
+        /// </summary>
+        /// <param name="fadeOutTime"></param>
+        public void Stop(float fadeOutTime, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        {
+            StartCoroutine(StopAndMute(fadeOutTime, tweenType));
+        }
+
+        #region Internal
+
+        /// <summary>
         /// Internal InAudio play method. Please use InAudio.Play(...) to play audio
         /// </summary>
-        public void _internalPlay(InAudioNode node, GameObject controllingObject, RuntimeInfo playingInfo, float fade,
-            LeanTweenType fadeType)
+        public void _internalPlay(InAudioNode node, GameObject controllingObject, RuntimeInfo playingInfo, float fade, LeanTweenType fadeType, AudioParameters parameters)
         {
             if (node.IsRootOrFolder)
             {
                 Debug.LogWarning("InAudio: Cannot play Folder node \"" + node.Name + "\"");
                 return;
             }
+
+            if (audioParameters == null)
+            {
+                audioParameters = new AudioParameters();
+            }
+
+            if (parameters != null)
+            {
+                audioParameters.CopyFrom(parameters);
+            }
+            else
+            {
+                audioParameters.Reset();
+            }
+
+
             dspPool = InAudioInstanceFinder.DSPTimePool;
             breakLoop = false;
 
@@ -50,10 +173,7 @@ namespace InAudioSystem.Runtime
             time.CurrentEndTime = AudioSettings.dspTime;
             isActive = true;
             fadeVolume = 1f;
-            volume = 1.0f;
-            _spatialBlend = 1.0f;
-            spread = 0.0f;
-            _panStereo = 0.0f;
+            _spread = 0.0f;
             if (fade > 0)
             {
                 LTDescr tweever = LeanTween.value(controllingObject, f =>
@@ -69,84 +189,11 @@ namespace InAudioSystem.Runtime
             StartCoroutine(StartPlay(node, time));
         }
 
-        /// <summary>
-        /// To call when the audio is done playing
-        /// </summary>
-        public Action<GameObject, InAudioNode> OnCompleted;
-
-        /// <summary>
-        /// Break any looping sounds
-        /// </summary>
-        public void Break()
+        public void _internalPlayFollowing(InAudioNode node, GameObject controllingObject, RuntimeInfo playingInfo, float fade, LeanTweenType fadeType, AudioParameters parameters)
         {
-            breakLoop = true;
-        }
-
-
-        /// <summary>
-        /// 3D SpatialBlend as in Audio Sources
-        /// </summary>
-        public float SpatialBlend
-        {
-            get { return _spatialBlend; }
-            set
-            {
-                for (int i = 0; i < audioSources.Count; i++)
-                {
-                    audioSources[i].AudioSource.spatialBlend = value;
-                }
-                _spatialBlend = value;
-            }
-        }
-
-        /// <summary>
-        /// 3D Spread as in Audio Sources
-        /// </summary>
-        public float Spread
-        {
-            get { return spread; }
-            set
-            {
-                for (int i = 0; i < audioSources.Count; i++)
-                {
-                    audioSources[i].AudioSource.spread = value;
-                }
-                spread = value;
-            }
-        }
-
-        /// <summary>
-        /// 2D Pan as in Audio Sources
-        /// </summary>
-        public float PanStereo
-        {
-            get { return _panStereo; }
-            set
-            {
-                for (int i = 0; i < audioSources.Count; i++)
-                {
-                    audioSources[i].AudioSource.panStereo = value;
-                }
-                _panStereo = value;
-            }
-        }
-
-        /// <summary>
-        /// Stop the current playing sound
-        /// </summary>
-        public void Stop()
-        {
-            //Use a non zero amount to avoid any issues with sound glitching
-            StartCoroutine(StopAndMute(0.08f, LeanTweenType.notUsed));
-        }
-
-        /// <summary>
-        /// Stop with fade out
-        /// </summary>
-        /// <param name="fadeOutTime"></param>
-        public void Stop(float fadeOutTime, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
-        {
-            StartCoroutine(StopAndMute(fadeOutTime, tweenType));
+            this.toFollow = controllingObject.transform;
+            internalUpdate();
+            _internalPlay(node, controllingObject, playingInfo, fade, fadeType, parameters);
         }
 
         /// <summary>
@@ -166,7 +213,17 @@ namespace InAudioSystem.Runtime
                 if (audioSources == null)
                     continue;
                 var source = audioSources[i];
-                SetVolume(source);
+                SetVolume(source, audioParameters.Volume);
+            }
+        }
+
+        public void internalUpdate()
+        {
+            if (toFollow != null)
+            {
+                transform.localPosition = new Vector3();
+                transform.localPosition = -transform.position + toFollow.position;
+                transform.localRotation = toFollow.rotation;
             }
         }
 
@@ -200,7 +257,7 @@ namespace InAudioSystem.Runtime
                 {
                     player.Rolloff = data.FalloffCurve.Evaluate(Mathf.Clamp01(distance/data.MaxDistance));
                 }
-                SetVolume(player);
+                SetVolume(player, audioParameters.Volume);
                 //player.AudioSource.SetLoudness(player.OriginalVolume * attachedToBus.RuntimeSelfVolume * volume * player.Rolloff);
             }
         }
@@ -240,30 +297,9 @@ namespace InAudioSystem.Runtime
             }
         }
 
-        public float Volume
+        private float SetVolume(InRuntimePlayer source, float volume)
         {
-            get { return volume; }
-            set
-            {
-                volume = value;
-                for (int i = 0; i < audioSources.Count; i++)
-                {
-                    if (audioSources == null)
-                        continue;
-                    var source = audioSources[i];
-                    SetVolume(source);
-                }
-            }
-        }
-
-        public InAudioNode NodePlaying
-        {
-            get { return PlayingNode; }
-        }
-
-        private float SetVolume(InRuntimePlayer source)
-        {
-            float vol = source.OriginalVolume*volume*source.Rolloff*fadeVolume* folderVolume;
+            float vol = source.OriginalVolume * volume * source.Rolloff * fadeVolume * folderVolume;
             return source.AudioSource.SetLoudness(vol);
         }
 
@@ -308,7 +344,7 @@ namespace InAudioSystem.Runtime
             }
             else
             {
-                var tween = LeanTween.value(gameObject, (f, o) => (o as InPlayer).Volume = f, volume*fadeVolume, 0.0f, fadeOutTime);
+                var tween = LeanTween.value(gameObject, (f, o) => (o as InPlayer).Volume = f, audioParameters.Volume*fadeVolume, 0.0f, fadeOutTime);
                 tween.onUpdateParam = this;
                 tween.tweenType = tweenType;
                 tween.onComplete = FinalCleanup;
@@ -331,11 +367,8 @@ namespace InAudioSystem.Runtime
             StopAllCoroutines();
         }
 
-        private float volume = 1.0f;
         private float fadeVolume = 1.0f;
-        private float _spatialBlend;
-        private float spread;
-        private float _panStereo;
+        private float _spread;
 
         private float folderVolume = 1.0f;
 
@@ -354,6 +387,8 @@ namespace InAudioSystem.Runtime
 
         //private bool firstClip;
 
+        private Transform toFollow;
+
         private bool isActive;
 
         private RuntimeInfo runtimeInfo;
@@ -361,6 +396,8 @@ namespace InAudioSystem.Runtime
         private bool breakLoop;
 
         private int currentIndex;
+
+        private AudioParameters audioParameters = new AudioParameters();
 
         public ReadOnlyCollection<InRuntimePlayer> PlayingSources
         {
@@ -570,10 +607,10 @@ namespace InAudioSystem.Runtime
                 nodeVolume = RuntimeHelper.CalcVolume(startNode, currentNode);
                 Current.OriginalVolume = nodeVolume;
 
-                SetVolume(Current);
+                SetVolume(Current, audioParameters.Volume);
 
                 source.spatialBlend = RuntimeHelper.CalcBlend(startNode, currentNode);
-                source.pitch = RuntimeHelper.CalcPitch(startNode, currentNode);
+                source.pitch = RuntimeHelper.CalcPitch(startNode, currentNode) * audioParameters.Pitch;
                 source.rolloffMode = RuntimeHelper.CalcAttentutation(startNode, currentNode, source);
                 source.outputAudioMixerGroup = currentNode.GetMixerGroup();
                 length = RuntimeHelper.LengthFromPitch(length, source.pitch);
@@ -581,9 +618,9 @@ namespace InAudioSystem.Runtime
                 Current.StartTime = playAtDSPTime;
                 Current.UsedNode = currentNode;
 
-                source.panStereo += _panStereo;
-                source.spread *= spread;
-                source.spatialBlend *= _spatialBlend;
+                source.panStereo += audioParameters.StereoPan;
+                source.spread = _spread;
+                source.spatialBlend *= audioParameters.SpatialBlend;
                 source.timeSamples = (int) (lengthOffset);
                 source.PlayScheduled(playAtDSPTime);
             }
@@ -679,4 +716,5 @@ namespace InAudioSystem.Runtime
             OnCompleted = null;
         }
     }
+    #endregion //Internal
 }

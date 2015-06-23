@@ -131,7 +131,7 @@ namespace InAudioSystem
         public void SetVolume(InMusicNode musicNode, float volume)
         {
             musicNode.Volume = volume;
-            //Is updated in the beginning of the next frame in InAudio.Update via the MusicVolumeUpdater class
+            //Is updated in the beginning of the next frame in InAudio.Update via the MusicUpdater class
         }
 
         public float GetVolume(InMusicNode musicNode)
@@ -195,7 +195,7 @@ namespace InAudioSystem
         public void SetPitch(InMusicGroup musicGroup, float pitch)
         {
             musicGroup.Pitch = pitch;
-            //Is updated in the beginning of the next frame in InAudio.Update via the MusicVolumeUpdater class
+            //Is updated in the beginning of the next frame in InAudio.Update via the MusicUpdater class
         }
 
         public float GetPitch(InMusicGroup musicGroup)
@@ -496,7 +496,7 @@ namespace InAudioSystem
                 for (int i = 0; i < playing.Count; i++)
                 {
                     playing[i].Stop();
-                    MusicVolumeUpdater.CleanupMusicNode(musicGroup);
+                    MusicUpdater.CleanupMusicNode(musicGroup);
                     
                 }
             }
@@ -515,7 +515,7 @@ namespace InAudioSystem
                 for (int i = 0; i < playing.Count; i++)
                 {
                     playing[i].SetScheduledEndTime(absoluteDSPTime);
-                    //cleanup happens in MusicVolumeUpdater
+                    //cleanup happens in MusicUpdater
                 }
             }
             for (int i = 0; i < musicGroup._children.Count; i++)

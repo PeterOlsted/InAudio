@@ -131,21 +131,21 @@ namespace InAudioSystem.TreeDrawer
             butArea.y += 3;
             butArea.x += EditorGUI.indentLevel*5 + 5;
 
-            Texture mute = MusicVolumeUpdater.IsMute(node) ? EditorResources.Muted : EditorResources.NotMute;
+            Texture mute = MusicUpdater.IsMute(node) ? EditorResources.Muted : EditorResources.NotMute;
 
             if (GUI.Button(butArea, mute, GUIStyle.none))
             {
                 UndoHelper.RegisterUndo(node, "Mute");
-                MusicVolumeUpdater.FlipMute(node);
+                MusicUpdater.FlipMute(node);
             }
 
             butArea.y += 14;
-            Texture solo = MusicVolumeUpdater.IsSolo(node) ? EditorResources.Soloed : EditorResources.NotSolo;
+            Texture solo = MusicUpdater.IsSolo(node) ? EditorResources.Soloed : EditorResources.NotSolo;
 
             if (GUI.Button(butArea, solo, GUIStyle.none))
             {
                 UndoHelper.RegisterUndo(node, "Solo");
-                MusicVolumeUpdater.FlipSolo(node);
+                MusicUpdater.FlipSolo(node);
             }
         }
 

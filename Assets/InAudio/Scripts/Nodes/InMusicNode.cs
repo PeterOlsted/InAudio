@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
+using InAudioSystem;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace InAudioSystem
-{
     public class InMusicNode : MonoBehaviour, InITreeNode<InMusicNode>
     {
         public int _guid;
@@ -160,4 +159,3 @@ namespace InAudioSystem
         Music = 2,
     }   
 
-}

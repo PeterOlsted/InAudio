@@ -257,13 +257,7 @@ public static class NodeTypeDataDrawer
             if (node._parent.IsRootOrFolder)
                 GUI.enabled = true;
 
-            bool dirty = false;
-            UndoHelper.GUIUndo(node, "Rolloff Mode", ref baseData.RolloffMode, () =>
-            {
-                dirty = true;
-                return (AudioRolloffMode) EditorGUILayout.EnumPopup("Volume Rolloff", baseData.RolloffMode);
-
-            });
+            UndoHelper.GUIUndo(node, "Rolloff Mode", ref baseData.RolloffMode, () => (AudioRolloffMode) EditorGUILayout.EnumPopup("Volume Rolloff", baseData.RolloffMode));
 
             UndoHelper.GUIUndo(baseData, "Set Rolloff Distance", ref baseData.MinDistance, ref baseData.MaxDistance,
                 (out float v1, out float v2) =>
@@ -277,8 +271,6 @@ public static class NodeTypeDataDrawer
                     v2 = EditorGUILayout.FloatField("Max Distance", baseData.MaxDistance);
                     v1 = Mathf.Max(v1, 0.00001f);
                     v2 = Mathf.Max(v2, v1 + 0.01f);
-
-                    dirty = true;
                 });
 
             
@@ -321,16 +313,8 @@ public static class NodeTypeDataDrawer
                     MessageType.Info, true);
                 }
 
-                EditorGUILayout.HelpBox(
-                    "Unity does not support setting custom rolloff via scripts. This will perform slower than a log/linear rolloff curve",
-                    MessageType.Warning, true);
+                EditorGUILayout.HelpBox("Unity does not support setting custom rolloff via scripts. This will perform slower than a log/linear rolloff curve", MessageType.Warning, true);
                 GUI.enabled = false;
-            }
-
-
-            if (dirty && Application.isPlaying)
-            {
-                UpdateDateRuntime.Update(node);
             }
 
             #endregion 

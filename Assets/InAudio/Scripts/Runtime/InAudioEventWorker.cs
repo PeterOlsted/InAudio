@@ -9,8 +9,7 @@ namespace InAudioSystem.Internal
 {
     public class InAudioEventWorker : MonoBehaviour
     {
-        public InPlayer PlayAttachedTo(GameObject controllingObject, InAudioNode audioNode, GameObject attachedTo,
-            float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
+        public InPlayer PlayConnectedTo(GameObject controllingObject, InAudioNode audioNode, GameObject attachedTo, AudioParameters audioParameters, float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
         {
             List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
             if (!AllowedStealing(audioNode, currentInstances))
@@ -26,11 +25,29 @@ namespace InAudioSystem.Internal
             currentInstances.Add(new InstanceInfo(AudioSettings.dspTime, runtimePlayer));
             runtimePlayer.transform.parent = attachedTo.transform;
             runtimePlayer.transform.localPosition = new Vector3();
-            Play(controllingObject, audioNode, runtimePlayer, fade, fadeType);
+            Play(controllingObject, audioNode, runtimePlayer, fade, fadeType, audioParameters);
             return runtimePlayer;
         }
 
-        public InPlayer PlayAtPosition(GameObject controllingObject, InAudioNode audioNode, Vector3 position,
+        public InPlayer PlayFollowing(GameObject controllingObject, InAudioNode audioNode, AudioParameters audioParameters, float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
+        {
+            List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
+            if (!AllowedStealing(audioNode, currentInstances))
+            {
+                return null;
+            }
+
+            var runtimePlayer = InAudioInstanceFinder.RuntimePlayerControllerPool.GetObject();
+            if (runtimePlayer == null)
+            {
+                Debug.LogWarning("InAudio: A pooled objected was not initialized. Try to restart play mode. If the problem persists, please submit a bug report.");
+            }
+            currentInstances.Add(new InstanceInfo(AudioSettings.dspTime, runtimePlayer));
+            PlayFollowing(controllingObject, audioNode, runtimePlayer, fade, fadeType, audioParameters);
+            return runtimePlayer;
+        }
+
+        public InPlayer PlayAtPosition(GameObject controllingObject, InAudioNode audioNode, Vector3 position, AudioParameters audioParameters,
             float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
         {
             List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
@@ -38,7 +55,7 @@ namespace InAudioSystem.Internal
                 return null;
             var poolObject = InAudioInstanceFinder.RuntimePlayerControllerPool.GetObject();
             poolObject.transform.position = position;
-            Play(controllingObject, audioNode, poolObject, fade, fadeType);
+            Play(controllingObject, audioNode, poolObject, fade, fadeType, audioParameters);
             return poolObject;
         }
 
@@ -188,8 +205,7 @@ namespace InAudioSystem.Internal
             }
         }
 
-        public void StopByNode(GameObject controllingObject, InAudioNode nodeToStop, float fadeOutTime = 0.0f,
-            LeanTweenType tweenType = LeanTweenType.easeOutCubic)
+        public void StopByNode(GameObject controllingObject, InAudioNode nodeToStop, float fadeOutTime = 0.0f, LeanTweenType tweenType = LeanTweenType.easeOutCubic)
         {
             ObjectAudioList infoList;
             GOAudioNodes.TryGetValue(controllingObject.GetInstanceID(), out infoList);
@@ -207,8 +223,22 @@ namespace InAudioSystem.Internal
             }
         }
 
-        private void Play(GameObject controllingObject, InAudioNode audioNode, InPlayer player, float fade,
-            LeanTweenType fadeType)
+        private void Play(GameObject controllingObject, InAudioNode audioNode, InPlayer player, float fade, LeanTweenType fadeType, AudioParameters parameters)
+        {
+            var runtimeInfo = PreparePlay(controllingObject, audioNode, player);
+
+            player._internalPlay(audioNode, controllingObject, runtimeInfo, fade, fadeType, parameters);
+        }
+
+        
+        private void PlayFollowing(GameObject controllingObject,InAudioNode audioNode, InPlayer player, float fade, LeanTweenType fadeType, AudioParameters parameters)
+        {
+            var runtimeInfo = PreparePlay(controllingObject, audioNode, player);
+
+            player._internalPlayFollowing(audioNode, controllingObject, runtimeInfo, fade, fadeType, parameters);
+        }
+
+        private RuntimeInfo PreparePlay(GameObject controllingObject, InAudioNode audioNode, InPlayer player)
         {
             ObjectAudioList tupleList = GetValue(GOAudioNodes, controllingObject);
 
@@ -218,9 +248,9 @@ namespace InAudioSystem.Internal
             runtimeInfo.Player = player;
             runtimeInfo.ListIndex = tupleList.InfoList.Count - 1;
             runtimeInfo.PlacedIn = tupleList;
-
-            player._internalPlay(audioNode, controllingObject, runtimeInfo, fade, fadeType);
+            return runtimeInfo;
         }
+
 
         private ObjectAudioList GetValue(Dictionary<int, ObjectAudioList> dictionary, GameObject go)
         {
