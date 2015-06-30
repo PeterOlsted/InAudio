@@ -28,7 +28,7 @@ namespace InAudioSystem.InAudioEditor
             InteractiveMusicWindow window = GetWindow<InteractiveMusicWindow>();
             window.Show();
 
-            window.title = "Interactive Music Window";
+            window.SetTitle("Interactive Music Window");
             return window;
         }
 

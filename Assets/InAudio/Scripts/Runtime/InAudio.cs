@@ -1344,7 +1344,7 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.3.5";
+    public const string CurrentVersion = "2.3.6";
 
     void OnLevelWasLoaded()
     {

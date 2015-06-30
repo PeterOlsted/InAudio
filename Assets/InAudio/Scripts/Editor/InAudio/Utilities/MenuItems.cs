@@ -54,7 +54,7 @@ namespace InAudioSystem.InAudioEditor
 
             window.Show();
             window.minSize = new Vector2(100, 50);
-            window.title = "Feedback";
+            window.SetTitle("Feedback");
         }
 
         //[MenuItem("Window/InAudio/Music Settings#&6", false, 7)]
@@ -90,6 +90,17 @@ namespace InAudioSystem.InAudioEditor
             Selection.activeGameObject = go;
         }
     }
-    
+
+    public static class EditorWindowExtensions
+    {
+        public static void SetTitle(this EditorWindow window, string title)
+        {
+#if UNITY_5_0
+            window.title = title;
+#else
+            window.titleContent = new GUIContent(title);
+#endif
+        }
+    }
 }
 

@@ -10,9 +10,11 @@ namespace InAudioSystem.InAudioEditor
         private void OnEnable()
         {
             BaseEnable();
-            title = "Event Window";
+            this.SetTitle("Event Window");
             if (audioEventCreatorGUI == null)
+            {
                 audioEventCreatorGUI = new AudioEventCreatorGUI(this);
+            }
             audioEventCreatorGUI.OnEnable();
         }
 

@@ -44,7 +44,7 @@ namespace InAudioSystem.InAudioEditor
             window.Show();
 
             //window.minSize = new Vector2(800, 200);
-            window.title = "Music Window";
+            window.SetTitle("Music Window");
             return window;
         }
 

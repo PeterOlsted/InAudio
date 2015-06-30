@@ -25,7 +25,7 @@ namespace InAudioSystem.InAudioEditor
 
             window.Show();
             window.minSize = new Vector2(400, 400);
-            window.title = "Aux Window";
+            window.SetTitle("Aux Window");
             return window;
         }
 
