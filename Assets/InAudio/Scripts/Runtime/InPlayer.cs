@@ -449,20 +449,29 @@ namespace InAudioSystem.Runtime
 
                     if (preOffset > 0)
                     {
-                        int sampleCount = audioData._clip.samples;
-                        if (sampleOffset < sampleCount)
+                        if (audioData._clip != null)
                         {
-                            PlayNode(current, endTime, preOffset, audioData);
 
-                            if (!firstPlay)
-                                yield return
-                                    new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime) - 0.5f);
-                            else
+                            int sampleCount = audioData._clip.samples;
+                            if (sampleOffset < sampleCount)
                             {
-                                yield return
-                                    new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime)/2f);
+                                PlayNode(current, endTime, preOffset, audioData);
+
+                                if (!firstPlay)
+                                    yield return
+                                        new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime) -
+                                                           0.5f);
+                                else
+                                {
+                                    yield return
+                                        new WaitForSeconds((float) (endTime.CurrentEndTime - AudioSettings.dspTime)/2f);
+                                }
+                                firstPlay = false;
                             }
-                            firstPlay = false;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("InAudio: Audio clip missing on audio node \"" + current.Name + "\", id=" + current._ID);
                         }
                     }
                     else

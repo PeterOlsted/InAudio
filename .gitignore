@@ -15,10 +15,6 @@ obj/*
 *.unityproj
 *.1-csharp.sln.DotSettings.user
 *.unitypackage
-Assets/UnityVS/*
-Assets/InAudio/Resources/InAudio/*InAudio*
-NonInAudio*
-AssetStoreTools*
 *firstpass*
 *CSharp.dll*
 *CSharp.pdb*

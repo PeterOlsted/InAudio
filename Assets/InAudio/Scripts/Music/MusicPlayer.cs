@@ -51,25 +51,25 @@ namespace InAudioSystem
                 return;
 
             double playTime = absoluteDSPTime;
-            PlayMusicGroup(musicGroup, playTime, 0);
+            PlayMusicGroup(parent, playTime, 0);
         }
 
-        public void PlayAtBar(InMusicGroup musicGroup)
-        {
-            if (musicGroup == null)
-            {
-                Debug.LogError("InAudio: Cannot play 'Null' music group");
-                return;
-            }
+        //public void PlayAtBar(InMusicGroup musicGroup)
+        //{
+        //    if (musicGroup == null)
+        //    {
+        //        Debug.LogError("InAudio: Cannot play 'Null' music group");
+        //        return;
+        //    }
 
-            var parent = GetParent(musicGroup);
-            var playingInfo = parent.PlayingInfo;
-            if (HandleExcistingPlay(parent, ref playingInfo))
-                return;
+        //    var parent = GetParent(musicGroup);
+        //    var playingInfo = parent.PlayingInfo;
+        //    if (HandleExcistingPlay(parent, ref playingInfo))
+        //        return;
 
-            //double playTime = absoluteDSPTime;
-            PlayMusicGroup(musicGroup, 0, 0);
-        }
+        //    //double playTime = absoluteDSPTime;
+        //    PlayMusicGroup(musicGroup, 0, 0);
+        //}
 
         //private SignaturePlayer signaturePlayer;
         //public SignaturePlayer Signature
@@ -84,25 +84,25 @@ namespace InAudioSystem
         //    }
         //}
 
-        public class SignaturePlayer
-        {
-            public void PlayAtBeat(InMusicGroup musicGroup)
-            {
-                if (musicGroup == null)
-                {
-                    Debug.LogError("InAudio: Cannot play 'Null' music group");
-                    return;
-                }
+        //public class SignaturePlayer
+        //{
+        //    public void PlayAtBeat(InMusicGroup musicGroup)
+        //    {
+        //        if (musicGroup == null)
+        //        {
+        //            Debug.LogError("InAudio: Cannot play 'Null' music group");
+        //            return;
+        //        }
 
-                var parent = GetParent(musicGroup);
-                var playingInfo = parent.PlayingInfo;
-                if (HandleExcistingPlay(parent, ref playingInfo))
-                    return;
+        //        var parent = GetParent(musicGroup);
+        //        var playingInfo = parent.PlayingInfo;
+        //        if (HandleExcistingPlay(parent, ref playingInfo))
+        //            return;
 
-                //double playTime = absoluteDSPTime;
-                PlayMusicGroup(musicGroup, 0, 0);
-            }
-        }
+        //        //double playTime = absoluteDSPTime;
+        //        PlayMusicGroup(musicGroup, 0, 0);
+        //    }
+        //}
         
 
         public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime, int skipSamples)
@@ -121,7 +121,7 @@ namespace InAudioSystem
             }
 
             double playTime = absoluteDSPTime;
-            PlayMusicGroup(musicGroup, playTime, skipSamples);
+            PlayMusicGroup(parent, playTime, skipSamples);
         }
 
         #endregion

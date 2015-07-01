@@ -200,8 +200,8 @@ public static class NodeTypeDataDrawer
                 Seperators(2);
 
                 #region Sample offset
-                UndoHelper.GUIUndo(baseData, "Random Sample Offset", ref baseData.RandomSecondsOffset, () =>
-                   EditorGUILayout.Toggle("Random Sample Offset", baseData.RandomSecondsOffset));
+                UndoHelper.GUIUndo(baseData, "Random Second Offset", ref baseData.RandomSecondsOffset, () =>
+                   EditorGUILayout.Toggle("Random Second Offset", baseData.RandomSecondsOffset));
 
                 if (baseData.RandomSecondsOffset)
                 {
