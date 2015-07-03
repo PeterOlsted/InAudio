@@ -462,7 +462,7 @@ namespace InAudioSystem
         {
             var musicPool = InAudioInstanceFinder.InMusicPlayerPool;
             var mixer = toPlay.GetUsedMixerGroup();
-
+            toPlay.PlayingInfo.State = MusicState.Playing;
             var editorClips = toPlay._clips;
             int clipCount = editorClips.Count;
             for (int j = 0; j < clipCount; j++)
@@ -531,11 +531,12 @@ namespace InAudioSystem
             var playingInfo = musicGroup.PlayingInfo;
             if (playingInfo.State == MusicState.Paused)
             {
+                playingInfo.State = MusicState.Playing;
                 var playing = playingInfo.Players;
                 for (int i = 0; i < playing.Count; i++)
                 {
                     playing[i].UnPause();
-                    playingInfo.State = MusicState.Playing;
+                    
                 }
             }
             for (int i = 0; i < musicGroup._children.Count; i++)
@@ -549,11 +550,12 @@ namespace InAudioSystem
             var playingInfo = musicGroup.PlayingInfo;
             if (playingInfo.State == MusicState.Playing)
             {
+                playingInfo.State = MusicState.Paused;
                 var playing = playingInfo.Players;
                 for (int i = 0; i < playing.Count; i++)
                 {
                     playing[i].Pause();
-                    playingInfo.State = MusicState.Paused;
+                    
                 }
             }
             for (int i = 0; i < musicGroup._children.Count; i++)

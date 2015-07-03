@@ -131,12 +131,13 @@ namespace InAudioSystem.Runtime
             AudioSource player;
             var playingInfo = musicGroup.PlayingInfo;
             var players = playingInfo.Players;
+            playingInfo.State = MusicState.Stopped;
+            playingInfo.Fading = false;
             for (int i = 0; i < players.Count; i++)
             {
                 player = players[i];
                 player.clip = null;
-                playingInfo.State = MusicState.Stopped;
-                playingInfo.Fading = false;
+                
                 InAudioInstanceFinder.InMusicPlayerPool.ImmidiateRelease(player);
             }
             players.Clear();

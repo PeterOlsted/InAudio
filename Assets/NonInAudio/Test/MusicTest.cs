@@ -9,6 +9,7 @@ public class MusicTest : MonoBehaviour
     public InMusicGroup MusicRoot;
     public InMusicGroup MusicChild1;
     public InMusicGroup MusicChild2;
+    public InMusicGroup MusicChild3;
 
 
     private InMusicGroup[] MusicGroups = new InMusicGroup[0];
@@ -17,7 +18,7 @@ public class MusicTest : MonoBehaviour
     {
         MusicGroups = new []
         {
-            MusicRoot, MusicChild1, MusicChild2
+            MusicRoot, MusicChild1, MusicChild2, MusicChild3
         };
     }
 
@@ -30,6 +31,16 @@ public class MusicTest : MonoBehaviour
         GUILayout.Label("", GUILayout.Width(400));
         GUILayout.EndVertical();
         scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Width(400));
+
+        PlayInFuture = GUILayout.HorizontalSlider((float)PlayInFuture, -1, 10);
+        PlayInFuture = GUILayout.HorizontalSlider(volume, -1, 2);
+        pitch = GUILayout.HorizontalSlider(pitch, -1, 5);
+
+        foreach (var node in MusicGroups)
+        {
+            GUILayout.Label(node.GetName + " " + node.Playing + " " + node.Stopped);
+        }
+
         GUILayout.Label("Play");
         foreach (var node in MusicGroups)
         {
@@ -54,6 +65,16 @@ public class MusicTest : MonoBehaviour
             if (GUILayout.Button(node.GetName))
             {
                 InAudio.Music.PlayWithFadeIn(node, 2.0f);
+            }
+        }
+
+
+        GUILayout.Label("Stop Fadeout");
+        foreach (var node in MusicGroups)
+        {
+            if (GUILayout.Button(node.GetName))
+            {
+                InAudio.Music.FadeAndStop(node, 2.0f);
             }
         }
 

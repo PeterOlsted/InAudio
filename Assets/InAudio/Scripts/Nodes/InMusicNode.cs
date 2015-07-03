@@ -7,7 +7,7 @@ using UnityEngine.Audio;
     {
         public int _guid;
 
-        public string _name;
+        public string _name = "";
 
         public MusicNodeType _type;
 

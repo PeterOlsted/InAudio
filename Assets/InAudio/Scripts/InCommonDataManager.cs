@@ -14,6 +14,14 @@ namespace InAudioSystem.Internal
         private InMusicNode MusicRoot;
         private InInteractiveMusic InteractiveMusicRoot;
 
+        public MonoBehaviour[] AllRoots
+        {
+            get
+            {
+                return new MonoBehaviour[] { AudioTree, EventTree, BankLinkTree, MusicTree, InteractiveMusicTree};
+            }
+        }
+
         public InAudioNode AudioTree
         {
             get { return AudioRoot; }

@@ -11,7 +11,13 @@ namespace InAudioSystem.Internal
     {
         public InPlayer PlayConnectedTo(GameObject controllingObject, InAudioNode audioNode, GameObject attachedTo, AudioParameters audioParameters, float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
         {
-            List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
+            if (audioNode.IsRootOrFolder)
+            {
+                Debug.LogWarning("InAudio: Cannot play \""+audioNode.GetName+"\" as it is a folder");
+                return null;
+            }
+
+                List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
             if (!AllowedStealing(audioNode, currentInstances))
             {
                 return null;
@@ -31,6 +37,12 @@ namespace InAudioSystem.Internal
 
         public InPlayer PlayFollowing(GameObject controllingObject, InAudioNode audioNode, AudioParameters audioParameters, float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
         {
+            if (audioNode.IsRootOrFolder)
+            {
+                Debug.LogWarning("InAudio: Cannot play \"" + audioNode.GetName + "\" as it is a folder");
+                return null;
+            }
+
             List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
             if (!AllowedStealing(audioNode, currentInstances))
             {
@@ -47,9 +59,14 @@ namespace InAudioSystem.Internal
             return runtimePlayer;
         }
 
-        public InPlayer PlayAtPosition(GameObject controllingObject, InAudioNode audioNode, Vector3 position, AudioParameters audioParameters,
-            float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
+        public InPlayer PlayAtPosition(GameObject controllingObject, InAudioNode audioNode, Vector3 position, AudioParameters audioParameters, float fade = 0f, LeanTweenType fadeType = LeanTweenType.notUsed)
         {
+            if (audioNode.IsRootOrFolder)
+            {
+                Debug.LogWarning("InAudio: Cannot play \"" + audioNode.GetName + "\" as it is a folder");
+                return null;
+            }
+
             List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
             if (!AllowedStealing(audioNode, currentInstances))
                 return null;
@@ -61,6 +78,11 @@ namespace InAudioSystem.Internal
 
         public void StopAll(InAudioNode node, float fadeOutTime, LeanTweenType type)
         {
+            if (node.IsRootOrFolder)
+            {
+                Debug.LogWarning("InAudio: Cannot stop audio on \"" + node.GetName + "\" as it is a folder");
+            }
+
             foreach (var audioNode in GOAudioNodes)
             {
                 var infoList = audioNode.Value;
