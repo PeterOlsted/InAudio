@@ -29,7 +29,7 @@ public static class AudioNodeWorker  {
         node._guid = guid;
         node._type = AudioNodeType.Root;
         node.FoldedOut = true;
-        node.Name = "Root";
+        node.Name = "Audio Root";
         return node;
     }
 
@@ -39,6 +39,7 @@ public static class AudioNodeWorker  {
         for (int i = 0; i < numberOfChildren; ++i)
         {
             var newNode = CreateNode(go, Tree, GUIDCreator.Create(), AudioNodeType.Folder);
+            newNode.Name = "Audio Folder " + i;
             AddDataClass(newNode);
         }
         return Tree;
@@ -111,7 +112,14 @@ public static class AudioNodeWorker  {
         if (parent._type == AudioNodeType.Random)
             (parent._nodeData as RandomData).weights.Add(50);
     }
-     
+
+    public static InAudioNode CreateChild(InAudioNode parent, AudioNodeType newNodeType, string name)
+    {
+        var node = CreateChild(parent, newNodeType);
+        node.Name = name;
+        return node;
+    }
+
     public static InAudioNode CreateChild(InAudioNode parent, AudioNodeType newNodeType)
     {
         var bank = parent.GetBank();

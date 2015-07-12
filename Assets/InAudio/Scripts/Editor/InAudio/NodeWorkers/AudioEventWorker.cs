@@ -15,7 +15,7 @@ public static class AudioEventWorker  {
         node._type = EventNodeType.Root;
         node._guid = guid;
         node.FoldedOut = true;
-        node.Name = "Root";
+        node.Name = "Event Root";
         return node;
     }
 
@@ -70,10 +70,18 @@ public static class AudioEventWorker  {
 
         for (int i = 0; i < levelSize; ++i)
         {
-            CreateFolder(go, GUIDCreator.Create(), tree);
+            var eventNode = CreateFolder(go, GUIDCreator.Create(), tree);
+            eventNode.Name = "Event Folder "+ i;
         }
 
         return tree;
+    }
+
+    public static InAudioEventNode CreateNode(InAudioEventNode parent, EventNodeType type, string name)
+    {
+        var node = CreateNode(parent, type);
+        node.Name = name;
+        return node;
     }
 
     public static InAudioEventNode CreateNode(InAudioEventNode parent, EventNodeType type)

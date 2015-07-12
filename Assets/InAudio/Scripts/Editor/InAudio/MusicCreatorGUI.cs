@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using InAudioSystem.TreeDrawer;
@@ -258,7 +258,7 @@ namespace InAudioSystem.InAudioEditor
             {
                 UndoHelper.RecordObjectFull(parent, "Create Music Folder");
                 parent.FoldedOut = true;
-                MusicWorker.CreateMusicGroup(parent.gameObject, parent);
+                MusicWorker.CreateMusicGroup(parent);
             });
         }
 

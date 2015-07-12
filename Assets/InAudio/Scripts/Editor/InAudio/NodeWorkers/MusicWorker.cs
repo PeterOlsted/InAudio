@@ -1,4 +1,4 @@
-﻿using InAudioSystem.ExtensionMethods;
+using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEngine;
 
@@ -7,14 +7,13 @@ namespace InAudioSystem.InAudioEditor
 
     public static class MusicWorker
     {
-
-
         internal static InMusicNode CreateTree(GameObject go, int levelSize)
         {
             var Tree = CreateRoot(go, GUIDCreator.Create());
             for (int i = 0; i < levelSize; ++i)
             {
-                CreateFolder(go, Tree);
+                var node = CreateFolder(go, Tree);
+                node._name = "Music Folder " + i;
             }
             return Tree;
         }
@@ -41,9 +40,16 @@ namespace InAudioSystem.InAudioEditor
             return newNode;
         }
 
-        public static InMusicGroup CreateMusicGroup(GameObject go, InMusicNode parent)
+        public static InMusicGroup CreateMusicGroup(InMusicNode parent, string name)
         {
-            var newNode = CreateNode<InMusicGroup>(go, parent, GUIDCreator.Create());
+            var newNode = CreateMusicGroup(parent);
+            newNode._name = name;
+            return newNode;
+        }
+
+        public static InMusicGroup CreateMusicGroup(InMusicNode parent)
+        {
+            var newNode = CreateNode<InMusicGroup>(parent.gameObject, parent, GUIDCreator.Create());
             newNode._type = MusicNodeType.Music;
             return newNode;
         }

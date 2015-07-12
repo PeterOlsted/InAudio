@@ -27,16 +27,11 @@ namespace InAudioSystem.InAudioEditor
 
             Manager.BankLinkTree = AudioBankWorker.CreateTree(bankGO);
             Manager.AudioTree = AudioNodeWorker.CreateTree(audioGO, levelSize);
-            var firstFolder = Manager.AudioTree._children[0];
-            var random = AudioNodeWorker.CreateChild(firstFolder, AudioNodeType.Random);
-            random.Name = "Random Node Example";
-            AudioNodeWorker.CreateChild(random, AudioNodeType.Audio);
-            AudioNodeWorker.CreateChild(random, AudioNodeType.Audio);
-            AudioNodeWorker.CreateChild(random, AudioNodeType.Audio);
-
-            Manager.EventTree = AudioEventWorker.CreateTree(eventGO, levelSize);
             Manager.MusicTree = MusicWorker.CreateTree(musicGO, levelSize);
             Manager.InteractiveMusicTree = InteractiveMusicWorker.CreateTree(interactiveGO, 0);
+            Manager.EventTree = AudioEventWorker.CreateTree(eventGO, levelSize);
+
+
 
             SaveAndLoad.CreateDataPrefabs(Manager.AudioTree.gameObject, Manager.MusicTree.gameObject, Manager.EventTree.gameObject, Manager.BankLinkTree.gameObject, Manager.InteractiveMusicTree.gameObject);
 
@@ -62,7 +57,36 @@ namespace InAudioSystem.InAudioEditor
                         folder._bankLink = Manager.BankLinkTree._getChildren[0];
                 });
 
-                
+
+                var firstAudioFolder = Manager.AudioTree._children[0];
+                var random = AudioNodeWorker.CreateChild(firstAudioFolder, AudioNodeType.Random);
+                random.Name = "Random Node Example";
+                AudioNodeWorker.CreateChild(random, AudioNodeType.Audio, "Empty Example Audio Node");
+                AudioNodeWorker.CreateChild(random, AudioNodeType.Audio, "Empty Example Audio Node");
+                AudioNodeWorker.CreateChild(random, AudioNodeType.Audio, "Empty Example Audio Node");
+
+
+                var multi = AudioNodeWorker.CreateChild(firstAudioFolder, AudioNodeType.Random, "Multi-Sound Example");
+                AudioNodeWorker.CreateChild(multi, AudioNodeType.Audio, "Empty Example Audio Node");
+                AudioNodeWorker.CreateChild(multi, AudioNodeType.Audio, "Empty Example Audio Node");
+                AudioNodeWorker.CreateChild(firstAudioFolder, AudioNodeType.Audio, "Empty Example Audio Node");
+
+                var firstEventFolder = Manager.EventTree._children[0];
+                firstEventFolder.FoldedOut = true;
+                var audioEvent = AudioEventWorker.CreateNode(firstEventFolder, EventNodeType.Event);
+                audioEvent.Name = "Playing Random Audio Event";
+                var action = AudioEventWorker.AddEventAction<InEventAudioAction>(audioEvent, EventActionTypes.Play);
+                audioEvent.FoldedOut = true;
+                action.Node = random;
+
+                var firstMusicFolder = Manager.MusicTree._children[0];
+                var musicGroup = MusicWorker.CreateMusicGroup(firstMusicFolder, "Empty Music Group");
+                firstMusicFolder.FoldedOut = true; 
+                MusicWorker.CreateMusicGroup(musicGroup, "Empty Music Group - Child 1");
+                MusicWorker.CreateMusicGroup(musicGroup, "Empty Music Group - Child 2");
+                musicGroup.FoldedOut = true;
+
+
                 AssetDatabase.Refresh();
                 DataCleanup.Cleanup(DataCleanup.CleanupVerbose.Silent);
                 EditorApplication.SaveCurrentSceneIfUserWantsTo();
