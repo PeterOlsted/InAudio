@@ -7,7 +7,7 @@ namespace InAudioSystem
     {
         public List<int> weights = new List<int>();
 
-        public int doNotRepeat;
+        public int doNotRepeat = 1;
 
         [NonSerialized] public Queue<int> lastPlayed = new Queue<int>();
     }

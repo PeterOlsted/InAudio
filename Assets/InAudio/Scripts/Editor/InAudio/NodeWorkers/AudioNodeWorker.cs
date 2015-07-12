@@ -63,9 +63,10 @@ public static class AudioNodeWorker  {
                 node._nodeData = node.gameObject.AddComponentUndo<InAudioData>();
                 break;
             case AudioNodeType.Random:
-                node._nodeData = node.gameObject.AddComponentUndo<RandomData>();
+                var randomData = node.gameObject.AddComponentUndo<RandomData>();
+                node._nodeData = randomData;
                 for (int i = 0; i < node._children.Count; ++i)
-                    (node._nodeData as RandomData).weights.Add(50);
+                    randomData.weights.Add(50);
                 break;
             case AudioNodeType.Sequence:
                 node._nodeData = node.gameObject.AddComponentUndo<InSequenceData>();
@@ -193,7 +194,7 @@ public static class AudioNodeWorker  {
         UndoHelper.DoInGroup(() =>
         {           
          
-            //UndoHelper.RecordObjectFull(UndoHelper.Array(node.Parent, node.Parent.AudioData), "Undo Deletion of " + node.Name);
+            UndoHelper.RecordObjects("Undo Deletion of " + node.Name, node, node._nodeData, node._parent, node._parent._nodeData);
 
             if (node._parent._type == AudioNodeType.Random) //We also need to remove the child from the weight list
             {
