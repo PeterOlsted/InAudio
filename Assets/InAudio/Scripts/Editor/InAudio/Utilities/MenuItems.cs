@@ -1,4 +1,4 @@
-﻿using InAudioSystem.Internal;
+using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
 
@@ -48,13 +48,22 @@ namespace InAudioSystem.InAudioEditor
         }
 
         [MenuItem("Window/InAudio/Feedback Window #&6", false, 6)]
-        private static void ShowFeedbackWindow()
+        public static void ShowFeedbackWindow()
         {
             FeedbackWindow window = EditorWindow.GetWindow<FeedbackWindow>();
 
             window.Show();
             window.minSize = new Vector2(100, 50);
-            window.SetTitle("Feedback");
+            
+        }
+
+        [MenuItem("Window/InAudio/Introduction Window #&7", false, 7)]
+        public static void ShowIntroductionWindow()
+        {
+            GuideWindow window = EditorWindow.GetWindow<GuideWindow>();
+
+            window.Show();
+            window.SetTitle("InAudio Introduction");
         }
 
         //[MenuItem("Window/InAudio/Music Settings#&6", false, 7)]

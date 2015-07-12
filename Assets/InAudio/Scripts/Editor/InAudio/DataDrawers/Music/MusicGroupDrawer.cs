@@ -29,6 +29,20 @@ namespace InAudioSystem
                 UndoHelper.GUIUndo(node, "Pitch", ref node._minPitch, () => EditorGUILayout.Slider("Initial Pitch", node._minPitch, 0f, 3f));
             else
                 UndoHelper.GUIUndo(node, "Pitch", ref node.runtimePitch, () => EditorGUILayout.Slider("Current Pitch", node.runtimePitch, 0f, 3f));
+            EditorGUILayout.BeginHorizontal();
+            if (Application.isPlaying)
+            {
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Save volume & pitch"))
+                {
+                    UndoHelper.RecordObject(node, "Volume & Pitch for Music");
+                    node._minVolume = node.runtimeVolume;
+                    node._minPitch = node.runtimePitch;
+                    Debug.Log("InAudio: Saved volume: "+node._minVolume + ", pitch: " + node._minPitch);
+                    
+                }
+            }
+            EditorGUILayout.EndHorizontal();
 
             var playingInfo = node.PlayingInfo;
             if (playingInfo.Fading && Application.isPlaying)

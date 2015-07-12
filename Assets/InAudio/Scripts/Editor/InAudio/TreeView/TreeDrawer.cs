@@ -123,9 +123,6 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
                     
                 }
             }
-            
-
-            
 
         }
 
@@ -383,6 +380,19 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
 
         if (GUIUtility.keyboardControl != 0)
             return;
+
+        if (Event.current.IsKeyDown(KeyCode.LeftArrow))
+        {
+            selectedNode.IsFoldedOut = false;
+            FocusOnSelectedNode();
+            Event.current.UseEvent();
+        }
+        if (Event.current.IsKeyDown(KeyCode.RightArrow))
+        {
+            selectedNode.IsFoldedOut = true;
+            FocusOnSelectedNode();
+            Event.current.UseEvent();
+        }
 
         if (Event.current.IsKeyDown(KeyCode.UpArrow))
         {

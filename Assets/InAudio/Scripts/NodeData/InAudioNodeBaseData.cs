@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 
-public abstract class InAudioNodeBaseData : MonoBehaviour
+namespace InAudioSystem
 {
-    
+
+    public abstract class InAudioNodeBaseData : MonoBehaviour
+    {
+
+    }
+
 }

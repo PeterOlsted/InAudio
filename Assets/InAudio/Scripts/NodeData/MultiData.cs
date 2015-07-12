@@ -1,3 +1,7 @@
-public class MultiData : InAudioNodeData {
+namespace InAudioSystem
+{
+    public class MultiData : InAudioNodeData
+    {
 
+    }
 }

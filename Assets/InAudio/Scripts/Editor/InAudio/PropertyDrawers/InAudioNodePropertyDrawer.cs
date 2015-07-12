@@ -42,9 +42,9 @@ namespace InAudioSystem.InAudioEditor
                 Rect labelPos = originalPos;
                 pos.height = EditorGUIUtility.singleLineHeight;
                 labelPos.y = labelPos.y + EditorGUIUtility.singleLineHeight;
-                labelPos.x += 20;
+                labelPos.x += 14;
                 EditorGUI.LabelField(labelPos, "Node name:");
-                labelPos.x += 100;
+                labelPos.x += 106;
                 EditorGUI.LabelField(labelPos, node.Name);
 
 

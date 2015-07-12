@@ -1,50 +1,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InAudioObjectPool<T> : MonoBehaviour where T : new()
+namespace InAudioSystem
 {
-    [SerializeField]
-    protected int allocateSize = 10;
 
-    [SerializeField]
-    protected int initialAllocation = 10;
-
-    protected List<T> freeObjects = new List<T>();
-
-    public int AllocateSize
+    public class InAudioObjectPool<T> : MonoBehaviour where T : new()
     {
-        get { return allocateSize; }
-        set
+        [SerializeField] protected int allocateSize = 10;
+
+        [SerializeField] protected int initialAllocation = 10;
+
+        protected List<T> freeObjects = new List<T>();
+
+        public int AllocateSize
         {
-            if (value > 0)
+            get { return allocateSize; }
+            set
             {
-                allocateSize = value;
+                if (value > 0)
+                {
+                    allocateSize = value;
+                }
             }
         }
-    }
 
-    public void ReleaseObject(T obj)
-    {
-        freeObjects.Add(obj);
-    }
-
-    public void ReserveExtra(int extra)
-    {
-        for (int i = 0; i < extra; ++i)
+        public void ReleaseObject(T obj)
         {
-            freeObjects.Add(new T());
+            freeObjects.Add(obj);
+        }
+
+        public void ReserveExtra(int extra)
+        {
+            for (int i = 0; i < extra; ++i)
+            {
+                freeObjects.Add(new T());
+            }
+        }
+
+        public T GetObject()
+        {
+            if (freeObjects.Count == 0)
+            {
+                ReserveExtra(allocateSize);
+            }
+            T go = freeObjects[freeObjects.Count - 1];
+            freeObjects.RemoveAt(freeObjects.Count - 1);
+            return go;
         }
     }
 
-    public T GetObject()
-    {
-        if (freeObjects.Count == 0)
-        {
-            ReserveExtra(allocateSize);
-        }
-        T go = freeObjects[freeObjects.Count - 1];
-        freeObjects.RemoveAt(freeObjects.Count - 1);
-        return go;
-    }
+
 }
-

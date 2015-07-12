@@ -3,9 +3,10 @@ using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
 
-namespace  InAudioSystem.InAudioEditor
+namespace InAudioSystem.InAudioEditor
 {
-    public static class ErrorDrawer {
+    public static class ErrorDrawer
+    {
         public static void AddManagerToScene()
         {
             var go = AssetDatabase.LoadAssetAtPath(FolderSettings.AudioManagerPath, typeof(GameObject)) as GameObject;
@@ -19,24 +20,27 @@ namespace  InAudioSystem.InAudioEditor
 
         public static void MissingAudioManager()
         {
-            EditorGUILayout.HelpBox("The audio manager could not be found in the scene\nClick the \"Fix it for me\" button or drag the prefab found at \"InAudio/Prefabs/InAudio Manager\" from the Project window into the scene", MessageType.Error, true);
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Fix it"))
+            EditorGUILayout.HelpBox("The audio manager could not be found in the scene. Please click the \"Fix it automatically\" button to insert it.\n", MessageType.Error, true);
+            EditorGUILayout.BeginVertical();
+            if (GUILayout.Button("Fix it automatically", GUILayout.ExpandWidth(true)))
             {
                 AddManagerToScene();
             }
             EditorGUILayout.Separator();
-            if (GUILayout.Button("Find Audio Manager Prefab")) 
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Find Audio Manager Prefab", GUILayout.Width(180)))
             {
                 EditorApplication.ExecuteMenuItem("Window/Project");
                 var go = AssetDatabase.LoadAssetAtPath(FolderSettings.AudioManagerPath, typeof(GameObject)) as GameObject;
                 if (go != null)
                 {
                     EditorGUIUtility.PingObject(go);
-                    Selection.objects = new Object[] { go};
+                    Selection.objects = new Object[] { go };
                 }
             }
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
         }
 
         public static bool IsDataMissing(InCommonDataManager manager)
@@ -74,7 +78,7 @@ namespace  InAudioSystem.InAudioEditor
             if (areAnyMissing)
             {
                 string missingAudioInfo = missingaudio ? "Missing Audio Data\n" : "";
-                string missingEventInfo =  missingaudioEvent ? "Missing Event Data\n" : "";
+                string missingEventInfo = missingaudioEvent ? "Missing Event Data\n" : "";
                 string missingMusicInfo = missingMusic ? "Missing Music Data\n" : "";
                 string missingBankLinkInfo = missingBankLink ? "Missing BankLink Data\n" : "";
                 string missingInteractiveMusicInfo = missingBankLink ? "Missing Interactive Music Data\n" : "";
@@ -116,5 +120,5 @@ namespace  InAudioSystem.InAudioEditor
                 Object.DestroyImmediate(go);
             }
         }
-    }   
+    }
 }

@@ -1,10 +1,9 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace InAudioSystem.RuntimeHelperClass
 {
-    [CustomPropertyDrawer(typeof(InAudioSystem.Runtime.MecanimParameter))]
+    [CustomPropertyDrawer(typeof(Runtime.MecanimParameter))]
     public class MecanimParameterDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)

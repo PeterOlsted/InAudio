@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 
-public class RandomData : InAudioNodeData
+namespace InAudioSystem
 {
-    public List<int> weights = new List<int>();
+    public class RandomData : InAudioNodeData
+    {
+        public List<int> weights = new List<int>();
 
-    public int doNotRepeat;
+        public int doNotRepeat;
 
-    [NonSerialized]
-    public Queue<int> lastPlayed = new Queue<int>();
+        [NonSerialized] public Queue<int> lastPlayed = new Queue<int>();
+    }
 }

@@ -28,7 +28,7 @@ namespace InAudioSystem
     {
         public float Delay;
         [FormerlySerializedAs("EventActionType")]
-        public InAudioSystem.EventActionTypes _eventActionType;
+        public EventActionTypes _eventActionType;
         public abstract Object Target { get; set; }
 
         public abstract string ObjectName { get; }

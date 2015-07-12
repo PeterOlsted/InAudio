@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace InAudioSystem.InAudioEditor
 {
-    [CustomPropertyDrawer(typeof(InAudioSystem.Runtime.MecanimParameterList))]
+    [CustomPropertyDrawer(typeof(Runtime.MecanimParameterList))]
     public class MecanimParameterListDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
@@ -19,7 +19,7 @@ namespace InAudioSystem.InAudioEditor
 
             if (prop.isExpanded)
             {
-                InAudioSystem.ReorderableList.ReorderableListGUI.ListField(prop.FindPropertyRelative("ParameterList"));
+                ReorderableList.ReorderableListGUI.ListField(prop.FindPropertyRelative("ParameterList"));
             }
             prop.serializedObject.ApplyModifiedProperties();
         }

@@ -47,49 +47,11 @@ namespace InAudioSystem.InAudioEditor
             }
         }
 
-        private readonly char[] spliter = { '\n' };
+        private readonly char[] lineSplit = { '\n' };
+        private readonly char[] dotSplit = { '.' };
         public void BaseOnGUI()
         {
-            if (PlayerPrefs.HasKey("InAudioUpdateInfo"))
-            {
-                string info = PlayerPrefs.GetString("InAudioUpdateInfo");
-
-                string version = null;
-                if (PlayerPrefs.HasKey("InAudioStoredVersion"))
-                {
-                    version = PlayerPrefs.GetString("InAudioStoredVersion");
-                }
-                EditorGUILayout.BeginHorizontal();
-                try
-                {
-                    var split = info.Split(spliter);
-                    if (split[0] != version)
-                    {
-                        string text = split[1];
-
-                        EditorGUILayout.LabelField(text, EditorStyles.boldLabel);
-                        var rect = GUILayoutUtility.GetLastRect();
-                        var dimensions = new Rect(rect.width - 350, 0, 200, EditorGUIUtility.singleLineHeight);
-
-                        if (GUI.Button(dimensions, "Open the Asset Store"))
-                        {
-                            Application.OpenURL("https://www.assetstore.unity3d.com/en/#!/content/15609");
-                        }
-
-                        dimensions.x = rect.width - 25;
-                        dimensions.width = 30;
-                        if (GUI.Button(dimensions, "X"))
-                        {
-                            PlayerPrefs.SetString("InAudioStoredVersion", split[0]);
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                }
-                EditorGUILayout.EndHorizontal();
-                
-            }
+            HandleVersionCheck();
 
             isDirty = false;
 
@@ -114,7 +76,64 @@ namespace InAudioSystem.InAudioEditor
                 
             }
         }
-         
+
+        private void HandleVersionCheck()
+        {
+            if (PlayerPrefs.HasKey("InAudioUpdateInfo"))
+            {
+                string info = PlayerPrefs.GetString("InAudioUpdateInfo");
+
+                string version = null;
+                if (PlayerPrefs.HasKey("InAudioStoredVersion"))
+                {
+                    version = PlayerPrefs.GetString("InAudioStoredVersion");
+                }
+                EditorGUILayout.BeginHorizontal();
+                try
+                {
+                    var split = info.Split(lineSplit);
+
+                    if (IsNewer(version, split[0]))
+                    {
+                        string text = split[1];
+
+                        EditorGUILayout.LabelField(text, EditorStyles.boldLabel);
+                        var rect = GUILayoutUtility.GetLastRect();
+                        var dimensions = new Rect(rect.width - 350, 0, 200, EditorGUIUtility.singleLineHeight);
+
+                        if (GUI.Button(dimensions, "Open the Asset Store"))
+                        {
+                            Application.OpenURL("https://www.assetstore.unity3d.com/en/#!/content/15609");
+                        }
+
+                        dimensions.x = rect.width - 25;
+                        dimensions.width = 30;
+                        if (GUI.Button(dimensions, "X"))
+                        {
+                            PlayerPrefs.SetString("InAudioStoredVersion", split[0]);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        private bool IsNewer(string currentVersion, string newVersion)
+        {
+            var currentSplit = currentVersion.Split(dotSplit);
+            var newSplit = newVersion.Split(dotSplit);
+
+            for (int i = 0; i < Math.Min(currentSplit.Length, newSplit.Length); i++)
+            {
+                if (Int32.Parse(newSplit[i]) > Int32.Parse(currentSplit[i]))
+                    return true;
+            }
+            return false;
+        }
+
 
         protected abstract T Root();
 

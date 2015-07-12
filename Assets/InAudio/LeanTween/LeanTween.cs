@@ -136,10 +136,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 * @property {integer} punch
 */
 using UnityEngine;
-using System.Collections;
 using System;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
 
 /**
 * Animate GUI Elements by creating this object and passing the *.rect variable to the GUI method<br><br>

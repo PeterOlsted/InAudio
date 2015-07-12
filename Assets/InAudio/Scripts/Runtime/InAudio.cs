@@ -9,8 +9,11 @@ using InAudioSystem.Runtime;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+/// <summary>
+/// The InAudio class it the primary way to interact with InAudio via code. 
+/// It is used to play all audio & events, while the music player can be accessed via InAudio.Music.
+/// </summary>
 #if UNITY_EDITOR
-
 [ExecuteInEditMode]
 #endif
 public class InAudio : MonoBehaviour
@@ -1344,7 +1347,7 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.3.9";
+    public const string CurrentVersion = "2.4.0"; 
 
     void OnLevelWasLoaded()
     {

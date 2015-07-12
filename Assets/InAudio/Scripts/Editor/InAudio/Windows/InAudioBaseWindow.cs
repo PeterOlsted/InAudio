@@ -1,12 +1,11 @@
+using System;
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
 
 namespace InAudioSystem.InAudioEditor
-{
-
-    public abstract class InAudioBaseWindow : EditorWindow
+{   public abstract class InAudioBaseWindow : EditorWindow
     {
         protected InCommonDataManager Manager;
 
@@ -17,6 +16,29 @@ namespace InAudioSystem.InAudioEditor
 
         protected void BaseEnable()
         {
+            try
+            {
+                if (!PlayerPrefs.HasKey("InAudioIntro"))
+                {
+                    PlayerPrefs.SetInt("InAudioIntro", 1);
+                    MenuItems.ShowIntroductionWindow();
+                }
+                else
+                {
+                    int allowIntro = PlayerPrefs.GetInt("InAudioAllowIntro");
+                    int haveIntro = PlayerPrefs.GetInt("InAudioIntro");
+                    if (allowIntro == 1 && haveIntro == 1)
+                    {
+                        PlayerPrefs.SetInt("InAudioAllowIntro", 0);
+                        MenuItems.ShowIntroductionWindow();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            
+    
             //autoRepaintOnSceneChange = true;
             EditorApplication.modifierKeysChanged += Repaint;
 

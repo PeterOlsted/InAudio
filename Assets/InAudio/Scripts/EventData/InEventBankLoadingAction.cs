@@ -8,37 +8,36 @@ namespace InAudioSystem
         Load = 0,
         Unload = 1,
     }
-}
 
-public class InEventBankLoadingAction : AudioEventAction
-{
-    public InAudioBankLink BankLink;
-    public BankHookActionType LoadingAction = BankHookActionType.Load;
-   
 
-    public override Object Target
+    public class InEventBankLoadingAction : AudioEventAction
     {
-        get
-        {
-            return BankLink;
-        }
-        set
-        {
-            if (value is InAudioBankLink)
-                BankLink = value as InAudioBankLink;
-        }
-    }
+        public InAudioBankLink BankLink;
+        public BankHookActionType LoadingAction = BankHookActionType.Load;
 
-    public override string ObjectName
-    {
-        get
+
+        public override Object Target
         {
-            if (BankLink != null)
-                return BankLink.GetName;
-            else
+            get { return BankLink; }
+            set
             {
-                return "Missing Bank";
+                if (value is InAudioBankLink)
+                    BankLink = value as InAudioBankLink;
+            }
+        }
+
+        public override string ObjectName
+        {
+            get
+            {
+                if (BankLink != null)
+                    return BankLink.GetName;
+                else
+                {
+                    return "Missing Bank";
+                }
             }
         }
     }
+
 }

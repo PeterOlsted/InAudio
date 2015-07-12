@@ -3,13 +3,14 @@
 public class PaulTest : MonoBehaviour
 {
     public InMusicGroup musicGroup;
+    public AudioSource other;
     public float future = 0f;
 
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            PlayMusicGroup(musicGroup);
+            other.enabled = !other.enabled;
         }
     }
 

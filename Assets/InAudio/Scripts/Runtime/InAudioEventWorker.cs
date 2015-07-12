@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using InAudioLeanTween;
 using InAudioSystem.ExtensionMethods;
+using InAudioSystem.InAudioSystem;
 using InAudioSystem.Runtime;
 using UnityEngine;
 

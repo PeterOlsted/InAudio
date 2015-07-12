@@ -1,4 +1,9 @@
-public class InSequenceData : InAudioNodeData
+namespace InAudioSystem
 {
+
+    public class InSequenceData : InAudioNodeData
+    {
+
+    }
 
 }

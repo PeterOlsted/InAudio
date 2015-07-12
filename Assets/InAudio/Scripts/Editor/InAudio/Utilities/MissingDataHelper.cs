@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
@@ -27,6 +27,13 @@ namespace InAudioSystem.InAudioEditor
 
             Manager.BankLinkTree = AudioBankWorker.CreateTree(bankGO);
             Manager.AudioTree = AudioNodeWorker.CreateTree(audioGO, levelSize);
+            var firstFolder = Manager.AudioTree._children[0];
+            var random = AudioNodeWorker.CreateChild(firstFolder, AudioNodeType.Random);
+            random.Name = "Random Node Example";
+            AudioNodeWorker.CreateChild(random, AudioNodeType.Audio);
+            AudioNodeWorker.CreateChild(random, AudioNodeType.Audio);
+            AudioNodeWorker.CreateChild(random, AudioNodeType.Audio);
+
             Manager.EventTree = AudioEventWorker.CreateTree(eventGO, levelSize);
             Manager.MusicTree = MusicWorker.CreateTree(musicGO, levelSize);
             Manager.InteractiveMusicTree = InteractiveMusicWorker.CreateTree(interactiveGO, 0);

@@ -34,6 +34,10 @@ namespace InAudioSystem
         public static Texture Muted;
         public static Texture NotMute;
 
+        public static Texture Question;
+        public static Texture Support;
+        public static Texture Book;
+
         //Reorderable list icons
         public static Texture2D ContainerBackground;
         public static Texture2D ContainerBackgroundWhite;
@@ -105,6 +109,13 @@ namespace InAudioSystem
 
             if (GenericColor == null)
                 GenericColor = LoadTexture("GenericColor") as Texture2D;
+
+            if (Question == null)
+                Question = LoadTexture("Question") as Texture2D;
+            if (Book == null)
+                Book = LoadTexture("Book") as Texture2D;
+            if (Support == null)
+                Support = LoadTexture("Support") as Texture2D;
         }
 
         private static Texture LoadTexture(string name)

@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-using InAudioSystem;
+﻿using InAudioSystem;
+using UnityEngine;
+using InAudioSystem.Internal;
 
 public class MyTest : MonoBehaviour {
 
@@ -20,10 +20,11 @@ public class MyTest : MonoBehaviour {
 	void Update () {
             if (Input.GetKeyDown(KeyCode.M))
             {
-                Debug.Log("Play");
+                InAudioNode rootNode = InAudioInstanceFinder.DataManager.AudioTree;
+                Debug.Log(rootNode.GetName);
 
                 InAudio.PlayFollowing(gameObject, Node, Parameters);
-                
+                InAudioNode foundNode = TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.AudioTree, node => node.GetName == "example name");
             }
         
     }

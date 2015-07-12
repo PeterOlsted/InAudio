@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using InAudioSystem.InAudioFeedback;
 using UnityEditor;
@@ -22,6 +22,12 @@ namespace InAudioSystem.InAudioEditor
         }
 
         private SendingStatus send = SendingStatus.NotSend;
+
+        private void OnEnable()
+        {
+            this.SetTitle("Feedback");
+        }
+
 
         private void OnGUI()
         {
