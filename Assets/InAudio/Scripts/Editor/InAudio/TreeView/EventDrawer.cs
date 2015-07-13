@@ -20,7 +20,7 @@ namespace InAudioSystem.TreeDrawer
             Rect fullArea = EditorGUILayout.BeginHorizontal();
             Rect area = EditorGUILayout.BeginHorizontal();
             if(isSelected)
-                GUI.DrawTexture(area, EditorResources.Background);
+                GUI.DrawTexture(area, EditorResources.GetBackground());
             
             if (node._type != EventNodeType.Event)
                 GUILayout.Space(EditorGUI.indentLevel * 16);

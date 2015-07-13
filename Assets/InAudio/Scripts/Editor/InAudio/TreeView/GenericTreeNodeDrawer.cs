@@ -15,7 +15,7 @@ namespace InAudioSystem.TreeDrawer
             Rect area = EditorGUILayout.BeginHorizontal();
             if (isSelected)
             {
-                GUI.DrawTexture(area, EditorResources.Background);
+                GUI.DrawTexture(area, EditorResources.GetBackground());
             }
 
 

@@ -5,7 +5,8 @@ namespace InAudioSystem
 {
     public static class EditorResources
     {
-        public static Texture2D Background;
+        public static Texture2D DarkSkinBackground;
+        public static Texture2D LightSkinBackground;
         public static Texture White;
 
         public static Texture Plus;
@@ -47,19 +48,33 @@ namespace InAudioSystem
 
         public static Texture2D GenericColor;
 
+        public static Texture2D GetBackground()
+        {
+            if (EditorGUIUtility.isProSkin)
+            {
+                return DarkSkinBackground;
+            }
+            else
+            {
+                return LightSkinBackground;
+            }
+        }
+         
         public static void Reload()
         {
             
-            if (Plus == null)
+            if (Plus == null) 
                 Plus = LoadTexture("Plus");
             if (Minus == null)
                 Minus = LoadTexture("Minus");
             if (Up == null)
-                Up = LoadTexture("Up");
+                Up = LoadTexture("Up"); 
             if (Down == null)
                 Down = LoadTexture("Down");
-            if (Background == null)
-                Background = LoadTexture("SelectedBackground") as Texture2D; 
+            if (DarkSkinBackground == null)
+                DarkSkinBackground = LoadTexture("DarkSkinBackground") as Texture2D;
+            if (LightSkinBackground == null)
+                LightSkinBackground = LoadTexture("LightSkinBackground") as Texture2D;
             if (White == null)
                 White = LoadTexture("White");
 

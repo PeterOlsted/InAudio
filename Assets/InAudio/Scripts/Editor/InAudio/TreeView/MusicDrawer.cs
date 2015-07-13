@@ -1,4 +1,4 @@
-﻿using InAudioSystem.ExtensionMethods;
+using InAudioSystem.ExtensionMethods;
 using InAudioSystem.InAudioEditor;
 using InAudioSystem.Runtime;
 using UnityEditor;
@@ -18,7 +18,7 @@ namespace InAudioSystem.TreeDrawer
 
             Rect area = EditorGUILayout.BeginHorizontal();
             if (isSelected)
-                GUI.DrawTexture(area, EditorResources.Background);
+                GUI.DrawTexture(area, EditorResources.GetBackground());
 
             GUILayout.Space(EditorGUI.indentLevel * 16);
 

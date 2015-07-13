@@ -436,7 +436,7 @@ public static class AudioEventDrawer
     private static void DrawBackground(Rect area)
     {
         GUI.depth += 10;
-        GUI.DrawTexture(area, EditorResources.Background);
+        GUI.DrawTexture(area, EditorResources.GetBackground());
         GUI.depth -= 10;
     }
 

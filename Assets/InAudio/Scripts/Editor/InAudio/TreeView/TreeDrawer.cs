@@ -106,7 +106,7 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
                 {
                     if (smallArea.Contains(Event.current.mousePosition))
                     {
-                        GUIDrawRect(smallArea, EditorResources.Background.GetPixel(0, 0)*0.7f);
+                        GUIDrawRect(smallArea, EditorResources.GetBackground().GetPixel(0, 0)*0.7f);
                         break;
                     }
                     else if (fullArea.Contains(Event.current.mousePosition))
@@ -144,10 +144,10 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         Rect top = smallArea;
         top.y += 4;
         top.height = 3;
-        GUIDrawRect(top, EditorResources.Background.GetPixel(0, 0)*0.7f);
+        GUIDrawRect(top, EditorResources.GetBackground().GetPixel(0, 0)*0.7f);
         var bottom = top;
         bottom.y -= nodeArea.height;
-        GUIDrawRect(bottom, EditorResources.Background.GetPixel(0, 0)*0.7f);
+        GUIDrawRect(bottom, EditorResources.GetBackground().GetPixel(0, 0)*0.7f);
         Rect left = bottom;
         left.width = 3;
         left.height = nodeArea.height;
@@ -155,8 +155,8 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
         var right = left;
         right.x += treeArea.width - 20 + ScrollPosition.x;
 
-        GUIDrawRect(left, EditorResources.Background.GetPixel(0, 0)*0.7f);
-        GUIDrawRect(right, EditorResources.Background.GetPixel(0, 0)*0.7f);
+        GUIDrawRect(left, EditorResources.GetBackground().GetPixel(0, 0)*0.7f);
+        GUIDrawRect(right, EditorResources.GetBackground().GetPixel(0, 0)*0.7f);
     }
 
     public void Filter(Func<T, bool> filter)

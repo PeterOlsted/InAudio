@@ -1,4 +1,4 @@
-﻿using InAudioSystem.Runtime;
+using InAudioSystem.Runtime;
 using UnityEngine;
 public class ParameterExample : MonoBehaviour
 {
