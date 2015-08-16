@@ -124,7 +124,7 @@ namespace InAudioSystem.Internal
         private IEnumerator VersionCheck()
         {
             
-            WWW website = new WWW("http://innersystems.net/version.html");
+            WWW website = new WWW("http://innersystems.net/version3.html");
             yield return website;
             if (website.error == null)
             {
@@ -137,8 +137,9 @@ namespace InAudioSystem.Internal
 
         void Update()
         {
-            if (!checkVersion || !PlayerPrefs.HasKey("InAudioStoredVersion"))
+            if (!checkVersion && PlayerPrefs.GetString("InAudioUpdateCheckTime") != DateTime.Now.Date.DayOfYear.ToString(CultureInfo.InvariantCulture))
             {
+                Debug.Log("Run version check");
                 checkVersion = true;
                 StartCoroutine(VersionCheck());
             }

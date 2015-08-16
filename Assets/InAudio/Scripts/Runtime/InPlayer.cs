@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -757,8 +757,8 @@ public class InPlayer : MonoBehaviour
             for (int i = audioSources.Count - 1; i >= 0; i--)
             {
                 pool.QueueRelease(audioSources[i]);
-                audioSources.RemoveAt(i);
             }
+            audioSources.Clear();
         }
 
 

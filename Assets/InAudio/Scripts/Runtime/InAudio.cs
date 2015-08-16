@@ -1361,6 +1361,17 @@ public class InAudio : MonoBehaviour
         return Object.FindObjectsOfType(typeof(AudioListener)).FindFirst(activeListener => (activeListener as AudioListener).gameObject.activeInHierarchy) as AudioListener;
     }
 
+    void Awake()
+    {
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+#endif
+        {
+            Music = GetComponentInChildren<MusicPlayer>();
+        }
+
+    }
+
     void OnEnable()
     {
         if (instance == null || instance == this)
@@ -1385,7 +1396,7 @@ public class InAudio : MonoBehaviour
         if (Application.isPlaying)
 #endif
         {
-            Music = InAudioInstanceFinder.MusicPlayer;
+            //Music = InAudioInstanceFinder.MusicPlayer;
 
             DontDestroyOnLoad(transform.gameObject);
 
@@ -1404,8 +1415,7 @@ public class InAudio : MonoBehaviour
             }
             else
             {
-                Debug.LogError(
-                    "InAudio: There was a problem loading the InAudio project. Have you created one?");
+                Debug.LogError("InAudio: There was a problem loading the InAudio project. Have you created one?");
             }
         }
 

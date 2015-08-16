@@ -269,7 +269,6 @@ namespace InAudioSystem.Internal
             tupleList.InfoList.Add(runtimeInfo);
             runtimeInfo.Node = audioNode;
             runtimeInfo.Player = player;
-            runtimeInfo.ListIndex = tupleList.InfoList.Count - 1;
             runtimeInfo.PlacedIn = tupleList;
             return runtimeInfo;
         }

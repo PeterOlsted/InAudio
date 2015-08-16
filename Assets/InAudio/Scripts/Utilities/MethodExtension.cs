@@ -193,6 +193,12 @@ namespace InAudioSystem.ExtensionMethods
             i -= 1;
         }
 
+        public static void SwapRemoveAt<T>(this IList<T> list, int i)
+        {
+            list[i] = list[list.Count - 1];
+            list.RemoveAt(list.Count - 1);
+        }
+
         public static void SafeRemoveAt<T>(this IList<T> list, ref int i)
         {
             list[i] = list[list.Count - 1];
@@ -254,18 +260,6 @@ namespace InAudioSystem.ExtensionMethods
             var temp = list[i];
             list[i] = list[j];
             list[j] = temp;
-            return list;
-        }
-
-        public static List<RuntimeInfo> SwapAtIndexes(this List<RuntimeInfo> list, int i, int j)
-        {
-            list[i].ListIndex = j;
-            list[j].ListIndex = i;
-            var temp = list[i];
-            list[i] = list[j];
-            list[j] = temp;
-
-
             return list;
         }
 
