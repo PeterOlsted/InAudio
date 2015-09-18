@@ -65,25 +65,28 @@ namespace InAudioSystem.Runtime
                 }
             }
 
-            if (playingInfo.Fading)
+            if (playingInfo.Fading && group != null)
             {
                 float currentTime = Time.time;
                 if (currentTime >= playingInfo.EndTime)
                 {
-                    if (group != null)
-                    {
-                        group.runtimeVolume = playingInfo.TargetVolume;
-                        playingInfo.Fading = false;
+                    
+                    group.runtimeVolume = playingInfo.TargetVolume;
+                    playingInfo.Fading = false;
 
-                        if (playingInfo.DoAtEnd == MusicState.Stopped)
-                        {
-                            InAudio.Music.Stop(group);
-                        }
-                        else if (playingInfo.DoAtEnd == MusicState.Paused)
-                        {
-                            InAudio.Music.Pause(group);
-                        }
+                    if (playingInfo.DoAtEnd == MusicState.Stopped)
+                    {
+                        InAudio.Music.Stop(group);
                     }
+                    else if (playingInfo.DoAtEnd == MusicState.Paused)
+                    {
+                        InAudio.Music.Pause(group);
+                    }
+                    
+                }
+                else if (currentTime < playingInfo.StartTime)
+                {
+                    //Do nothing
                 }
                 else
                 {
@@ -136,9 +139,12 @@ namespace InAudioSystem.Runtime
             for (int i = 0; i < players.Count; i++)
             {
                 player = players[i];
-                player.clip = null;
-                
-                InAudioInstanceFinder.InMusicPlayerPool.ImmidiateRelease(player);
+                if (player != null)
+                {
+                    player.clip = null;
+
+                    InAudioInstanceFinder.InMusicPlayerPool.ImmidiateRelease(player);
+                }
             }
             players.Clear();
         }

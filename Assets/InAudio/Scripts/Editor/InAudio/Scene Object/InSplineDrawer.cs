@@ -105,11 +105,8 @@ namespace InAudioSystem.InAudioEditor
             {
                 UndoHelper.DoInGroup(() =>
                 {
-#if UNITY_4_1 || UNITY_4_2
-                        Undo.RegisterSceneUndo("Delete element in spline");
-                    #else
+
                     UndoAll("Add new spline node");
-#endif
 
                     GameObject newNodeGO = UndoHelper.CreateGO(SplineController.gameObject.name + " Node");
                     var newNode = newNodeGO.AddComponent<InSplineNode>();

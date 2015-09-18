@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using InAudioSystem.Runtime;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -12,6 +12,11 @@ namespace InAudioSystem.ExtensionMethods
         public static float ExactLength(this AudioClip clip)
         {
             return clip.samples / (float)clip.frequency;
+        }
+
+        public static double ExactTimeLength(this AudioSource source)
+        {
+            return (source.clip.samples - source.timeSamples) / (double)source.clip.frequency;
         }
 
         public static bool UnloadIfPossible(this AudioClip clip)
@@ -51,6 +56,27 @@ namespace InAudioSystem.ExtensionMethods
                 newList.AddRange(lists[i]);
             }
             return newList;
+        }
+
+        public static void CopyTo<T>(this List<T> from, List<T> to)
+        {
+            to.Clear();
+            for (int i = 0; i < from.Count; i++)
+            {
+                to.Add(from[i]);
+            }
+        }
+
+        public static T FindFirstNonNull<T>(this List<T> from) where T : class 
+        {
+            for (int i = 0; i < from.Count; i++)
+            {
+                if (from[i] != null)
+                {
+                    return from[i];
+                }
+            }
+            return default(T);
         }
 
         public static T[] TakeNonNulls<T>(this T[] arr) where T : UnityEngine.Object

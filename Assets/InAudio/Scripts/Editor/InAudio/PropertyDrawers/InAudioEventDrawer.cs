@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using InAudioSystem.ExtensionMethods;
 using UnityEditor;
 using UnityEngine;
 

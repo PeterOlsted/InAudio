@@ -24,9 +24,9 @@ namespace InAudioSystem
         public void PlayWithFadeIn(InMusicGroup musicGroup, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             var parent = GetParent(musicGroup);
-            Play(parent);
             SetVolume(parent, 0);
-            Fade(parent, 1f, duration, tweenType);
+            Play(parent);
+            Fade(parent, 1f, duration, tweenType, Time.time);
         }
 
         public void PlayWithFadeIn(InMusicGroup musicGroup, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
@@ -34,7 +34,15 @@ namespace InAudioSystem
             var parent = GetParent(musicGroup);
             Play(parent);
             SetVolume(parent, 0);
-            Fade(parent, targetVolume, duration, tweenType);
+            Fade(parent, targetVolume, duration, tweenType, Time.time);
+        }
+
+        public void PlayWithFadeInAt(InMusicGroup musicGroup, float duration, double dspTime, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        {
+            var parent = GetParent(musicGroup);
+            PlayAt(parent, dspTime);
+            SetVolume(parent, 0);
+            Fade(parent, 1f, duration, tweenType, Time.time + Mathf.Max((float)(dspTime - AudioSettings.dspTime), 0));
         }
 
         public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime)
@@ -54,57 +62,7 @@ namespace InAudioSystem
             PlayMusicGroup(parent, playTime, 0);
         }
 
-        //public void PlayAtBar(InMusicGroup musicGroup)
-        //{
-        //    if (musicGroup == null)
-        //    {
-        //        Debug.LogError("InAudio: Cannot play 'Null' music group");
-        //        return;
-        //    }
-
-        //    var parent = GetParent(musicGroup);
-        //    var playingInfo = parent.PlayingInfo;
-        //    if (HandleExcistingPlay(parent, ref playingInfo))
-        //        return;
-
-        //    //double playTime = absoluteDSPTime;
-        //    PlayMusicGroup(musicGroup, 0, 0);
-        //}
-
-        //private SignaturePlayer signaturePlayer;
-        //public SignaturePlayer Signature
-        //{
-        //    get
-        //    {
-        //        if(signaturePlayer == null)
-        //        {
-        //            signaturePlayer = new SignaturePlayer();
-        //        }
-        //        return signaturePlayer;
-        //    }
-        //}
-
-        //public class SignaturePlayer
-        //{
-        //    public void PlayAtBeat(InMusicGroup musicGroup)
-        //    {
-        //        if (musicGroup == null)
-        //        {
-        //            Debug.LogError("InAudio: Cannot play 'Null' music group");
-        //            return;
-        //        }
-
-        //        var parent = GetParent(musicGroup);
-        //        var playingInfo = parent.PlayingInfo;
-        //        if (HandleExcistingPlay(parent, ref playingInfo))
-        //            return;
-
-        //        //double playTime = absoluteDSPTime;
-        //        PlayMusicGroup(musicGroup, 0, 0);
-        //    }
-        //}
         
-
         public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime, int skipSamples)
         {
             if (musicGroup == null)
@@ -317,54 +275,61 @@ namespace InAudioSystem
         public void FadeVolume(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
             //There are no guarantees that the music is playing, 
-            Fade(toFade, targetVolume, duration, tweenType);
+            Fade(toFade, targetVolume, duration, tweenType, Time.time);
         }
+
+        public void FadeVolumeAt(InMusicNode toFade, float targetVolume, float duration, float startTime, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        {
+            //There are no guarantees that the music is playing, 
+            Fade(toFade, targetVolume, duration, tweenType, startTime);
+        }
+
 
         public void FadeAndStop(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(toFade, targetVolume, duration, tweenType);
+            Fade(toFade, targetVolume, duration, tweenType, Time.time);
             toFade.PlayingInfo.DoAtEnd = MusicState.Stopped;
         }
 
         public void FadeAndStop(InMusicNode toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(toFade, 0f, duration, tweenType);
+            Fade(toFade, 0f, duration, tweenType, Time.time);
             toFade.PlayingInfo.DoAtEnd = MusicState.Stopped;
         }
 
         public void FadeAndPause(InMusicNode toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(toFade, 0f, duration, tweenType);
+            Fade(toFade, 0f, duration, tweenType, Time.time);
             toFade.PlayingInfo.DoAtEnd = MusicState.Paused;
         }
 
         public void FadeAndPause(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(toFade, targetVolume, duration, tweenType);
+            Fade(toFade, targetVolume, duration, tweenType, Time.time);
             toFade.PlayingInfo.DoAtEnd = MusicState.Paused;
         }
 
         public void FadeToInitialVolume(InMusicNode toFade, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(toFade, toFade._minVolume, duration, tweenType);
+            Fade(toFade, toFade._minVolume, duration, tweenType, Time.time);
         }
 
         public void CrossfadeVolume(InMusicNode from, InMusicGroup to, float targetVolume, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(from, 0f, duration, tweenType);
-            Fade(to, targetVolume, duration, tweenType);
+            Fade(from, 0f, duration, tweenType, Time.time);
+            Fade(to, targetVolume, duration, tweenType, Time.time);
         }
 
         public void SwapCrossfadeVolume(InMusicNode from, InMusicGroup to, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(from, to.Volume, duration, tweenType);
-            Fade(to, from.Volume, duration, tweenType);
+            Fade(from, to.Volume, duration, tweenType, Time.time);
+            Fade(to, from.Volume, duration, tweenType, Time.time);
         }
 
         public void CrossfadeVolume(InMusicNode from, InMusicGroup to, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
         {
-            Fade(from, 0f, duration, tweenType);
-            Fade(to, 1f, duration, tweenType);
+            Fade(from, 0f, duration, tweenType, Time.time);
+            Fade(to, 1f, duration, tweenType, Time.time);
         }
 
 
@@ -411,7 +376,45 @@ namespace InAudioSystem
         {
             BankLoader.Unload(musicGroup.GetBank());
         }
-        
+
+        #endregion
+
+        #region Other
+        public double GetRemainingTime(InMusicGroup musicGroup)
+        {
+            double maxTime = 0;
+            var info = musicGroup.PlayingInfo;
+            for (int i = 0; i < info.Players.Count; i++)
+            {
+                var source = musicGroup.PlayingInfo.Players[i];
+                double time = source.ExactTimeLength();
+                if (time / source.pitch > maxTime)
+                {
+                    maxTime = time;
+                }
+            }
+            for (int i = 0; i < musicGroup._children.Count; i++)
+            {
+                double time = GetRemainingTime(musicGroup);
+                if (time > maxTime)
+                {
+                    maxTime = time;
+                }
+            }
+
+            return maxTime;
+        }
+
+        public float GetHiearchyPitch(InMusicNode musicNode)
+        {
+            if (musicNode == null)
+            {
+                return 1;
+            }
+
+            float pitch = musicNode.Pitch * GetHiearchyPitch(musicNode._getParent);
+            return pitch;
+        }
         #endregion
 
         #region Non-public
@@ -425,7 +428,7 @@ namespace InAudioSystem
                 return GetParent(group._parent as InMusicGroup);
         }
 
-        private static void Fade(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType)
+        private static void Fade(InMusicNode toFade, float targetVolume, float duration, LeanTweenType tweenType, float startTime)
         {
             if (tweenType == LeanTweenType.animationCurve)
             {
@@ -435,9 +438,8 @@ namespace InAudioSystem
             var runInfo = toFade.PlayingInfo;
 
             runInfo.Fading = true;
-            float currentTime = Time.time;
-            runInfo.StartTime = currentTime;
-            runInfo.EndTime = currentTime + duration;
+            runInfo.StartTime = startTime;
+            runInfo.EndTime = startTime + duration;
             runInfo.TweenType = tweenType;
             runInfo.TargetVolume = targetVolume;
             runInfo.StartVolume = toFade.runtimeVolume;
@@ -465,11 +467,12 @@ namespace InAudioSystem
             toPlay.PlayingInfo.State = MusicState.Playing;
             var editorClips = toPlay._clips;
             int clipCount = editorClips.Count;
+            var playingInfo = toPlay.PlayingInfo;
+            playingInfo.State = MusicState.Playing;
+            playingInfo.DoAtEnd = MusicState.Nothing;
+
             for (int j = 0; j < clipCount; j++)
             {
-                var playingInfo = toPlay.PlayingInfo;
-                playingInfo.State = MusicState.Playing;
-				playingInfo.DoAtEnd = MusicState.Nothing;
                 var player = musicPool.GetObject();
                 toPlay.PlayingInfo.Players.Add(player);
                 player.clip = editorClips[j];
@@ -495,7 +498,8 @@ namespace InAudioSystem
                 var playing = playingInfo.Players;
                 for (int i = 0; i < playing.Count; i++)
                 {
-                    playing[i].Stop();
+                    if(playing[i] != null)
+                        playing[i].Stop();
                     MusicUpdater.CleanupMusicNode(musicGroup);
                     
                 }
@@ -564,41 +568,29 @@ namespace InAudioSystem
             }
         }
 
-        //public static AudioSource Max(InMusicGroup node, out AudioSource source, out double currentMax)
-        //{
-        //    var max = double.MinValue;
-        //    AudioSource refSource = null;
-        //    var v = FindMax(node, ref refSource, ref max);
-        //    currentMax = max;
-        //    return v;
-        //}
+        private void OnEnable()
+        {
+            CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
+            MusicUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
+            AudioUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+        }
 
-        //private static AudioSource FindMax(InMusicGroup node, ref AudioSource audioSource, ref double currentMax)
-        //{
-        //    var end = default(T);
 
-        //    U currentVal = predicate(node);
-
-        //    if (currentVal.CompareTo(currentMax) > 0)
-        //    {
-        //        end = node;
-        //        currentMax = currentVal;
-        //    }
-
-        //    for (int i = 0; i < node.GetChildren.Count; i++)
-        //    {
-        //        U max = default(U);
-        //        var result = FindMax(node.GetChildren[i], predicate, ref max);
-        //        if (max.CompareTo(currentMax) > 0)
-        //        {
-        //            currentMax = max;
-        //            end = result;
-        //        }
-        //    }
-        //    return end;
-        //}
-        
-        
+        private void CreateMusicLists(InMusicNode inMusicNode)
+        {
+            var group = inMusicNode as InMusicGroup;
+            if (group != null)
+            {
+                var info = group.PlayingInfo;
+                info.Music = group;
+                if (info.Players != null)
+                    info.Players.Capacity = group._Clips.Count;
+            }
+            for (int i = 0; i < inMusicNode._children.Count; i++)
+            {
+                CreateMusicLists(inMusicNode._children[i]);
+            }
+        }
 
         #endregion
     }

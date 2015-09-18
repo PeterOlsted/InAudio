@@ -1,11 +1,9 @@
-﻿using System;
-using InAudioSystem.ExtensionMethods;
-using InAudioSystem.InAudioEditor;
+﻿using InAudioSystem.ExtensionMethods;
 using InAudioSystem.ReorderableList;
 using UnityEditor;
 using UnityEngine;
 
-namespace InAudioSystem
+namespace InAudioSystem.InAudioEditor
 {
     public static class MusicGroupDrawer 
     {
@@ -47,7 +45,7 @@ namespace InAudioSystem
             var playingInfo = node.PlayingInfo;
             if (playingInfo.Fading && Application.isPlaying)
             {
-                EditorGUILayout.Slider("Node fading to", playingInfo.TargetVolume, 0f, 1f);
+                EditorGUILayout.Slider("Volume target", playingInfo.TargetVolume, 0f, 1f);
                 GUI.enabled = false;
                 var duration = playingInfo.EndTime - playingInfo.StartTime;
                 var left = playingInfo.EndTime - Time.time;

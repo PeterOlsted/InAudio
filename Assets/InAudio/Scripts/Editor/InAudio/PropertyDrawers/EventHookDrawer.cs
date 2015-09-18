@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace InAudioSystem.InAudioEditor
 {
-    //[CanEditMultipleObjects]// Does not work currently, work in progress
     [CustomEditor(typeof(InAudioEventHook))]
     public class EventHookDrawer : Editor
     {

@@ -1,16 +1,19 @@
-using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace InAudioSystem
 {
-
-
     public class InAudioData : InAudioNodeData
     {
-
         [FormerlySerializedAs("EditorClip")]
         public AudioClip _clip;
+
+        public bool LoadedFromAssetBundle;
+
+        public AudioClip AudioClip
+        {
+            get { return _clip; }
+        }
 
         public bool IsLoaded
         {

@@ -139,7 +139,7 @@ namespace InAudioSystem.Internal
         {
             if (!checkVersion && PlayerPrefs.GetString("InAudioUpdateCheckTime") != DateTime.Now.Date.DayOfYear.ToString(CultureInfo.InvariantCulture))
             {
-                Debug.Log("Run version check");
+//                Debug.Log("Run version check");
                 checkVersion = true;
                 StartCoroutine(VersionCheck());
             }

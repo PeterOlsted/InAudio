@@ -24,7 +24,7 @@ public class MyTest : MonoBehaviour {
                 Debug.Log(rootNode.GetName);
 
                 InAudio.PlayFollowing(gameObject, Node, Parameters);
-                InAudioNode foundNode = TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.AudioTree, node => node.GetName == "example name");
+//                InAudioNode foundNode = TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.AudioTree, node => node.GetName == "example name");
             }
         
     }

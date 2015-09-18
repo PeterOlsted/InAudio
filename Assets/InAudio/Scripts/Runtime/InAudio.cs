@@ -928,23 +928,6 @@ public class InAudio : MonoBehaviour
 
     #endregion
 
-    #region Cleanup
-    /// <summary>
-    /// This will clean up any unused runtime memory and release objects back to their pools
-    /// Does not release audio clips.
-    /// Best called in loading screens 
-    /// </summary>
-    public static void Cleanup()
-    {
-        if (instance != null && instance._inAudioEventWorker != null)
-            instance._inAudioEventWorker.Cleanup();
-        else
-        {
-            InDebug.CleanupInstance();
-        }
-    }
-    #endregion
-
     /*Internal systems*/
     #region Internal system
 
@@ -1369,7 +1352,6 @@ public class InAudio : MonoBehaviour
         {
             Music = GetComponentInChildren<MusicPlayer>();
         }
-
     }
 
     void OnEnable()
@@ -1409,9 +1391,7 @@ public class InAudio : MonoBehaviour
             {
                 runtimeData.UpdateEvents(InAudioInstanceFinder.DataManager.EventTree);
 
-                CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
-                MusicUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
-                AudioUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+                //See MusicPlayer for initialization of audio
             }
             else
             {
@@ -1419,22 +1399,6 @@ public class InAudio : MonoBehaviour
             }
         }
 
-    }
-
-    private void CreateMusicLists(InMusicNode inMusicNode)
-    {
-        var group = inMusicNode as InMusicGroup;
-        if (group != null)
-        {
-            var info = group.PlayingInfo;
-            info.Music = group;
-            if(info.Players != null)
-                info.Players.Capacity = group._Clips.Count;
-        }
-        for (int i = 0; i < inMusicNode._children.Count; i++)
-        {
-            CreateMusicLists(inMusicNode._children[i]);
-        }
     }
 
 

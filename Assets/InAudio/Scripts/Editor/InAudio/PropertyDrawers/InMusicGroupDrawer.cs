@@ -47,10 +47,13 @@ namespace InAudioSystem.InAudioEditor
 
                 pos.x = width - 25;
                 pos.width = 40;
+                bool guiEnabled = GUI.enabled;
+                GUI.enabled = true;
                 if (GUI.Button(pos, "Find"))
                 {
                     SearchHelper.SearchFor(node);
                 }
+                GUI.enabled = guiEnabled;
             }
             if (EditorGUI.EndChangeCheck())
             {

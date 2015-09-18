@@ -281,7 +281,6 @@ namespace InAudioSystem.Internal
             if (!dictionary.TryGetValue(instanceID, out infoList))
             {
                 infoList = AudioListPool.GetObject();
-                infoList.GO = go;
                 dictionary.Add(instanceID, infoList);
             }
             return infoList;
@@ -378,29 +377,7 @@ namespace InAudioSystem.Internal
 
         private void FreeController(ObjectAudioList audioList)
         {
-            if (audioList.GO == null)
-            {
-                AudioListPool.ReleaseObject(audioList);
-            }
-        }
-
-        public void Cleanup()
-        {
-            //Yes, an object is allucated to clean up memory. 
-            List<int> toRemove = new List<int>();
-            foreach (KeyValuePair<int, ObjectAudioList> pair in GOAudioNodes)
-            {
-                var audioList = pair.Value;
-                if (audioList.GO == null)
-                {
-                    toRemove.Add(pair.Key);
-                    AudioListPool.ReleaseObject(pair.Value);
-                }
-            }
-            for (int i = 0; i < toRemove.Count; i++)
-            {
-                GOAudioNodes.Remove(toRemove[i]);
-            }
+            AudioListPool.ReleaseObject(audioList);
         }
 
         private void Awake()
