@@ -265,7 +265,7 @@ namespace InAudioSystem.Internal
         {
             ObjectAudioList tupleList = GetValue(GOAudioNodes, controllingObject);
 
-            RuntimeInfo runtimeInfo = runtimeInfoPool.GetObject();
+            RuntimeInfo runtimeInfo = new RuntimeInfo();
             tupleList.InfoList.Add(runtimeInfo);
             runtimeInfo.Node = audioNode;
             runtimeInfo.Player = player;
