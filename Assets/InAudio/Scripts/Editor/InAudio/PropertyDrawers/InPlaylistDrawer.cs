@@ -52,6 +52,8 @@ namespace InAudioSystem.InAudioEditor
             if(serializedObject.FindProperty("crossfade").boolValue)
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("crossfadeTime"));
 
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("delayBetweenTracks"));
+
             if (Application.isPlaying)
             {
                 GUI.enabled = false;

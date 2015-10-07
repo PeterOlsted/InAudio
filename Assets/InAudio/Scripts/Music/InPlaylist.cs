@@ -68,6 +68,12 @@ public class InPlaylist : MonoBehaviour
         get { return transitionToNextSong; }
     }
 
+
+    public float DelayBetweenTracks
+    {
+        get { return delayBetweenTracks; }
+    }
+
     public InMusicGroup CurrentMusic
     {
         get { return playingCurrently; }
@@ -193,6 +199,10 @@ public class InPlaylist : MonoBehaviour
     private float crossfadeTime = 3;
 
     [SerializeField]
+    [Range(0, 60)]
+    private float delayBetweenTracks = 0;
+
+    [SerializeField]
     private List<InMusicGroup> playlist;
 
     [SerializeField]
@@ -218,30 +228,30 @@ public class InPlaylist : MonoBehaviour
             {
                 if (crossfade)
                 {
-                    if (remainingTime <= crossfadeTime) 
+                    if (remainingTime <= crossfadeTime)
                     {
                         float pitch = InAudio.Music.GetHiearchyPitch(playingCurrently);
                         float nextPitch = InAudio.Music.GetHiearchyPitch(next);
 
                         transitionToNextSong = true;
-                        InAudio.Music.FadeAndStop(playingCurrently, (float)remainingTime / pitch);
-                        InAudio.Music.PlayWithFadeIn(next, musicParameters.Volume, (float)remainingTime / nextPitch);
+                        InAudio.Music.FadeAndStop(playingCurrently, (float) remainingTime/pitch);
+                        InAudio.Music.PlayWithFadeIn(next, musicParameters.Volume, (float) remainingTime/ nextPitch + delayBetweenTracks);
                         playingPreviously = playingCurrently;
                         playingCurrently = next;
                     }
                 }
-                else if (remainingTime / playingCurrently.Pitch <= prebookAudioTime)
+                else if (remainingTime/playingCurrently.Pitch <= prebookAudioTime)
                 {
                     float pitch = InAudio.Music.GetHiearchyPitch(playingCurrently);
                     float nextPitch = InAudio.Music.GetHiearchyPitch(next);
 
                     transitionToNextSong = true;
-                    InAudio.Music.StopAt(playingCurrently, AudioSettings.dspTime + remainingTime / pitch);
-                    InAudio.Music.PlayAt(next, AudioSettings.dspTime + remainingTime / nextPitch);
+                    InAudio.Music.StopAt(playingCurrently, AudioSettings.dspTime + remainingTime/pitch);
+                    InAudio.Music.PlayWithFadeInAt(next, (float)remainingTime / nextPitch, AudioSettings.dspTime + remainingTime/nextPitch + delayBetweenTracks);
                     playingPreviously = playingCurrently;
                     playingCurrently = next;
                     playingCurrently.Volume = musicParameters.Volume;
-                }            
+                }
             }
         }
     }
