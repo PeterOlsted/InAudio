@@ -235,7 +235,7 @@ public class InPlaylist : MonoBehaviour
 
                         transitionToNextSong = true;
                         InAudio.Music.FadeAndStop(playingCurrently, (float) remainingTime/pitch);
-                        InAudio.Music.PlayWithFadeIn(next, musicParameters.Volume, (float) remainingTime/ nextPitch + delayBetweenTracks);
+                        InAudio.Music.PlayWithFadeInAt(next, musicParameters.Volume, (float) remainingTime/ nextPitch, AudioSettings.dspTime + delayBetweenTracks);
                         playingPreviously = playingCurrently;
                         playingCurrently = next;
                     }

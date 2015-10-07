@@ -45,6 +45,14 @@ namespace InAudioSystem
             Fade(parent, 1f, duration, tweenType, Time.time + Mathf.Max((float)(dspTime - AudioSettings.dspTime), 0));
         }
 
+        public void PlayWithFadeInAt(InMusicGroup musicGroup, float targetVolume, float duration, double dspTime, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        {
+            var parent = GetParent(musicGroup);
+            PlayAt(parent, dspTime);
+            SetVolume(parent, 0);
+            Fade(parent, targetVolume, duration, tweenType, Time.time + Mathf.Max((float)(dspTime - AudioSettings.dspTime), 0));
+        }
+
         public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime)
         {
             if (musicGroup == null)
