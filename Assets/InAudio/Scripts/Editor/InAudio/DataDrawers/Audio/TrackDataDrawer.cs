@@ -42,7 +42,7 @@ public static class TrackDataDrawer
 
             if (GUILayout.Button("Add Layer", GUILayout.Width(150)))
             {
-                UndoHelper.RecordObjectFull(trackData, "Add layer");
+                InUndoHelper.RecordObjectFull(trackData, "Add layer");
                 trackData.Layers.Add(new InLayerData());
             }
 
@@ -57,7 +57,7 @@ public static class TrackDataDrawer
             if (trackData.Layers.Remove(toRemove))
             {
                 GUI.FocusControl("none");
-                UndoHelper.RegisterUndo(trackData, "Removed Layer");
+                InUndoHelper.RegisterUndo(trackData, "Removed Layer");
             }
         }
         //GUILayout.EndScrollView();
@@ -77,11 +77,11 @@ public static class TrackDataDrawer
         EditorGUILayout.BeginVertical(GUILayout.Width(150));
         GUILayout.Label("Left");
         GUILayout.Label("Inside left");
-        UndoHelper.GUIUndo(trackData, "Zoom", ref item.Zoom, () => Math.Max(0, EditorGUILayout.FloatField("Zoom", item.Zoom)));
+        InUndoHelper.GUIUndo(trackData, "Zoom", ref item.Zoom, () => Math.Max(0, EditorGUILayout.FloatField("Zoom", item.Zoom)));
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Delete Layer"))
         {
-            UndoHelper.RecordObjectFull(trackData, "Remove layer");
+            InUndoHelper.RecordObjectFull(trackData, "Remove layer");
             {
                 toRemove = item;
             }

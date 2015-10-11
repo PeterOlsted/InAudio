@@ -19,7 +19,7 @@ public static class DataDrawerHelper
             bool overrideParent = EditorGUILayout.Toggle("Override Parent Mixer Group", node.OverrideParentMixerGroup);
             if (overrideParent != node.OverrideParentMixerGroup)
             {
-                UndoHelper.RecordObjectFull(new Object[] {node._nodeData, node}, "Override parent mixer group");
+                InUndoHelper.RecordObjectFull(new Object[] {node._nodeData, node}, "Override parent mixer group");
                 node.OverrideParentMixerGroup = overrideParent;
             }
             if (!node.OverrideParentMixerGroup)
@@ -58,7 +58,7 @@ public static class DataDrawerHelper
             bool overrideParent = EditorGUILayout.Toggle("Override Parent Mixer", node._overrideParentMixerGroup);
             if (overrideParent != node._overrideParentMixerGroup)
             {
-                UndoHelper.RecordObjectFull(node, "Override parent mixer group");
+                InUndoHelper.RecordObjectFull(node, "Override parent mixer group");
                 node._overrideParentMixerGroup = overrideParent;
             }
             if (!node._overrideParentMixerGroup)
@@ -104,11 +104,11 @@ public static class DataDrawerHelper
             float maxVolume = refMaxVolume;
             bool randomVolume = refRandomVolume;
 
-            UndoHelper.GUIUndo(undoObj, "Random Volume", ref randomVolume, () => EditorGUILayout.Toggle("Random Volume", randomVolume));
+            InUndoHelper.GUIUndo(undoObj, "Random Volume", ref randomVolume, () => EditorGUILayout.Toggle("Random Volume", randomVolume));
 
             if (!randomVolume)
             {
-                UndoHelper.GUIUndo(undoObj, "Volume", () => EditorGUILayout.Slider("Volume", minVolume, 0, 1), v =>
+                InUndoHelper.GUIUndo(undoObj, "Volume", () => EditorGUILayout.Slider("Volume", minVolume, 0, 1), v =>
                 {
                     minVolume = v;
                     if (minVolume > maxVolume)
@@ -119,7 +119,7 @@ public static class DataDrawerHelper
             }
             else
             {
-                UndoHelper.GUIUndo(undoObj, "Random Volume", ref minVolume, ref maxVolume, (out float newMinVolume, out float newMaxVolume) =>
+                InUndoHelper.GUIUndo(undoObj, "Random Volume", ref minVolume, ref maxVolume, (out float newMinVolume, out float newMaxVolume) =>
                 {
                     EditorGUILayout.MinMaxSlider(new GUIContent("Volume"), ref minVolume, ref maxVolume, 0, 1);
                     newMinVolume = Mathf.Clamp(EditorGUILayout.FloatField("Min volume", minVolume), 0, maxVolume);

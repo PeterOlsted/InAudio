@@ -135,7 +135,7 @@ namespace InAudioSystem.TreeDrawer
 
             if (GUI.Button(butArea, mute, GUIStyle.none))
             {
-                UndoHelper.RegisterUndo(node, "Mute");
+                InUndoHelper.RegisterUndo(node, "Mute");
                 MusicUpdater.FlipMute(node);
             }
 
@@ -144,7 +144,7 @@ namespace InAudioSystem.TreeDrawer
 
             if (GUI.Button(butArea, solo, GUIStyle.none))
             {
-                UndoHelper.RegisterUndo(node, "Solo");
+                InUndoHelper.RegisterUndo(node, "Solo");
                 MusicUpdater.FlipSolo(node);
             }
         }

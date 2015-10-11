@@ -88,7 +88,7 @@ public static class AudioNodeWorker  {
 
     public static void AddNewParent(InAudioNode node, AudioNodeType parentType)
     {
-        UndoHelper.RecordObject(new Object[] { node, node._parent, node.GetBank() }, "Undo Add New Parent for " + node.Name);
+        InUndoHelper.RecordObject(new Object[] { node, node._parent, node.GetBank() }, "Undo Add New Parent for " + node.Name);
         var newParent = CreateNode(node.gameObject, node._parent, parentType);
         var oldParent = node._parent;
         newParent.MixerGroup = node.MixerGroup;
@@ -124,7 +124,7 @@ public static class AudioNodeWorker  {
     public static InAudioNode CreateChild(InAudioNode parent, AudioNodeType newNodeType)
     {
         var bank = parent.GetBank();
-        UndoHelper.RecordObject(UndoHelper.Array(parent, parent._nodeData, bank), "Undo Node Creation");
+        InUndoHelper.RecordObject(InUndoHelper.Array(parent, parent._nodeData, bank), "Undo Node Creation");
         OnRandomNode(parent);
 
         var child = CreateNode(parent.gameObject, parent, GUIDCreator.Create(), newNodeType);
@@ -142,14 +142,14 @@ public static class AudioNodeWorker  {
     {
         if (newType == node._type)
             return;
-        UndoHelper.DoInGroup(() =>
+        InUndoHelper.DoInGroup(() =>
         {
-            UndoHelper.RecordObjectFull(new Object[] {node, node._nodeData}, "Change Node Type");
+            InUndoHelper.RecordObjectFull(new Object[] {node, node._nodeData}, "Change Node Type");
             
             AudioBankWorker.RemoveNodeFromBank(node);
             
             node._type = newType;
-            UndoHelper.Destroy(node._nodeData);
+            InUndoHelper.Destroy(node._nodeData);
             AddDataClass(node);
             
         });
@@ -158,7 +158,7 @@ public static class AudioNodeWorker  {
 
     public static void Duplicate(InAudioNode audioNode)
     {
-        UndoHelper.DoInGroup(() =>
+        InUndoHelper.DoInGroup(() =>
         {
 
             List<Object> toUndo = new List<Object>(AudioBankWorker.GetAllBanks().ConvertAll(b => b as Object));
@@ -166,7 +166,7 @@ public static class AudioNodeWorker  {
             toUndo.Add(audioNode._parent);
             toUndo.Add(audioNode.GetBank());
 
-            UndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Duplication Of " + audioNode.Name);
+            InUndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Duplication Of " + audioNode.Name);
 
             if (audioNode._parent._type == AudioNodeType.Random)
             {
@@ -191,10 +191,10 @@ public static class AudioNodeWorker  {
 
     public static void DeleteNode(InAudioNode node)
     {
-        UndoHelper.DoInGroup(() =>
+        InUndoHelper.DoInGroup(() =>
         {           
          
-            UndoHelper.RecordObjects("Undo Deletion of " + node.Name, node, node._nodeData, node._parent, node._parent._nodeData);
+            InUndoHelper.RecordObjects("Undo Deletion of " + node.Name, node, node._nodeData, node._parent, node._parent._nodeData);
 
             if (node._parent._type == AudioNodeType.Random) //We also need to remove the child from the weight list
             {
@@ -231,8 +231,8 @@ public static class AudioNodeWorker  {
         }
 
 
-        UndoHelper.Destroy(node._nodeData);
-        UndoHelper.Destroy(node);
+        InUndoHelper.Destroy(node._nodeData);
+        InUndoHelper.Destroy(node);
     }
 }
 }

@@ -19,21 +19,21 @@ namespace InAudioSystem.InAudioEditor
             
 
             if(!Application.isPlaying)
-                UndoHelper.GUIUndo(node, "Volume", ref node._minVolume, () => EditorGUILayout.Slider("Initial Volume",node._minVolume, 0f, 1f));
+                InUndoHelper.GUIUndo(node, "Volume", ref node._minVolume, () => EditorGUILayout.Slider("Initial Volume",node._minVolume, 0f, 1f));
             else
-                UndoHelper.GUIUndo(node, "Volume", ref node.runtimeVolume, () => EditorGUILayout.Slider("Current Volume", node.runtimeVolume, 0f, 1f));
+                InUndoHelper.GUIUndo(node, "Volume", ref node.runtimeVolume, () => EditorGUILayout.Slider("Current Volume", node.runtimeVolume, 0f, 1f));
 
             if (!Application.isPlaying)
-                UndoHelper.GUIUndo(node, "Pitch", ref node._minPitch, () => EditorGUILayout.Slider("Initial Pitch", node._minPitch, 0f, 3f));
+                InUndoHelper.GUIUndo(node, "Pitch", ref node._minPitch, () => EditorGUILayout.Slider("Initial Pitch", node._minPitch, 0f, 3f));
             else
-                UndoHelper.GUIUndo(node, "Pitch", ref node.runtimePitch, () => EditorGUILayout.Slider("Current Pitch", node.runtimePitch, 0f, 3f));
+                InUndoHelper.GUIUndo(node, "Pitch", ref node.runtimePitch, () => EditorGUILayout.Slider("Current Pitch", node.runtimePitch, 0f, 3f));
             EditorGUILayout.BeginHorizontal();
             if (Application.isPlaying)
             {
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Save volume & pitch"))
                 {
-                    UndoHelper.RecordObject(node, "Volume & Pitch for Music");
+                    InUndoHelper.RecordObject(node, "Volume & Pitch for Music");
                     node._minVolume = node.runtimeVolume;
                     node._minPitch = node.runtimePitch;
                     Debug.Log("InAudio: Saved volume: "+node._minVolume + ", pitch: " + node._minPitch);
@@ -63,14 +63,14 @@ namespace InAudioSystem.InAudioEditor
             prop.ApplyModifiedProperties();
 
             if (!Application.isPlaying)
-                UndoHelper.GUIUndo(node, "Mute", ref node._mute, () => EditorGUILayout.Toggle("Initial Mute", node._mute));
+                InUndoHelper.GUIUndo(node, "Mute", ref node._mute, () => EditorGUILayout.Toggle("Initial Mute", node._mute));
             else
-                UndoHelper.GUIUndo(node, "Mute", ref node.runtimeMute, () => EditorGUILayout.Toggle("Currently Mute", node.runtimeMute));
+                InUndoHelper.GUIUndo(node, "Mute", ref node.runtimeMute, () => EditorGUILayout.Toggle("Currently Mute", node.runtimeMute));
 
             if (!Application.isPlaying)
-                UndoHelper.GUIUndo(node, "Solo", ref node._solo, () => EditorGUILayout.Toggle("Initial Solo", node._solo));
+                InUndoHelper.GUIUndo(node, "Solo", ref node._solo, () => EditorGUILayout.Toggle("Initial Solo", node._solo));
             else
-                UndoHelper.GUIUndo(node, "Solo", ref node.runtimeSolo, () => EditorGUILayout.Toggle("Currently Solo", node.runtimeSolo));
+                InUndoHelper.GUIUndo(node, "Solo", ref node.runtimeSolo, () => EditorGUILayout.Toggle("Currently Solo", node.runtimeSolo));
 
             EditorGUILayout.Separator();
             prop.Update();

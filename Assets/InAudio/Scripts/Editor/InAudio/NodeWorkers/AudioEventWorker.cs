@@ -31,9 +31,9 @@ public static class AudioEventWorker  {
 
     public static void DeleteNode(InAudioEventNode node)
     {
-        UndoHelper.DoInGroup(() =>
+        InUndoHelper.DoInGroup(() =>
         {
-            UndoHelper.RegisterUndo(node._parent, "Event Deletion");
+            InUndoHelper.RegisterUndo(node._parent, "Event Deletion");
             node._parent._children.Remove(node); 
             DeleteNodeRec(node);
         });
@@ -43,14 +43,14 @@ public static class AudioEventWorker  {
     {
         for (int i = 0; i < node._actionList.Count; i++)
         {
-            UndoHelper.Destroy(node._actionList[i]);
+            InUndoHelper.Destroy(node._actionList[i]);
         }
         for (int i = 0; i < node._children.Count; ++i)
         {
             DeleteNodeRec(node._children[i]);
         }
 
-        UndoHelper.Destroy(node);
+        InUndoHelper.Destroy(node);
     }
 
    
@@ -100,7 +100,7 @@ public static class AudioEventWorker  {
         Object target = audioEvent._actionList[toRemoveAndInsertAt].Target;
         var newActionType = AudioEventAction.ActionEnumToType(enumType);
 
-        UndoHelper.Destroy(audioEvent._actionList[toRemoveAndInsertAt]);
+        InUndoHelper.Destroy(audioEvent._actionList[toRemoveAndInsertAt]);
         //UndoHelper.RecordObject(audioEvent, "Event Action Creation");
 
         audioEvent._actionList.RemoveAt(toRemoveAndInsertAt);
@@ -123,7 +123,7 @@ public static class AudioEventWorker  {
 
     public static AudioEventAction AddEventAction(InAudioEventNode audioevent, Type eventActionType, EventActionTypes enumType) 
     {
-        UndoHelper.RecordObject(audioevent, "Event Action Creation");
+        InUndoHelper.RecordObject(audioevent, "Event Action Creation");
         var eventAction = audioevent.gameObject.AddComponentUndo(eventActionType) as AudioEventAction;
         audioevent._actionList.Add(eventAction);
         eventAction._eventActionType = enumType;
@@ -134,8 +134,8 @@ public static class AudioEventWorker  {
     public static InAudioEventNode DeleteActionAtIndex(InAudioEventNode audioevent, int index)
     {
         
-        UndoHelper.RecordObject(audioevent, "Event Action Creation");
-        UndoHelper.Destroy(audioevent._actionList[index]);
+        InUndoHelper.RecordObject(audioevent, "Event Action Creation");
+        InUndoHelper.Destroy(audioevent._actionList[index]);
             
         
         audioevent._actionList.RemoveAt(index);
@@ -219,7 +219,7 @@ public static class AudioEventWorker  {
 
     public static bool OnDrop(InAudioEventNode audioevent, Object[] objects)
     {
-        UndoHelper.DoInGroup(() =>
+        InUndoHelper.DoInGroup(() =>
         {
             //if (audioevent.Type == EventNodeType.Folder)
             //{
@@ -231,7 +231,7 @@ public static class AudioEventWorker  {
             {
                 var movingEvent = objects[0] as InAudioEventNode;
 
-                UndoHelper.RecordObjectFull(new Object[] { audioevent, movingEvent, movingEvent._parent }, "Event Move");
+                InUndoHelper.RecordObjectFull(new Object[] { audioevent, movingEvent, movingEvent._parent }, "Event Move");
                 NodeWorker.ReasignNodeParent((InAudioEventNode)objects[0], audioevent);
                 audioevent.IsFoldedOut = true;
             }
@@ -240,7 +240,7 @@ public static class AudioEventWorker  {
             if (audioNode != null && audioNode.IsPlayable)
             {
 
-                UndoHelper.RecordObjectFull(audioevent, "Adding of Audio Action");
+                InUndoHelper.RecordObjectFull(audioevent, "Adding of Audio Action");
                 var action = AddEventAction<InEventAudioAction>(audioevent,
                     EventActionTypes.Play);
                 action.Node = audioNode;
@@ -251,7 +251,7 @@ public static class AudioEventWorker  {
             if (musicGroup != null )
             {
 
-                UndoHelper.RecordObjectFull(audioevent, "Adding of Music Action");
+                InUndoHelper.RecordObjectFull(audioevent, "Adding of Music Action");
                 var action = AddEventAction<InEventMusicControl>(audioevent,
                     EventActionTypes.PlayMusic);
                 action.MusicGroup = musicGroup;
@@ -261,7 +261,7 @@ public static class AudioEventWorker  {
             var audioBank = objects[0] as InAudioBankLink;
             if (audioBank != null)
             {
-                UndoHelper.RecordObjectFull(audioevent, "Adding of Bank Load Action");
+                InUndoHelper.RecordObjectFull(audioevent, "Adding of Bank Load Action");
                 var action = AddEventAction<InEventBankLoadingAction>(audioevent,
                     EventActionTypes.BankLoading);
                 action.BankLink = audioBank;

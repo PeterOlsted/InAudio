@@ -89,12 +89,12 @@ namespace InAudioSystem.InAudioEditor
 
             if (node is InAudioNode)//As parent could be a random one, it needs to record this first
             {
-                UndoHelper.RecordObject(new Object[] { node._getParent, (node._getParent as InAudioNode)._nodeData },
+                InUndoHelper.RecordObject(new Object[] { node._getParent, (node._getParent as InAudioNode)._nodeData },
                     "Undo Reorder Of " + node.GetName);
             }
             else
             {
-                UndoHelper.RecordObject(new Object[] { node._getParent }, "Undo Reorder Of " + node.GetName);
+                InUndoHelper.RecordObject(new Object[] { node._getParent }, "Undo Reorder Of " + node.GetName);
             }
 
             var children = node._getParent._getChildren;
@@ -120,12 +120,12 @@ namespace InAudioSystem.InAudioEditor
 
             if (node is InAudioNode)
             {
-                UndoHelper.RecordObject(new Object[] { node._getParent, (node._getParent as InAudioNode)._nodeData },
+                InUndoHelper.RecordObject(new Object[] { node._getParent, (node._getParent as InAudioNode)._nodeData },
                     "Undo Reorder Of " + node.GetName);
             }
             else
             {
-                UndoHelper.RecordObject(new Object[] { node._getParent }, "Undo Reorder Of " + node.GetName);
+                InUndoHelper.RecordObject(new Object[] { node._getParent }, "Undo Reorder Of " + node.GetName);
             }
 
 

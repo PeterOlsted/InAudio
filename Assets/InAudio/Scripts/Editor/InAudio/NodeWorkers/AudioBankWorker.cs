@@ -103,7 +103,7 @@ public static class AudioBankWorker {
         var bankLink = node.GetBank();
         if (bankLink != null)
         {
-            UndoHelper.RecordObjectFull(bankLink, "Node from bank removal");
+            InUndoHelper.RecordObjectFull(bankLink, "Node from bank removal");
             var bank = bankLink._bankData;
             bank.RemoveAll(b => b.AudioNode == node);
         }
@@ -180,7 +180,7 @@ public static class AudioBankWorker {
     public static void ChangeAudioNodeBank(InAudioNode node, InAudioBankLink newBank)
     {
         var all = GetAllBanks();
-        UndoHelper.RecordObject(all.ToArray().AddObj(node._nodeData), "Changed Bank");
+        InUndoHelper.RecordObject(all.ToArray().AddObj(node._nodeData), "Changed Bank");
         InFolderData data = (node._nodeData as InFolderData);
         data.BankLink = newBank;
         RebuildBanks();
@@ -189,7 +189,7 @@ public static class AudioBankWorker {
     public static void ChangeMusicNodeBank(InMusicNode node, InAudioBankLink newBank)
     {
         var all = GetAllBanks();
-        UndoHelper.RecordObject(all.ToArray().AddObj(node), "Changed Bank");
+        InUndoHelper.RecordObject(all.ToArray().AddObj(node), "Changed Bank");
         InMusicFolder data = (node as InMusicFolder);
         data._bankLink = newBank;
         RebuildBanks();
@@ -198,7 +198,7 @@ public static class AudioBankWorker {
     public static void ChangeBankOverride(InAudioNode node)
     {
         var all = GetAllBanks();
-        UndoHelper.RecordObject(all.ToArray().AddObj(node._nodeData), "Changed Bank");
+        InUndoHelper.RecordObject(all.ToArray().AddObj(node._nodeData), "Changed Bank");
         InFolderData data = (node._nodeData as InFolderData);
         data.OverrideParentBank = !data.OverrideParentBank;
         RebuildBanks();        
@@ -207,7 +207,7 @@ public static class AudioBankWorker {
     public static void ChangeBankOverride(InMusicFolder node)
     {
         var all = GetAllBanks();
-        UndoHelper.RecordObject(all.ToArray().AddObj(node), "Changed Bank");
+        InUndoHelper.RecordObject(all.ToArray().AddObj(node), "Changed Bank");
         node._overrideParentBank = !node._overrideParentBank;
         RebuildBanks();
     }
@@ -245,7 +245,7 @@ public static class AudioBankWorker {
     {
         List<Object> toUndo = new List<Object>(GetAllBanks().ConvertAll(b => b as Object));
 
-        UndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Duplication");
+        InUndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Duplication");
     }
 
     private static void DeleteAllNodesFromBanks(InAudioBankLink audioBankLink)
@@ -258,11 +258,11 @@ public static class AudioBankWorker {
 
     public static void DeleteBank(InAudioBankLink toDelete)
     {        
-        UndoHelper.DoInGroup(() =>
+        InUndoHelper.DoInGroup(() =>
         {
-            UndoHelper.RecordObject(InAudioInstanceFinder.DataManager.AudioTree.gameObject.GetComponents<MonoBehaviour>().Add(toDelete).Add(InAudioInstanceFinder.DataManager.MusicTree.gameObject.GetComponents<MonoBehaviour>()), "Bank detele");
+            InUndoHelper.RecordObject(InAudioInstanceFinder.DataManager.AudioTree.gameObject.GetComponents<MonoBehaviour>().Add(toDelete).Add(InAudioInstanceFinder.DataManager.MusicTree.gameObject.GetComponents<MonoBehaviour>()), "Bank detele");
             toDelete._parent._getChildren.Remove(toDelete);
-            UndoHelper.Destroy(toDelete);
+            InUndoHelper.Destroy(toDelete);
         });
         
         
@@ -270,11 +270,11 @@ public static class AudioBankWorker {
 
     public static void DeleteFolder(InAudioBankLink toDelete)
     {
-        UndoHelper.DoInGroup(() =>
+        InUndoHelper.DoInGroup(() =>
         {
-            UndoHelper.RecordObjectFull(toDelete._parent, "Delete Bank Folder");
+            InUndoHelper.RecordObjectFull(toDelete._parent, "Delete Bank Folder");
             toDelete._parent._getChildren.Remove(toDelete);
-            UndoHelper.Destroy(toDelete);
+            InUndoHelper.Destroy(toDelete);
         });
     }
 }

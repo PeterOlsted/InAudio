@@ -87,7 +87,7 @@ namespace InAudioSystem.InAudioEditor
 
         protected override void OnDrop(InAudioBankLink node, Object[] objects)
         {
-            UndoHelper.DragNDropUndo(node, "Bank Drag N Drop");
+            InUndoHelper.DragNDropUndo(node, "Bank Drag N Drop");
             InAudioBankLink target = objects[0] as InAudioBankLink;
             NodeWorker.ReasignNodeParent(target, node);
         }
@@ -172,7 +172,7 @@ namespace InAudioSystem.InAudioEditor
         private void CreateBank(InAudioBankLink parent, AudioBankTypes type)
         {
             //TODO make real undo
-            UndoHelper.RecordObjectFull(parent, "Bank " + (type == AudioBankTypes.Folder ? "Folder " : "") + "Creation");
+            InUndoHelper.RecordObjectFull(parent, "Bank " + (type == AudioBankTypes.Folder ? "Folder " : "") + "Creation");
             if (type == AudioBankTypes.Folder)
                 AudioBankWorker.CreateFolder(parent.gameObject, parent, GUIDCreator.Create());
             else

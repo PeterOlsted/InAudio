@@ -98,10 +98,10 @@ namespace InAudioSystem.InAudioEditor
         {
             if (SelectedNode != null)
             {
-                UndoHelper.DoInGroup(() =>
+                InUndoHelper.DoInGroup(() =>
                 {
                     TreeWalker.ForEachParent(SelectedNode, n => n.FoldedOut = true);
-                    UndoHelper.RecordObject(SelectedNode, "Send to Event");                
+                    InUndoHelper.RecordObject(SelectedNode, "Send to Event");                
                     if (SelectedNode.IsRootOrFolder)
                     {
                         var myEvent = AudioEventWorker.CreateNode(SelectedNode, EventNodeType.Event);
@@ -123,10 +123,10 @@ namespace InAudioSystem.InAudioEditor
         {
             if (SelectedNode != null)
             {
-                UndoHelper.DoInGroup(() =>
+                InUndoHelper.DoInGroup(() =>
                 {
                     TreeWalker.ForEachParent(SelectedNode, n => n.FoldedOut = true);
-                    UndoHelper.RecordObject(SelectedNode, "Send to Event");
+                    InUndoHelper.RecordObject(SelectedNode, "Send to Event");
                     if (SelectedNode.IsRootOrFolder)
                     {
                         var myEvent = AudioEventWorker.CreateNode(SelectedNode, EventNodeType.Event);
@@ -209,9 +209,9 @@ namespace InAudioSystem.InAudioEditor
 
         private void CreateChild(InAudioEventNode node, EventNodeType type)
         {
-            UndoHelper.DoInGroup(() =>
+            InUndoHelper.DoInGroup(() =>
             {
-                UndoHelper.RegisterUndo(node, "Event Creation");
+                InUndoHelper.RegisterUndo(node, "Event Creation");
                 AudioEventWorker.CreateNode(node, type);
             });
 

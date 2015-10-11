@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace InAudioSystem.InAudioEditor
 {
-    public static class UndoHelper
+    public static class InUndoHelper
     {
         public static Object[] Array(params Object[] obj)
         {

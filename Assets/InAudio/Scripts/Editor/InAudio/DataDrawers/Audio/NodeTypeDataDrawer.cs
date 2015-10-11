@@ -87,11 +87,11 @@ public static class NodeTypeDataDrawer
 
                 GUILayout.BeginVertical();
 
-                UndoHelper.GUIUndo(baseData, "Randomize Delay", ref baseData.RandomizeDelay, () =>
+                InUndoHelper.GUIUndo(baseData, "Randomize Delay", ref baseData.RandomizeDelay, () =>
                     EditorGUILayout.Toggle("Randomize Delay", baseData.RandomizeDelay));
                 if (baseData.RandomizeDelay)
                 {
-                    UndoHelper.GUIUndo(baseData, "Delay Change", ref baseData.InitialDelayMin, ref baseData.InitialDelayMax,
+                    InUndoHelper.GUIUndo(baseData, "Delay Change", ref baseData.InitialDelayMin, ref baseData.InitialDelayMax,
                         (out float v1, out float v2) =>
                         {
                             v1 = Mathf.Clamp(EditorGUILayout.FloatField("Min delay", baseData.InitialDelayMin), 0, baseData.InitialDelayMax);
@@ -101,7 +101,7 @@ public static class NodeTypeDataDrawer
                 }
                 else
                 {
-                    UndoHelper.GUIUndo(baseData, "Delay", ref baseData.InitialDelayMin, () =>
+                    InUndoHelper.GUIUndo(baseData, "Delay", ref baseData.InitialDelayMin, () =>
                     {
                         float delay = Mathf.Max(EditorGUILayout.FloatField("Initial delay", baseData.InitialDelayMin), 0);
                         if (delay > baseData.InitialDelayMax)
@@ -135,28 +135,28 @@ public static class NodeTypeDataDrawer
                 GUI.enabled = true;
                 GUILayout.BeginVertical();
 
-                UndoHelper.GUIUndo(baseData, "Use looping", ref baseData.Loop, () => EditorGUILayout.Toggle("Loop", baseData.Loop));
+                InUndoHelper.GUIUndo(baseData, "Use looping", ref baseData.Loop, () => EditorGUILayout.Toggle("Loop", baseData.Loop));
                 if (baseData.Loop)
                 {
                     GUI.enabled = baseData.Loop;
 
-                    UndoHelper.GUIUndo(baseData, "Loop Infinite", ref baseData.LoopInfinite,
+                    InUndoHelper.GUIUndo(baseData, "Loop Infinite", ref baseData.LoopInfinite,
                         () => EditorGUILayout.Toggle("Loop Infinite", baseData.LoopInfinite));
                     if (baseData.Loop)
                         GUI.enabled = !baseData.LoopInfinite;
 
-                    UndoHelper.GUIUndo(baseData, "Loop Randomize", ref baseData.RandomizeLoops,
+                    InUndoHelper.GUIUndo(baseData, "Loop Randomize", ref baseData.RandomizeLoops,
                         () => EditorGUILayout.Toggle("Randomize Loop Count", baseData.RandomizeLoops));
 
                     if (!baseData.RandomizeLoops)
                     {
-                        UndoHelper.GUIUndo(baseData, "Loop Count",
+                        InUndoHelper.GUIUndo(baseData, "Loop Count",
                             ref baseData.MinIterations, () => (byte)Mathf.Clamp(EditorGUILayout.IntField("Loop Count", baseData.MinIterations), 0, 255));
                     }
                     else
                     {
                         GUILayout.BeginHorizontal();
-                        UndoHelper.GUIUndo(baseData, "Loop Count", ref baseData.MinIterations, ref baseData.MaxIterations,
+                        InUndoHelper.GUIUndo(baseData, "Loop Count", ref baseData.MinIterations, ref baseData.MaxIterations,
                             (out byte v1, out byte v2) =>
                             {
                                 v1 = (byte)Mathf.Clamp(EditorGUILayout.IntField("Min Loop Count", baseData.MinIterations), 0, 255);
@@ -181,12 +181,12 @@ public static class NodeTypeDataDrawer
                 Seperators(2);
 
                 #region Instance limiting
-                UndoHelper.GUIUndo(baseData, "Limit Instances (Global)", ref baseData.LimitInstances, () => EditorGUILayout.Toggle("Limit Instances", baseData.LimitInstances));
+                InUndoHelper.GUIUndo(baseData, "Limit Instances (Global)", ref baseData.LimitInstances, () => EditorGUILayout.Toggle("Limit Instances", baseData.LimitInstances));
                 GUI.enabled = baseData.LimitInstances;
                 if (baseData.LimitInstances)
                 {
-                    UndoHelper.GUIUndo(baseData, "Max Instance Cont", ref baseData.MaxInstances, () => Math.Max(EditorGUILayout.IntField("Max Instance Count", baseData.MaxInstances), 0));
-                    UndoHelper.GUIUndo(baseData, "Stealing Type", ref baseData.InstanceStealingTypes, () => (InstanceStealingTypes)EditorGUILayout.EnumPopup("Stealing Type", baseData.InstanceStealingTypes));
+                    InUndoHelper.GUIUndo(baseData, "Max Instance Cont", ref baseData.MaxInstances, () => Math.Max(EditorGUILayout.IntField("Max Instance Count", baseData.MaxInstances), 0));
+                    InUndoHelper.GUIUndo(baseData, "Stealing Type", ref baseData.InstanceStealingTypes, () => (InstanceStealingTypes)EditorGUILayout.EnumPopup("Stealing Type", baseData.InstanceStealingTypes));
                 }
                 GUI.enabled = true;
 
@@ -195,18 +195,18 @@ public static class NodeTypeDataDrawer
                 Seperators(2);
 
                 #region Priority
-                UndoHelper.GUIUndo(baseData, "Priority", ref baseData.Priority, () => EditorGUILayout.IntSlider("Priority", baseData.Priority, 0, 255));
+                InUndoHelper.GUIUndo(baseData, "Priority", ref baseData.Priority, () => EditorGUILayout.IntSlider("Priority", baseData.Priority, 0, 255));
                 #endregion
 
                 Seperators(2);
 
                 #region Sample offset
-                UndoHelper.GUIUndo(baseData, "Random Second Offset", ref baseData.RandomSecondsOffset, () =>
+                InUndoHelper.GUIUndo(baseData, "Random Second Offset", ref baseData.RandomSecondsOffset, () =>
                    EditorGUILayout.Toggle("Random Second Offset", baseData.RandomSecondsOffset));
 
                 if (baseData.RandomSecondsOffset)
                 {
-                    UndoHelper.GUIUndo(baseData, "First item offset", ref baseData.MinSecondsOffset, ref baseData.MaxSecondsOffset,
+                    InUndoHelper.GUIUndo(baseData, "First item offset", ref baseData.MinSecondsOffset, ref baseData.MaxSecondsOffset,
                         (out float v1, out float v2) =>
                         {
                             v1 = Mathf.Clamp(EditorGUILayout.FloatField("Min offset", baseData.MinSecondsOffset), 0, baseData.MaxSecondsOffset);
@@ -216,7 +216,7 @@ public static class NodeTypeDataDrawer
                 }
                 else
                 {
-                    UndoHelper.GUIUndo(baseData, "Delay", ref baseData.MinSecondsOffset, () =>
+                    InUndoHelper.GUIUndo(baseData, "Delay", ref baseData.MinSecondsOffset, () =>
                     {
                         var delay = Mathf.Max(EditorGUILayout.FloatField("First clip offset", baseData.MinSecondsOffset), 0);
                         if (delay > baseData.MaxSecondsOffset)
@@ -253,14 +253,14 @@ public static class NodeTypeDataDrawer
             #region Attenuation
 
             if (!node._parent.IsRootOrFolder)
-                UndoHelper.GUIUndo(baseData, "Override Parent", ref baseData.OverrideAttenuation, () => GUILayout.Toggle(baseData.OverrideAttenuation, "Override Parent"));
+                InUndoHelper.GUIUndo(baseData, "Override Parent", ref baseData.OverrideAttenuation, () => GUILayout.Toggle(baseData.OverrideAttenuation, "Override Parent"));
             GUI.enabled = baseData.OverrideAttenuation;
             if (node._parent.IsRootOrFolder)
                 GUI.enabled = true;
 
-            UndoHelper.GUIUndo(node, "Rolloff Mode", ref baseData.RolloffMode, () => (AudioRolloffMode) EditorGUILayout.EnumPopup("Volume Rolloff", baseData.RolloffMode));
+            InUndoHelper.GUIUndo(node, "Rolloff Mode", ref baseData.RolloffMode, () => (AudioRolloffMode) EditorGUILayout.EnumPopup("Volume Rolloff", baseData.RolloffMode));
 
-            UndoHelper.GUIUndo(baseData, "Set Rolloff Distance", ref baseData.MinDistance, ref baseData.MaxDistance,
+            InUndoHelper.GUIUndo(baseData, "Set Rolloff Distance", ref baseData.MinDistance, ref baseData.MaxDistance,
                 (out float v1, out float v2) =>
                 {
                     if (baseData.RolloffMode != AudioRolloffMode.Custom)
@@ -281,7 +281,7 @@ public static class NodeTypeDataDrawer
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PrefixLabel("Rolloff");
 
-                UndoHelper.GUIUndo(baseData, "Set Rolloff Curve", ref baseData.FalloffCurve, () => EditorGUILayout.CurveField(baseData.FalloffCurve, GUILayout.Height(200), GUILayout.Width(200)));
+                InUndoHelper.GUIUndo(baseData, "Set Rolloff Curve", ref baseData.FalloffCurve, () => EditorGUILayout.CurveField(baseData.FalloffCurve, GUILayout.Height(200), GUILayout.Width(200)));
                 //baseData.FalloffCurve = EditorGUILayout.CurveField(baseData.FalloffCurve, GUILayout.Height(200), GUILayout.Width(200));
                 EditorGUILayout.EndHorizontal();
 
@@ -304,7 +304,7 @@ public static class NodeTypeDataDrawer
                 }
                 if (GUILayout.Button("Reset curve", GUILayout.Width(150)))
                 {
-                    UndoHelper.RecordObject(baseData, "Reset Curve");
+                    InUndoHelper.RecordObject(baseData, "Reset Curve");
                     baseData.FalloffCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(0.1f, 1), new Keyframe(1, 0));
                 }
                 
@@ -331,12 +331,12 @@ public static class NodeTypeDataDrawer
     {
         float minPitch = 0.001f;
         float maxPitch = 3;
-        UndoHelper.GUIUndo(baseData, "Random Pitch", ref baseData.RandomPitch, () =>
+        InUndoHelper.GUIUndo(baseData, "Random Pitch", ref baseData.RandomPitch, () =>
             EditorGUILayout.Toggle("Random Pitch", baseData.RandomPitch));
 
         if (!baseData.RandomPitch)
         {
-            UndoHelper.GUIUndo(baseData, "Pitch", () =>
+            InUndoHelper.GUIUndo(baseData, "Pitch", () =>
                 EditorGUILayout.Slider("Pitch", baseData.MinPitch, minPitch, maxPitch),
                 v =>
                 {
@@ -348,7 +348,7 @@ public static class NodeTypeDataDrawer
         }
         else
         {
-            UndoHelper.GUIUndo(baseData, "Random Pitch",
+            InUndoHelper.GUIUndo(baseData, "Random Pitch",
                 ref baseData.MinPitch, ref baseData.MaxPitch,
                 (out float v1, out float v2) =>
                 {
@@ -364,12 +364,12 @@ public static class NodeTypeDataDrawer
     {
         float minBlend = 0;
         float maxBlend = 1;
-        UndoHelper.GUIUndo(baseData, "Random Spatial Blend", ref baseData.RandomBlend, () =>
+        InUndoHelper.GUIUndo(baseData, "Random Spatial Blend", ref baseData.RandomBlend, () =>
             EditorGUILayout.Toggle("Random Spatial Blend", baseData.RandomBlend));
 
         if (!baseData.RandomBlend)
         {
-            UndoHelper.GUIUndo(baseData, "Blend", () =>
+            InUndoHelper.GUIUndo(baseData, "Blend", () =>
                 EditorGUILayout.Slider("Blend (2D <-> 3D)", baseData.MinBlend, minBlend, maxBlend),
                 v =>
                 {
@@ -381,7 +381,7 @@ public static class NodeTypeDataDrawer
         }
         else
         {
-            UndoHelper.GUIUndo(baseData, "Random Pitch",
+            InUndoHelper.GUIUndo(baseData, "Random Pitch",
                 ref baseData.MinBlend, ref baseData.MaxBlend,
                 (out float v1, out float v2) =>
                 {
@@ -403,13 +403,13 @@ public static class NodeTypeDataDrawer
 
     public static void DrawSelectedArea(InAudioNode node, InAudioNodeData baseData)
     {
-        UndoHelper.GUIUndo(node, "Name Change", ref baseData.SelectedArea, () =>
+        InUndoHelper.GUIUndo(node, "Name Change", ref baseData.SelectedArea, () =>
             GUILayout.Toolbar(baseData.SelectedArea, new[] { "Audio", "Attenuation" }));     
     }
 
     public static void DrawName(InAudioNode node)
     {
-        UndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
+        InUndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
             EditorGUILayout.TextField("Name", node.Name));
     }
 }

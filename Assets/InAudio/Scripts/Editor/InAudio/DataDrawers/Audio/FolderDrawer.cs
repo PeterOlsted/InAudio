@@ -13,7 +13,7 @@ public static class FolderDrawer
             var data = node._nodeData as InFolderData;
             #region Bank 
 
-            UndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
+            InUndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
             EditorGUILayout.TextField("Name", node.Name));
        
         if (node._type == AudioNodeType.Folder)
@@ -109,11 +109,11 @@ public static class FolderDrawer
         #region Volume
         if (Application.isPlaying)
         {
-            UndoHelper.GUIUndo(nodeData, "Folder volume", ref data.runtimeVolume, () => EditorGUILayout.Slider("Runtime Volume", data.runtimeVolume, 0, 1));
+            InUndoHelper.GUIUndo(nodeData, "Folder volume", ref data.runtimeVolume, () => EditorGUILayout.Slider("Runtime Volume", data.runtimeVolume, 0, 1));
         }
         else
         {
-            UndoHelper.GUIUndo(nodeData, "Folder volume", ref data.VolumeMin, () => EditorGUILayout.Slider("Initial Volume", data.VolumeMin, 0, 1));
+            InUndoHelper.GUIUndo(nodeData, "Folder volume", ref data.VolumeMin, () => EditorGUILayout.Slider("Initial Volume", data.VolumeMin, 0, 1));
                 
         }
         #endregion 

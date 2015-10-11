@@ -94,7 +94,7 @@ namespace InAudioSystem.InAudioEditor
 
                 if (node != null)
                 {
-                    UndoHelper.Destroy(node.gameObject);
+                    InUndoHelper.Destroy(node.gameObject);
                 }
             });
 
@@ -103,12 +103,12 @@ namespace InAudioSystem.InAudioEditor
 
             if (add)
             {
-                UndoHelper.DoInGroup(() =>
+                InUndoHelper.DoInGroup(() =>
                 {
 
                     UndoAll("Add new spline node");
 
-                    GameObject newNodeGO = UndoHelper.CreateGO(SplineController.gameObject.name + " Node");
+                    GameObject newNodeGO = InUndoHelper.CreateGO(SplineController.gameObject.name + " Node");
                     var newNode = newNodeGO.AddComponent<InSplineNode>();
                     newNodeGO.transform.position = SplineController.transform.position;
                     newNode.SplineController = SplineController;
@@ -155,7 +155,7 @@ namespace InAudioSystem.InAudioEditor
                             if (GUILayout.Button("X", GUILayout.Width(20)))
                             {
                                 int index = i;
-                                UndoHelper.DoInGroup(() =>
+                                InUndoHelper.DoInGroup(() =>
                                 {
 #if UNITY_4_1 || UNITY_4_2
                                         Undo.RegisterSceneUndo("Delete element in spline");
@@ -231,7 +231,7 @@ namespace InAudioSystem.InAudioEditor
 
         private void UndoAll(string message)
         {
-            UndoHelper.RecordObject(
+            InUndoHelper.RecordObject(
                 SplineController.Nodes.Cast<Object>().ToArray().Add(SplineController), message);
         }
     }

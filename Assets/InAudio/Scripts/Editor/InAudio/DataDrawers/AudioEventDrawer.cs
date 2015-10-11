@@ -47,7 +47,7 @@ public static class AudioEventDrawer
         EditorGUILayout.BeginVertical();
 
         lastEvent = audioevent;
-        UndoHelper.GUIUndo(audioevent, "Name Change", ref audioevent.Name, () => 
+        InUndoHelper.GUIUndo(audioevent, "Name Change", ref audioevent.Name, () => 
             EditorGUILayout.TextField("Name", audioevent.Name));
         
         bool repaint = false;
@@ -94,7 +94,7 @@ public static class AudioEventDrawer
 
             
 
-            UndoHelper.GUIUndo(audioevent, "Delay", ref audioevent.Delay, () =>
+            InUndoHelper.GUIUndo(audioevent, "Delay", ref audioevent.Delay, () =>
                 Mathf.Max(EditorGUILayout.FloatField("Delay", audioevent.Delay), 0));
           
             NewEventArea(audioevent);
@@ -114,7 +114,7 @@ public static class AudioEventDrawer
 
         if (toRemove != null)
         {
-            UndoHelper.DoInGroup(() =>
+            InUndoHelper.DoInGroup(() =>
             {
                 //Remove the required piece
                 int index = audioevent._actionList.FindIndex(toRemove);
@@ -147,7 +147,7 @@ public static class AudioEventDrawer
 
             GUI.skin.label.alignment = TextAnchor.UpperLeft;
 
-            UndoHelper.GUIUndo(eventAction, "Event Action Delay", ref eventAction.Delay, () =>
+            InUndoHelper.GUIUndo(eventAction, "Event Action Delay", ref eventAction.Delay, () =>
                 Mathf.Max(EditorGUI.FloatField(buttonArea, "Seconds Delay", eventAction.Delay), 0));
             
             buttonArea.y += 33;
@@ -164,9 +164,9 @@ public static class AudioEventDrawer
             {
                 if (audioAction._eventActionType == EventActionTypes.Play || audioAction._eventActionType == EventActionTypes.Stop || audioAction._eventActionType == EventActionTypes.StopAll)
                 {
-                    UndoHelper.GUIUndo(audioAction, "Fade Time", ref audioAction.Fadetime,
+                    InUndoHelper.GUIUndo(audioAction, "Fade Time", ref audioAction.Fadetime,
                         () => Mathf.Max(0, EditorGUILayout.FloatField("Fade Time", audioAction.Fadetime)));
-                    UndoHelper.GUIUndo(audioAction, "Fade Type", ref audioAction.TweenType,
+                    InUndoHelper.GUIUndo(audioAction, "Fade Type", ref audioAction.TweenType,
                         () => (LeanTweenType) EditorGUILayout.EnumPopup("Fade Type", audioAction.TweenType));
                     if (audioAction.TweenType == LeanTweenType.animationCurve)
                     {
@@ -176,28 +176,28 @@ public static class AudioEventDrawer
             }
             else if (bankLoadingAction != null)
             {
-                UndoHelper.GUIUndo(bankLoadingAction, "Bank Loading Action", ref bankLoadingAction.LoadingAction, () =>
+                InUndoHelper.GUIUndo(bankLoadingAction, "Bank Loading Action", ref bankLoadingAction.LoadingAction, () =>
                     (BankHookActionType)EditorGUI.EnumPopup(buttonArea, "Load Action", bankLoadingAction.LoadingAction));
             }
             else if (snapshotAction != null)
             {
-                UndoHelper.GUIUndo(snapshotAction, "Snapshot Transition Action", ref snapshotAction.Snapshot, () =>
+                InUndoHelper.GUIUndo(snapshotAction, "Snapshot Transition Action", ref snapshotAction.Snapshot, () =>
                     (AudioMixerSnapshot)EditorGUILayout.ObjectField("Transition Action", snapshotAction.Snapshot, typeof(AudioMixerSnapshot), false));
-                UndoHelper.GUIUndo(snapshotAction, "Snapshot Transition Time", ref snapshotAction.TransitionTime, () => 
+                InUndoHelper.GUIUndo(snapshotAction, "Snapshot Transition Time", ref snapshotAction.TransitionTime, () => 
                     EditorGUILayout.FloatField("Transition Time", snapshotAction.TransitionTime));
             }
             else if (mixerAction != null)
             {
-                UndoHelper.GUIUndo(mixerAction, "Mixer Value", ref mixerAction.Mixer, () =>
+                InUndoHelper.GUIUndo(mixerAction, "Mixer Value", ref mixerAction.Mixer, () =>
                     (AudioMixer)EditorGUILayout.ObjectField("Audio Mixer", mixerAction.Mixer, typeof(AudioMixer), false));
-                UndoHelper.GUIUndo(mixerAction, "Parameter", ref mixerAction.Parameter, () =>
+                InUndoHelper.GUIUndo(mixerAction, "Parameter", ref mixerAction.Parameter, () =>
                     EditorGUILayout.TextField("Parameter", mixerAction.Parameter));
-                UndoHelper.GUIUndo(mixerAction, "Value", ref mixerAction.Value, () =>
+                InUndoHelper.GUIUndo(mixerAction, "Value", ref mixerAction.Value, () =>
                     EditorGUILayout.FloatField("Value", mixerAction.Value));
                 EditorGUILayout.Separator();
-                UndoHelper.GUIUndo(mixerAction, "Transition Time", ref mixerAction.TransitionTime, () =>
+                InUndoHelper.GUIUndo(mixerAction, "Transition Time", ref mixerAction.TransitionTime, () =>
                     Mathf.Max(0, EditorGUILayout.FloatField("Transition Time", mixerAction.TransitionTime)));
-                UndoHelper.GUIUndo(mixerAction, "Transition Type", ref mixerAction.TransitionType, () =>
+                InUndoHelper.GUIUndo(mixerAction, "Transition Type", ref mixerAction.TransitionType, () =>
                     (LeanTweenType)EditorGUILayout.EnumPopup("Transition Type", mixerAction.TransitionType));
                 if (mixerAction.TransitionType == LeanTweenType.animationCurve)
                 {
@@ -206,27 +206,27 @@ public static class AudioEventDrawer
             }
             else if (musicControlAction != null)
             {
-                UndoHelper.GUIUndo(musicControlAction, "Fade Action", ref musicControlAction.Fade, () =>
+                InUndoHelper.GUIUndo(musicControlAction, "Fade Action", ref musicControlAction.Fade, () =>
                         EditorGUILayout.Toggle("Fade Action", musicControlAction.Fade));
 
                 if (musicControlAction.Fade)
                 {
-                    UndoHelper.GUIUndo(musicControlAction, "Transition Time", ref musicControlAction.Duration, () =>
+                    InUndoHelper.GUIUndo(musicControlAction, "Transition Time", ref musicControlAction.Duration, () =>
                         Mathf.Max(0, EditorGUILayout.FloatField("Transition Time", musicControlAction.Duration)));
 
-                    UndoHelper.GUIUndo(musicControlAction, "Transition Type", ref musicControlAction.TweenType, () =>
+                    InUndoHelper.GUIUndo(musicControlAction, "Transition Type", ref musicControlAction.TweenType, () =>
                         (LeanTweenType) EditorGUILayout.EnumPopup("Transition Type", musicControlAction.TweenType));
 
                    
                 }
 
                 
-                UndoHelper.GUIUndo(musicControlAction, "Set Volume Target", ref musicControlAction.ChangeVolume,
+                InUndoHelper.GUIUndo(musicControlAction, "Set Volume Target", ref musicControlAction.ChangeVolume,
                     () =>
                         EditorGUILayout.Toggle("Set Volume Target", musicControlAction.ChangeVolume));
                 if (musicControlAction.ChangeVolume)
                 {
-                    UndoHelper.GUIUndo(musicControlAction, "Volume Target", ref musicControlAction.Duration,
+                    InUndoHelper.GUIUndo(musicControlAction, "Volume Target", ref musicControlAction.Duration,
                         () => Mathf.Clamp01(EditorGUILayout.Slider("Volume Target", musicControlAction.Duration, 0, 1)));
                 }
                 
@@ -235,20 +235,20 @@ public static class AudioEventDrawer
             {
                 if (musicFadeAction._eventActionType == EventActionTypes.CrossfadeMusic)
                 {
-                    UndoHelper.GUIUndo(musicFadeAction, "Fade Target", ref musicFadeAction.From, () => EditorGUILayout.ObjectField("From Target", musicFadeAction.To, typeof(InEventMusicFade),false) as InMusicGroup);
-                    UndoHelper.GUIUndo(musicFadeAction, "Fade Target", ref musicFadeAction.To, () => EditorGUILayout.ObjectField("To Target", musicFadeAction.To, typeof(InEventMusicFade), false) as InMusicGroup);    
+                    InUndoHelper.GUIUndo(musicFadeAction, "Fade Target", ref musicFadeAction.From, () => EditorGUILayout.ObjectField("From Target", musicFadeAction.To, typeof(InEventMusicFade),false) as InMusicGroup);
+                    InUndoHelper.GUIUndo(musicFadeAction, "Fade Target", ref musicFadeAction.To, () => EditorGUILayout.ObjectField("To Target", musicFadeAction.To, typeof(InEventMusicFade), false) as InMusicGroup);    
                 }
 
                 if (musicFadeAction._eventActionType == EventActionTypes.FadeMusic)
                 {
-                    UndoHelper.GUIUndo(musicFadeAction, "Volume Target", ref musicFadeAction.ToVolumeTarget, () =>
+                    InUndoHelper.GUIUndo(musicFadeAction, "Volume Target", ref musicFadeAction.ToVolumeTarget, () =>
                         EditorGUILayout.Slider("Volume Target", musicFadeAction.ToVolumeTarget, 0f, 1f));
                 }
 
-                UndoHelper.GUIUndo(musicFadeAction, "Transition Time", ref musicFadeAction.Duration, () =>
+                InUndoHelper.GUIUndo(musicFadeAction, "Transition Time", ref musicFadeAction.Duration, () =>
                     Mathf.Max(0, EditorGUILayout.FloatField("Transition Time", musicFadeAction.Duration)));
 
-                UndoHelper.GUIUndo(musicFadeAction, "Transition Type", ref musicFadeAction.TweenType, () =>
+                InUndoHelper.GUIUndo(musicFadeAction, "Transition Type", ref musicFadeAction.TweenType, () =>
                     (LeanTweenType)EditorGUILayout.EnumPopup("Transition Type", musicFadeAction.TweenType));
                 
                 if (musicFadeAction.TweenType == LeanTweenType.animationCurve)
@@ -258,7 +258,7 @@ public static class AudioEventDrawer
 
                 if (musicFadeAction._eventActionType == EventActionTypes.FadeMusic)
                 {
-                    UndoHelper.GUIUndo(musicFadeAction, "Do At End", ref musicFadeAction.DoAtEndTo, () =>
+                    InUndoHelper.GUIUndo(musicFadeAction, "Do At End", ref musicFadeAction.DoAtEndTo, () =>
                         (MusicState)EditorGUILayout.EnumPopup("Do At End", musicFadeAction.DoAtEndTo));
                     if (musicFadeAction.DoAtEndTo == MusicState.Playing)
                     {
@@ -269,19 +269,19 @@ public static class AudioEventDrawer
             }
             else if (musicSoloMuteAction != null)
             {
-                UndoHelper.GUIUndo(musicSoloMuteAction, "Set Solo", ref musicSoloMuteAction.SetSolo, () =>
+                InUndoHelper.GUIUndo(musicSoloMuteAction, "Set Solo", ref musicSoloMuteAction.SetSolo, () =>
                         EditorGUILayout.Toggle("Set Solo", musicSoloMuteAction.SetSolo));
                 if (musicSoloMuteAction.SetSolo)
                 {
-                    UndoHelper.GUIUndo(musicSoloMuteAction, "Solo Target", ref musicSoloMuteAction.SoloTarget, () =>
+                    InUndoHelper.GUIUndo(musicSoloMuteAction, "Solo Target", ref musicSoloMuteAction.SoloTarget, () =>
                         EditorGUILayout.Toggle("Solo Target", musicSoloMuteAction.SoloTarget));
                 }
                 EditorGUILayout.Separator();
-                UndoHelper.GUIUndo(musicSoloMuteAction, "Set Mute", ref musicSoloMuteAction.SetMute, () =>
+                InUndoHelper.GUIUndo(musicSoloMuteAction, "Set Mute", ref musicSoloMuteAction.SetMute, () =>
                         EditorGUILayout.Toggle("Set Mute", musicSoloMuteAction.SetMute));
                 if (musicSoloMuteAction.SetMute)
                 {
-                    UndoHelper.GUIUndo(musicSoloMuteAction, "Solo Mute", ref musicSoloMuteAction.MuteTarget, () =>
+                    InUndoHelper.GUIUndo(musicSoloMuteAction, "Solo Mute", ref musicSoloMuteAction.MuteTarget, () =>
                         EditorGUILayout.Toggle("Solo Mute", musicSoloMuteAction.MuteTarget));
                 }
             }
@@ -396,7 +396,7 @@ public static class AudioEventDrawer
                 InAudioNode dragged = OnDragging.DraggingObject<InAudioNode>(dragArea, node => node.IsPlayable);
                 if (dragged != null)
                 {
-                    UndoHelper.RecordObject(currentAction, "Change Action Type");
+                    InUndoHelper.RecordObject(currentAction, "Change Action Type");
                     currentAction.Target = dragged;
                 }
             }
@@ -407,7 +407,7 @@ public static class AudioEventDrawer
 
                 if (dragged != null)
                 {
-                    UndoHelper.RecordObject(currentAction, "Change Action Type");
+                    InUndoHelper.RecordObject(currentAction, "Change Action Type");
                     currentAction.Target = dragged;
                 }
             }
@@ -416,7 +416,7 @@ public static class AudioEventDrawer
                 AudioMixer dragged = OnDragging.DraggingObject<AudioMixer>(dragArea);
                 if (dragged != null)
                 {
-                    UndoHelper.RecordObject(currentAction, "Change Action Type");
+                    InUndoHelper.RecordObject(currentAction, "Change Action Type");
                     currentAction.Target = dragged;
                 }
             }
@@ -425,7 +425,7 @@ public static class AudioEventDrawer
                 InMusicGroup dragged = OnDragging.DraggingObject<InMusicGroup>(dragArea);
                 if (dragged != null)
                 {
-                    UndoHelper.RecordObject(currentAction, "Change Action Type");
+                    InUndoHelper.RecordObject(currentAction, "Change Action Type");
                     currentAction.Target = dragged;
                 }
             }
@@ -471,11 +471,11 @@ public static class AudioEventDrawer
 
                 if (oldType != newType)
                 {
-                    UndoHelper.DoInGroup(() => AudioEventWorker.ReplaceActionDestructiveAt(audioEvent, newEnumType, i));
+                    InUndoHelper.DoInGroup(() => AudioEventWorker.ReplaceActionDestructiveAt(audioEvent, newEnumType, i));
                 }
                 else
                 {
-                    UndoHelper.RecordObject(action, "Change Event Action Type");
+                    InUndoHelper.RecordObject(action, "Change Event Action Type");
                     action._eventActionType = newEnumType;
                 }    
                 

@@ -150,10 +150,10 @@ namespace InAudioSystem.InAudioEditor
                 if (dragged.IsRoot || dragged == newParent)
                     return;
 
-                UndoHelper.DoInGroup(() =>
+                InUndoHelper.DoInGroup(() =>
                 {
                     var oldParent = dragged._parent;
-                    UndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
+                    InUndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
 
                     dragged.MoveToNewParent(newParent);
 
@@ -168,9 +168,9 @@ namespace InAudioSystem.InAudioEditor
                 var musicGroup = newParent as InMusicGroup;
                 if (musicGroup != null)
                 {
-                    UndoHelper.DoInGroup(() =>
+                    InUndoHelper.DoInGroup(() =>
                     {
-                        UndoHelper.RecordObject(newParent,"Music Clip Add");
+                        InUndoHelper.RecordObject(newParent,"Music Clip Add");
                         foreach (var audioClip in clips)
                         {
                             musicGroup._clips.Add(audioClip);
@@ -229,7 +229,7 @@ namespace InAudioSystem.InAudioEditor
 
         private void DeleteNode(InMusicNode toDelete)
         {
-            UndoHelper.DoInGroup(() => DeleteNodeRec(toDelete));
+            InUndoHelper.DoInGroup(() => DeleteNodeRec(toDelete));
         }
 
         private void DeleteNodeRec(InMusicNode toDelete)
@@ -238,14 +238,14 @@ namespace InAudioSystem.InAudioEditor
             {
                 DeleteNodeRec(toDelete._children[i]);
             }
-            UndoHelper.Destroy(toDelete);
+            InUndoHelper.Destroy(toDelete);
         }
 
         private void CreateFolder(InMusicNode parent)
         {
-            UndoHelper.DoInGroup(() =>
+            InUndoHelper.DoInGroup(() =>
             {
-                UndoHelper.RecordObjectFull(parent, "Create Music Folder");
+                InUndoHelper.RecordObjectFull(parent, "Create Music Folder");
                 parent.FoldedOut = true;
                 MusicWorker.CreateFolder(parent.gameObject, parent);
             });
@@ -254,9 +254,9 @@ namespace InAudioSystem.InAudioEditor
 
         private void CreateMusicGroup(InMusicNode parent)
         {
-            UndoHelper.DoInGroup(() =>
+            InUndoHelper.DoInGroup(() =>
             {
-                UndoHelper.RecordObjectFull(parent, "Create Music Folder");
+                InUndoHelper.RecordObjectFull(parent, "Create Music Folder");
                 parent.FoldedOut = true;
                 MusicWorker.CreateMusicGroup(parent);
             });

@@ -99,7 +99,7 @@ public class InSplineNodeDrawer : Editor
                 return false;
             }, o =>
             {
-                UndoHelper.RecordObject(SplineNode.SplineController, "Connect nodes");
+                InUndoHelper.RecordObject(SplineNode.SplineController, "Connect nodes");
                 (o as GameObject).GetComponent<InSplineNode>().ConnectTo(SplineNode);
             });
 
@@ -119,7 +119,7 @@ public class InSplineNodeDrawer : Editor
                         GUI.enabled = true;
                         if (GUILayout.Button("X", GUILayout.Width(20)))
                         {
-                            UndoHelper.RecordObject(SplineNode.SplineController, "Remove spline connection");
+                            InUndoHelper.RecordObject(SplineNode.SplineController, "Remove spline connection");
                             SplineNode.SplineController.RemoveConnections(conc);
                         }
                         EditorUtility.SetDirty(SplineNode.SplineController);
@@ -130,7 +130,7 @@ public class InSplineNodeDrawer : Editor
                         GUI.enabled = true;
                         if (GUILayout.Button("X", GUILayout.Width(20)))
                         {
-                            UndoHelper.RecordObject(SplineNode.SplineController, "Remove spline connection");
+                            InUndoHelper.RecordObject(SplineNode.SplineController, "Remove spline connection");
                             SplineNode.SplineController.RemoveConnections(conc);
                         }
                         EditorUtility.SetDirty(SplineNode.SplineController);
@@ -149,7 +149,7 @@ public class InSplineNodeDrawer : Editor
         bool delete = true;
         if (GUILayout.Button("Delete"))
         {
-            UndoHelper.DoInGroup(() =>
+            InUndoHelper.DoInGroup(() =>
             {
                 
             #if UNITY_4_1 || UNITY_4_2
@@ -159,7 +159,7 @@ public class InSplineNodeDrawer : Editor
             #endif
                 foreach (var gameObject in Selection.gameObjects)
                 {
-                    UndoHelper.Destroy(gameObject);
+                    InUndoHelper.Destroy(gameObject);
                 }
                 
                 delete = true;
@@ -169,7 +169,7 @@ public class InSplineNodeDrawer : Editor
 
         if (add)
         {
-            UndoHelper.DoInGroup(() =>
+            InUndoHelper.DoInGroup(() =>
             {
                 #if UNITY_4_1 || UNITY_4_2
                 Undo.RegisterSceneUndo("Delete element in spline");
@@ -177,7 +177,7 @@ public class InSplineNodeDrawer : Editor
                 UndoAll("Add new spline node");
                 #endif
 
-                GameObject go = UndoHelper.CreateGO(SplineNode.SplineController.gameObject.name + " Node");
+                GameObject go = InUndoHelper.CreateGO(SplineNode.SplineController.gameObject.name + " Node");
                 go.transform.parent = SplineNode.SplineController.transform;
                 go.transform.position = SplineNode.transform.position + SplineNode.transform.forward;
                 go.transform.position = SplineNode.transform.position;
@@ -314,7 +314,7 @@ public class InSplineNodeDrawer : Editor
 
     private void UndoAll(string message)
     {
-        UndoHelper.RecordObject(
+        InUndoHelper.RecordObject(
             SplineNode.SplineController.Nodes.Cast<Object>().ToArray().Add(SplineNode.SplineController), message);
     }
 
@@ -335,7 +335,7 @@ public class InSplineNodeDrawer : Editor
 
     private void CombineNodes(InSplineNode splineNode, InSplineNode[] conditioned)
     {
-        UndoHelper.DoInGroup(() => { 
+        InUndoHelper.DoInGroup(() => { 
             #if UNITY_4_1 || UNITY_4_2
                     Undo.RegisterSceneUndo("Combine nodes");
             #else
@@ -357,7 +357,7 @@ public class InSplineNodeDrawer : Editor
             foreach (var node in conditioned)
             {
                 if(node != null)
-                    UndoHelper.Destroy(node.gameObject);
+                    InUndoHelper.Destroy(node.gameObject);
             }
 
             foreach (var node in periphery)

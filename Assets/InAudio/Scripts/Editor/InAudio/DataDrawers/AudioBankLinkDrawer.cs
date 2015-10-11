@@ -10,7 +10,7 @@ public static class AudioBankLinkDrawer
     { 
         EditorGUILayout.BeginVertical();
 
-        UndoHelper.GUIUndo(bankLink, "Name Change", ref bankLink._name, () => 
+        InUndoHelper.GUIUndo(bankLink, "Name Change", ref bankLink._name, () => 
             EditorGUILayout.TextField("Name", bankLink._name));
 
         if (bankLink._type == AudioBankTypes.Bank)
@@ -23,7 +23,7 @@ public static class AudioBankLinkDrawer
             bool autoLoad = EditorGUILayout.Toggle("Auto load", bankLink._autoLoad);
             if (autoLoad != bankLink._autoLoad) //Value has changed
             {
-                UndoHelper.RecordObjectFull(bankLink, "Bank Auto Load");
+                InUndoHelper.RecordObjectFull(bankLink, "Bank Auto Load");
                 bankLink._autoLoad = autoLoad;
             }
 

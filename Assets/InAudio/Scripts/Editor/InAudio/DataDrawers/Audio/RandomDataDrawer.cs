@@ -10,7 +10,7 @@ namespace InAudioSystem.InAudioEditor
             node.ScrollPosition = GUILayout.BeginScrollView(node.ScrollPosition);
 
             //UndoHandler.CheckUndo(new UnityEngine.Object[] { node, node.AudioData }, "Random Data Node Change");
-            UndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
+            InUndoHelper.GUIUndo(node, "Name Change", ref node.Name, () =>
                 EditorGUILayout.TextField("Name", node.Name));
             NodeTypeDataDrawer.Draw(node);
 
@@ -25,7 +25,7 @@ namespace InAudioSystem.InAudioEditor
                 var randomData = (node._nodeData as RandomData);
                 var weights = randomData.weights;
 
-                UndoHelper.GUIUndo(node._nodeData, "Do Not Repeat Last #", ref randomData.doNotRepeat, () => Mathf.Max(0,EditorGUILayout.IntField("Do Not Repeat Last #", randomData.doNotRepeat)));
+                InUndoHelper.GUIUndo(node._nodeData, "Do Not Repeat Last #", ref randomData.doNotRepeat, () => Mathf.Max(0,EditorGUILayout.IntField("Do Not Repeat Last #", randomData.doNotRepeat)));
                 if (randomData.doNotRepeat >= weights.Count && weights.Count > 0)
                 {
                     EditorGUILayout.HelpBox("The number of random elements that should be repeated exceeds the number of nodes.\nThe number will be clambed to "+(randomData.weights.Count-1)+".", MessageType.Info);
@@ -40,7 +40,7 @@ namespace InAudioSystem.InAudioEditor
                         var child = node._children[i];
 
                         int index = i;
-                        UndoHelper.GUIUndo(node._nodeData, "Weights",
+                        InUndoHelper.GUIUndo(node._nodeData, "Weights",
                             () => EditorGUILayout.IntSlider(child.Name, weights[index], 0, 100), i1 =>
                                 weights[index] = i1);
 

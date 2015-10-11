@@ -207,7 +207,7 @@ public class TreeDrawer<T> where T : Object, InITreeNode<T>
 
     private void genericPlaceHere (T p, T n)
     {
-        UndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
+        InUndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
 
         DeattachFromParent(n);
         if (p._getChildren.Any() && p.IsFoldedOut)

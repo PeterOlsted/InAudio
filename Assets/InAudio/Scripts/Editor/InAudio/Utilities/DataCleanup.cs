@@ -94,7 +94,7 @@ namespace InAudioSystem.InAudioEditor
                 if (!inUse.Contains(node))
                 {
                     deleted += 1;
-                    UndoHelper.PureDestroy(node);
+                    InUndoHelper.PureDestroy(node);
                 }
             }
             return deleted;
@@ -134,7 +134,7 @@ namespace InAudioSystem.InAudioEditor
                     {
                         ++deleteCount;
                         toDelete.Add(node._ID.ToString());
-                        UndoHelper.PureDestroy(node);
+                        InUndoHelper.PureDestroy(node);
                     }
                 }
             }

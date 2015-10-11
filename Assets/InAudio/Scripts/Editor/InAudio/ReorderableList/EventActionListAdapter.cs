@@ -50,7 +50,7 @@ namespace InAudioSystem.InAudioEditor
 
         public void Move(int sourceIndex, int destIndex)
         {
-            UndoHelper.RecordObjectFull(Event, "Reorder Event Actions");
+            InUndoHelper.RecordObjectFull(Event, "Reorder Event Actions");
             if (destIndex > sourceIndex)
                 --destIndex;
 

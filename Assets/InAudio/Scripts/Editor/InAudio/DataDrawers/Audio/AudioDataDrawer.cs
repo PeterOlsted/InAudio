@@ -13,7 +13,7 @@ public static class AudioDataDrawer
     {
         node.ScrollPosition = GUILayout.BeginScrollView(node.ScrollPosition);
 
-        UndoHelper.GUIUndo(node, "Name Change", ref node.Name, () => 
+        InUndoHelper.GUIUndo(node, "Name Change", ref node.Name, () => 
             EditorGUILayout.TextField("Name", node.Name));
 
         Rect area = GUILayoutUtility.GetLastRect();
@@ -50,7 +50,7 @@ public static class AudioDataDrawer
 
         if (clip != audioData._clip) //Assign new clip
         {
-            UndoHelper.RecordObjectFull(audioData, "Changed " + node.Name + " Clip");
+            InUndoHelper.RecordObjectFull(audioData, "Changed " + node.Name + " Clip");
             audioData._clip = clip;            
             EditorUtility.SetDirty(node._nodeData.gameObject);
         }

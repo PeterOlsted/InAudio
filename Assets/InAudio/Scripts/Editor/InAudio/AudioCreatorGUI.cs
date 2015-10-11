@@ -221,12 +221,12 @@ namespace InAudioSystem.InAudioEditor
         {
             if (objects[0] as InAudioNode != null) //Drag N Drop internally in the tree, change the parent
             {
-                UndoHelper.DoInGroup(() =>
+                InUndoHelper.DoInGroup(() =>
                 {
                     node.IsFoldedOut = true;
                     var nodeToMove = objects[0] as InAudioNode;
 
-                    UndoHelper.RecordObject(
+                    InUndoHelper.RecordObject(
                         new UnityEngine.Object[] { node, node._nodeData, nodeToMove._parent._nodeData, nodeToMove, nodeToMove._parent }.AddObj(
                             AudioBankWorker.GetAllBanks().ToArray()),
                         "Audio Node Move");
@@ -239,9 +239,9 @@ namespace InAudioSystem.InAudioEditor
             }
             else if (node._type != AudioNodeType.Audio) //Create new audio nodes when we drop clips
             {
-                UndoHelper.DoInGroup(() =>
+                InUndoHelper.DoInGroup(() =>
                 {
-                    UndoHelper.RecordObject(UndoHelper.NodeUndo(node), "Adding Nodes to " + node.Name);
+                    InUndoHelper.RecordObject(InUndoHelper.NodeUndo(node), "Adding Nodes to " + node.Name);
 
                     AudioClip[] clips = objects.Convert(o => o as AudioClip);
 
@@ -275,12 +275,12 @@ namespace InAudioSystem.InAudioEditor
             }
             else //Then it must be an audio clip dropped on an audio node, so assign the clip to that node
             {
-                UndoHelper.DoInGroup(() =>
+                InUndoHelper.DoInGroup(() =>
                 {
                     var nodeData = (node._nodeData as InAudioData);
                     if (nodeData != null)
                     {
-                        UndoHelper.RecordObject(UndoHelper.NodeUndo(node), "Change Audio Clip In " + node.Name);
+                        InUndoHelper.RecordObject(InUndoHelper.NodeUndo(node), "Change Audio Clip In " + node.Name);
                         nodeData._clip = objects[0] as AudioClip;
                     }
                 });
@@ -448,7 +448,7 @@ namespace InAudioSystem.InAudioEditor
 
         private void CreateChild(InAudioNode parent, AudioNodeType type)
         {
-            UndoHelper.RecordObjectFull(new UnityEngine.Object[] { parent, parent.GetBank() },
+            InUndoHelper.RecordObjectFull(new UnityEngine.Object[] { parent, parent.GetBank() },
                 "Create Audio Node");
             var newNode = AudioNodeWorker.CreateChild(parent, type);
 

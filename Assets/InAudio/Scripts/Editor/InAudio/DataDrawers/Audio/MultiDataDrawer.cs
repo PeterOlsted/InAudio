@@ -7,7 +7,7 @@ public static class MultiDataDrawer  {
     public static void Draw(InAudioNode node)
     {
         node.ScrollPosition = GUILayout.BeginScrollView(node.ScrollPosition);
-        UndoHelper.GUIUndo(node, "Name Change", () =>
+        InUndoHelper.GUIUndo(node, "Name Change", () =>
             EditorGUILayout.TextField("Name", node.Name),
             s => node.Name = s);
         NodeTypeDataDrawer.Draw(node); 
