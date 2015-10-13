@@ -54,6 +54,11 @@ namespace InAudioSystem.InAudioEditor
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("delayBetweenTracks"));
 
+            EditorGUILayout.Separator();
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("playOnEnable"));
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("stopOnDisable"));
+
             if (Application.isPlaying)
             {
                 GUI.enabled = false;

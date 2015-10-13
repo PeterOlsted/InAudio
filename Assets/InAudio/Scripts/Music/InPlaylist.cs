@@ -32,6 +32,18 @@ public class InPlaylist : MonoBehaviour
         set { crossfade = value; }
     }
 
+    public bool PlayOnEnable
+    {
+        get { return playOnEnable; }
+        set { playOnEnable = value; }
+    }
+
+    public bool StopOnDisable
+    {
+        get { return stopOnDisable; }
+        set { stopOnDisable = value; }
+    }
+
     public float TrackCrossfadeTime
     {
         get { return crossfadeTime; }
@@ -208,6 +220,11 @@ public class InPlaylist : MonoBehaviour
     [SerializeField]
     private bool transitionToNextSong = false;
 
+    [SerializeField]
+    private bool playOnEnable = true;
+    [SerializeField]
+    private bool stopOnDisable = true;
+
     private InMusicGroup playingCurrently;
     private InMusicGroup playingPreviously;
 
@@ -253,6 +270,22 @@ public class InPlaylist : MonoBehaviour
                     playingCurrently.Volume = musicParameters.Volume;
                 }
             }
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (PlayOnEnable)
+        {
+            Play();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (StopOnDisable)
+        {
+            Stop();
         }
     }
 
