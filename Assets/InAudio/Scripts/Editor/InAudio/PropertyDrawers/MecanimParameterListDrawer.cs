@@ -14,14 +14,14 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
-            prop.serializedObject.Update();
+            EditorGUI.BeginProperty(pos, label, prop);
             prop.isExpanded = EditorGUILayout.Foldout(prop.isExpanded, "Volume Control");
 
             if (prop.isExpanded)
             {
                 ReorderableList.ReorderableListGUI.ListField(prop.FindPropertyRelative("ParameterList"));
             }
-            prop.serializedObject.ApplyModifiedProperties();
+            EditorGUI.EndProperty();
         }
     }
 } 

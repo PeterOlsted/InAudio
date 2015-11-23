@@ -14,9 +14,9 @@ namespace InAudioSystem.RuntimeHelperClass
 
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
-            prop.serializedObject.Update();
+            EditorGUI.BeginProperty(pos, label, prop);
 
-            
+
             EditorGUI.PropertyField(pos, prop.FindPropertyRelative("Node"));
             //prop.FindPropertyRelative("Node").objectReferenceValue = EditorGUI.ObjectField(pos,
             //    prop.FindPropertyRelative("Node").objectReferenceValue, typeof(InAudioNode), false);
@@ -28,7 +28,7 @@ namespace InAudioSystem.RuntimeHelperClass
             
 
             
-            prop.serializedObject.ApplyModifiedProperties();
+            EditorGUI.EndProperty();
 
 
         }

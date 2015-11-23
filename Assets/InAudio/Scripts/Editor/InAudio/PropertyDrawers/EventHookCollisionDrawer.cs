@@ -43,6 +43,7 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
+            EditorGUI.BeginProperty(pos, label, prop);
             var labelPos = pos;
             labelPos.y += 2;
             Color backgroundColor = GUI.color;
@@ -99,6 +100,7 @@ namespace InAudioSystem.InAudioEditor
             }
             GUI.color = backgroundColor;
             GUI.skin.label.alignment = alignment;
+            EditorGUI.EndProperty();
 
         }
 

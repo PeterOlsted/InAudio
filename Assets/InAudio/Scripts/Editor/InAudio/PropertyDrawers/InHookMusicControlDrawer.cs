@@ -15,16 +15,13 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.BeginChangeCheck();
+            EditorGUI.BeginProperty(position, label, property);
             property.isExpanded = EditorGUILayout.Foldout(property.isExpanded, label);
             if (property.isExpanded)
             {
                 ReorderableListGUI.ListField(property.FindPropertyRelative("MusicControls"), EditorGUIUtility.singleLineHeight * 2);
             }
-            if (EditorGUI.EndChangeCheck())
-            {
-                property.serializedObject.ApplyModifiedProperties();
-            }
+            EditorGUI.EndProperty();
         }
     }
 }

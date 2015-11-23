@@ -16,8 +16,7 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.BeginChangeCheck();
-            //EditorGUI.BeginProperty(position, label, property);
+            EditorGUI.BeginProperty(position, label, property);
             var propPos = position;
             propPos.width -= 65;
             var controlPos = position;
@@ -49,12 +48,10 @@ namespace InAudioSystem.InAudioEditor
             buttonPos.width = 10;
             controlPos.x += 65;
             
-            //ReorderableListGUI.ListField(property);
-            //EditorGUI.EndProperty();
-            if (EditorGUI.EndChangeCheck())
-            {
-                property.serializedObject.ApplyModifiedProperties();
-            }
+           
+            
+            EditorGUI.EndProperty();
+            
         }
     }
 }

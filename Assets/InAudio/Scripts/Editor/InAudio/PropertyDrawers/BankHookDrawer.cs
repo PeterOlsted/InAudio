@@ -22,6 +22,7 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
+            EditorGUI.BeginProperty(pos, label, prop);
             var actions = prop.FindPropertyRelative("Actions");
 
             var labelPos = pos;
@@ -82,6 +83,7 @@ namespace InAudioSystem.InAudioEditor
             }
 
             labelStyle.alignment = alignment;
+            EditorGUI.EndProperty();
         }
     }
 }

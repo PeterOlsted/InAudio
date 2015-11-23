@@ -21,7 +21,7 @@ namespace InAudioSystem.InAudioEditor
 
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
-            prop.serializedObject.Update();
+            EditorGUI.BeginProperty(pos, label, prop);
 
             Rect originalPos = pos;
             float width = pos.width;
@@ -55,7 +55,7 @@ namespace InAudioSystem.InAudioEditor
                     SearchHelper.SearchFor(node);
                 }
             }
-            prop.serializedObject.ApplyModifiedProperties();
+            EditorGUI.EndProperty();
         }
     }
 

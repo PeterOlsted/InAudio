@@ -20,7 +20,7 @@ namespace InAudioSystem.InAudioEditor
 
         internal static void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
-            EditorGUI.BeginChangeCheck();
+            EditorGUI.BeginProperty(pos, label, prop);
 
             Rect originalPos = pos;
             float width = pos.width;
@@ -55,10 +55,7 @@ namespace InAudioSystem.InAudioEditor
                 }
                 GUI.enabled = guiEnabled;
             }
-            if (EditorGUI.EndChangeCheck())
-            {
-                prop.serializedObject.ApplyModifiedProperties();
-            }
+            EditorGUI.EndProperty();
         }
     }
 

@@ -26,6 +26,7 @@ public class InAudioEventDrawer : PropertyDrawer
 
     public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
     {
+        EditorGUI.BeginProperty(pos, label, prop);
         var labelPos = pos;
         labelPos.y += 2;
         Color backgroundColor = GUI.color;
@@ -126,7 +127,7 @@ public class InAudioEventDrawer : PropertyDrawer
 
         labelPos.height += 4;
         GUI.skin.label.alignment = defaultAnchor;
-        
+        EditorGUI.EndProperty();
     }
 }
 
