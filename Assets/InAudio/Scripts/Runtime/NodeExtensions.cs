@@ -59,17 +59,20 @@ namespace InAudioSystem.ExtensionMethods
         {
             var data = node._nodeData as InFolderData;
 
-            if (data == null)
-            {
-                Debug.LogWarning("InAudio: Could not fetch bank");
-                return null;
-            }
-
             if (node.IsRoot)
                 return data.BankLink;
 
-            if (node._type == AudioNodeType.Folder && data.OverrideParentBank && data.BankLink != null)
-                return data.BankLink;
+            if (node._type == AudioNodeType.Folder)
+            {
+                if (data == null)
+                {
+                    return null;
+                }
+                else if(data.OverrideParentBank && data.BankLink != null)
+                {
+                    return data.BankLink;
+                }
+            }
 
             return GetBank(node._parent);
         }

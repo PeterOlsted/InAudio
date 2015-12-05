@@ -98,10 +98,19 @@ public static class FolderDrawer
         {
             EditorGUILayout.Toggle("Is Loaded", BankLoader.IsLoaded(parentLink));
         }
-#endregion
+            #endregion
 
-        EditorGUILayout.Separator();
-        
+        if (data.ExternalPlacement)
+        {
+            EditorGUILayout.Separator();
+
+            GUI.enabled = false;
+            EditorGUILayout.ObjectField("Placed on", node.gameObject, typeof (GameObject), false);
+            GUI.enabled = true;
+
+            EditorGUILayout.Separator();
+        }
+
         #region Mixer
         DataDrawerHelper.DrawMixer(node);
         #endregion
