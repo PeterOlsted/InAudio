@@ -123,11 +123,16 @@ public static class AudioNodeWorker  {
 
     public static InAudioNode CreateChild(InAudioNode parent, AudioNodeType newNodeType)
     {
+        return CreateChild(parent.gameObject, parent, newNodeType);
+    }
+
+    public static InAudioNode CreateChild(GameObject go, InAudioNode parent, AudioNodeType newNodeType)
+    {
         var bank = parent.GetBank();
         InUndoHelper.RecordObject(InUndoHelper.Array(parent, parent._nodeData, bank), "Undo Node Creation");
         OnRandomNode(parent);
 
-        var child = CreateNode(parent.gameObject, parent, GUIDCreator.Create(), newNodeType);
+        var child = CreateNode(go, parent, GUIDCreator.Create(), newNodeType);
         parent.FoldedOut = true;
         child.Name = parent.Name + " Child";
         var data = AddDataClass(child);

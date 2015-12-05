@@ -1,3 +1,4 @@
+using System;
 using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
@@ -24,11 +25,17 @@ namespace InAudioSystem.InAudioEditor
             EventWindow.Launch();
         }
 
+        public static void ShowNewDataWindow(Action<GameObject> callback)
+        {
+            SplitDataWindow window = EditorWindow.GetWindow<SplitDataWindow>();
+            window.AssignCallback(callback);
+        }
+
         [MenuItem("Window/InAudio/Banks Window #&4", false, 4)]
         private static void ShowBanksWindow()
         {
             AuxWindow.Launch();
-            AuxWindow window = EditorWindow.GetWindow(typeof(AuxWindow)) as AuxWindow;
+            AuxWindow window = EditorWindow.GetWindow<AuxWindow>();
             if (window != null)
             {
                 window.SelectBankCreation();

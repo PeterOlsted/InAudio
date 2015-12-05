@@ -58,6 +58,13 @@ namespace InAudioSystem.ExtensionMethods
         public static InAudioBankLink GetBank(this InAudioNode node)
         {
             var data = node._nodeData as InFolderData;
+
+            if (data == null)
+            {
+                Debug.LogWarning("InAudio: Could not fetch bank");
+                return null;
+            }
+
             if (node.IsRoot)
                 return data.BankLink;
 

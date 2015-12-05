@@ -303,9 +303,19 @@ namespace InAudioSystem.InAudioEditor
             menu.AddSeparator("");
 
             #endregion
+
+            if (node._type == AudioNodeType.Folder)
+            {
+                menu.AddItem(new GUIContent("Create child folder in new prefab"), false, obj =>
+                {
+                    CreateFolderInNewPrefab(node);
+                }, node);
+                menu.AddSeparator("");
+            }
+
             #region Create child
 
-            if (node._type == AudioNodeType.Audio || node._type == AudioNodeType.Voice)
+                if (node._type == AudioNodeType.Audio || node._type == AudioNodeType.Voice)
             //If it is a an audio source, it cannot have any children
             {
                 menu.AddDisabledItem(new GUIContent(@"Create Child/Folder"));
@@ -444,6 +454,16 @@ namespace InAudioSystem.InAudioEditor
             #endregion
 
             menu.ShowAsContext();
+        }
+
+        private void CreateFolderInNewPrefab(InAudioNode parent)
+        {
+            MenuItems.ShowNewDataWindow((gameObject =>
+            {
+                var node = AudioNodeWorker.CreateChild(gameObject, parent, AudioNodeType.Folder);
+                node.name += " (Seperate)";
+                (node._nodeData as InFolderData).ExternalPlacement = true;
+            }));
         }
 
         private void CreateChild(InAudioNode parent, AudioNodeType type)

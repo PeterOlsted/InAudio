@@ -5,9 +5,10 @@ namespace InAudioSystem
 {
     public class InFolderData : InAudioNodeBaseData, IBankUsage
     {
-
+        public bool ExternalPlacement;
         public bool OverrideParentBank;
         public InAudioBankLink BankLink;
+        
 
         public bool ParentBankOverride
         {
