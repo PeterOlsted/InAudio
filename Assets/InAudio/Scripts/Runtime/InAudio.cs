@@ -1365,11 +1365,6 @@ public class InAudio : MonoBehaviour
 
     void OnEnable()
     {
-        if (InAudioInstanceFinder.Instance == null || InAudioInstanceFinder.DataManager == null || InAudioInstanceFinder.MusicPlayer == null)
-        {
-            Debug.LogError("There seems to be a problem with the InAudio prefab. Please try to remove it from the scene and re-add it from the prefab.");
-        }
-
         if (instance == null || instance == this)
         {
             if (activeAudioListener == null)

@@ -15,15 +15,6 @@ namespace InAudioSystem
         public const string BankLinkLoadData    = RelativePathResources + "InAudio BankLinkSave";
         public const string MusicLoadData       = RelativePathResources + "InAudio MusicSave";
         public const string InteractiveMusicLoadData       = RelativePathResources + "InAudio InteractiveMusicSave";
-               
-        public const string ComponentPathInternal = "InAudio/Internal/";
-        public const string ComponentPathInternalPools = "InAudio/Internal/Pools/";
-        public const string ComponentPathInternalData = "InAudio/Internal/Data/";
-
-        public const string ComponentPathPrefabs = "InAudio/Prefab Scripts/";
-        public const string ComponentPathPrefabsManager = ComponentPathPrefabs + "Manager/";
-        public const string ComponentPathPrefabsGUIPrefs = ComponentPathPrefabs + "GUI Prefs/";
-
 
 #if UNITY_EDITOR
         private readonly static string FullPathResources = AssetFolder + "InAudio/Resources/InAudio/";
@@ -44,12 +35,6 @@ namespace InAudioSystem
         //Creating the folders
         public static readonly string CreateFolderResources = AssetFolder + Name + "/Resources/" + Name + "/";
         public static string AudioDataCreateFolder  = CreateFolderResources + "AudioData/";
-
-
-        public static string GetIconPath(string name)
-        {
-            return AssetFolder + "InAudio/Icons/" + name + ".png";
-        }
 
         private static string relativePath;
         private static string AssetFolder
