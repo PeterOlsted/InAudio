@@ -95,13 +95,7 @@ namespace InAudioSystem.InAudioEditor
             if (SelectedNode != null)
             {
                 DrawTypeControls(SelectedNode);
-
-                EditorGUILayout.Separator();
-                EditorGUILayout.Separator();
-                EditorGUILayout.BeginHorizontal();
-
-                GUI.enabled = true;
-                EditorGUILayout.EndHorizontal();
+                GUI.enabled = true;              
 
             }
 
@@ -232,7 +226,8 @@ namespace InAudioSystem.InAudioEditor
                             "Moving this node will move it from the game object \"" + nodeToMove.gameObject.name +
                             "\" to \"" + node.gameObject.name + "\"", "Ok", "Cancel"))
                         {
-                            treeDrawer.SelectedNode = TreeWalker.GetPreviousVisibleNode(treeDrawer.SelectedNode);
+                            treeDrawer.SelectedNode = treeDrawer.SelectedNode._getParent;
+                            isDirty = false;
                             AudioNodeWorker.CopyTo(nodeToMove, node);
                             AudioNodeWorker.DeleteNodeNoGroup(nodeToMove);
                         }
