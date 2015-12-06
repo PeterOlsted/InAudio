@@ -65,7 +65,7 @@ public class InAudio : MonoBehaviour
     /// <returns>A controller for the playing node</returns>
     public static InPlayer Play(GameObject gameObject, InAudioNode audioNode, AudioParameters parameters = null)
     {
-        if(instance != null && gameObject != null && audioNode != null)
+        if (instance != null && gameObject != null && audioNode != null)
             return instance._inAudioEventWorker.PlayConnectedTo(gameObject, audioNode, gameObject, parameters);
         else
             InDebug.MissingArguments("Play", gameObject, audioNode);
@@ -110,7 +110,7 @@ public class InAudio : MonoBehaviour
 
         return player;
     }
-    
+
 
     /// <summary>
     /// Play an audio node directly, at this position in world space
@@ -376,7 +376,7 @@ public class InAudio : MonoBehaviour
             InDebug.MissingArgumentsForNode("PlayPersistent", audioNode);
             return null;
         }
-        
+
 
         InPlayer player = instance._inAudioEventWorker.PlayAtPosition(instance.gameObject, audioNode, position, parameters);
 
@@ -410,7 +410,7 @@ public class InAudio : MonoBehaviour
     /// <param name="fadeOutTime"></param>
     public static void Stop(GameObject gameObject, InAudioNode audioNode, float fadeOutTime)
     {
-        if(instance != null && gameObject != null && audioNode != null)
+        if (instance != null && gameObject != null && audioNode != null)
             instance._inAudioEventWorker.StopByNode(gameObject, audioNode, fadeOutTime);
         else
         {
@@ -425,7 +425,7 @@ public class InAudio : MonoBehaviour
     /// <param name="audioNode"></param>
     public static void Break(GameObject gameObject, InAudioNode audioNode)
     {
-        if(instance != null && gameObject != null && audioNode != null)
+        if (instance != null && gameObject != null && audioNode != null)
             instance._inAudioEventWorker.Break(gameObject, audioNode);
         else
         {
@@ -439,7 +439,7 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAllOfNode(InAudioNode audioNode)
     {
-        if(instance != null && audioNode != null)
+        if (instance != null && audioNode != null)
             instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
         else
         {
@@ -453,7 +453,7 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAllOfNode(InAudioNode audioNode, float fadeOutDuration, LeanTweenType leanTweenType = LeanTweenType.easeInOutQuad)
     {
-        if(instance != null)
+        if (instance != null)
             instance._inAudioEventWorker.StopAll(0, leanTweenType);
         else
         {
@@ -467,7 +467,7 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAll()
     {
-        if(instance != null)
+        if (instance != null)
             instance._inAudioEventWorker.StopAll(0, LeanTweenType.notUsed);
         else
         {
@@ -501,14 +501,15 @@ public class InAudio : MonoBehaviour
     /// <param name="fadeType">Fade type</param>
     public static void StopAll(float fadeOut, LeanTweenType fadeType)
     {
-        if(instance != null){
+        if (instance != null)
+        {
             instance._inAudioEventWorker.StopAll(fadeOut, fadeType);
         }
         else
         {
             InDebug.InstanceMissing("StopAll (fade)");
         }
-        
+
     }
 
     /// <summary>
@@ -517,7 +518,7 @@ public class InAudio : MonoBehaviour
     /// <param name="gameObject"></param>
     public static void StopAll(GameObject gameObject)
     {
-        if(instance != null && gameObject != null)
+        if (instance != null && gameObject != null)
         {
             instance._inAudioEventWorker.StopAll(gameObject, 0, LeanTweenType.notUsed);
         }
@@ -535,8 +536,8 @@ public class InAudio : MonoBehaviour
     /// <param name="fadeType">Fade type</param>
     public static void StopAll(GameObject gameObject, float fadeOut, LeanTweenType fadeType)
     {
-        if(instance != null && gameObject != null)
-        { 
+        if (instance != null && gameObject != null)
+        {
             instance._inAudioEventWorker.StopAll(gameObject, 0, LeanTweenType.notUsed);
         }
         else
@@ -585,7 +586,7 @@ public class InAudio : MonoBehaviour
             }
             else
             {
-                InDebug.MissingArguments("PlayersOnGO", gameObject, null);    
+                InDebug.MissingArguments("PlayersOnGO", gameObject, null);
             }
         }
     }
@@ -626,7 +627,7 @@ public class InAudio : MonoBehaviour
         if (instance != null && folderNode != null && folderNode.IsRootOrFolder)
         {
             var data = folderNode._nodeData as InFolderData;
-            if(data != null)
+            if (data != null)
             {
                 data.runtimeVolume = Mathf.Clamp01(volume);
             }
@@ -950,7 +951,7 @@ public class InAudio : MonoBehaviour
         switch (eventData._eventActionType)
         {
             case EventActionTypes.Play:
-                var audioPlayData = ((InEventAudioAction) eventData);
+                var audioPlayData = ((InEventAudioAction)eventData);
                 audioNode = audioPlayData.Node;
                 if (audioNode != null)
                 {
@@ -961,12 +962,12 @@ public class InAudio : MonoBehaviour
                 }
                 break;
             case EventActionTypes.Stop:
-                var data = ((InEventAudioAction) eventData);
+                var data = ((InEventAudioAction)eventData);
                 audioNode = data.Node;
                 _inAudioEventWorker.StopByNode(controllingObject, audioNode, data.Fadetime, data.TweenType);
                 break;
             case EventActionTypes.StopAll:
-                var stopAlLData = ((InEventAudioAction) eventData);
+                var stopAlLData = ((InEventAudioAction)eventData);
                 _inAudioEventWorker.StopAll(controllingObject, stopAlLData.Fadetime, stopAlLData.TweenType);
                 break;
             case EventActionTypes.Break:
@@ -1126,39 +1127,39 @@ public class InAudio : MonoBehaviour
                 }
                 break;
             case EventActionTypes.SoloMuteMusic:
-            {
-                musicSoloMute = eventData as InEventSoloMuteMusic;
-                if (musicSoloMute.Target != null)
                 {
-                    if(musicSoloMute.SetSolo)
-                        Music.Solo(musicSoloMute.MusicGroup, musicSoloMute.SoloTarget);
-                    if (musicSoloMute.SetMute)
-                        Music.Solo(musicSoloMute.MusicGroup, musicSoloMute.MuteTarget);
+                    musicSoloMute = eventData as InEventSoloMuteMusic;
+                    if (musicSoloMute.Target != null)
+                    {
+                        if (musicSoloMute.SetSolo)
+                            Music.Solo(musicSoloMute.MusicGroup, musicSoloMute.SoloTarget);
+                        if (musicSoloMute.SetMute)
+                            Music.Solo(musicSoloMute.MusicGroup, musicSoloMute.MuteTarget);
+                    }
+                    else
+                    {
+                        InDebug.MissingActionTarget(controllingObject, eventData);
+                    }
+                    break;
+                }
+            case EventActionTypes.StopAllMusic:
+                musicFade = eventData as InEventMusicFade;
+                if (musicFade.Target != null)
+                {
+                    if (musicFade.Duration > 0)
+                    {
+                        InAudio.Music.StopAll(musicFade.Duration, musicFade.TweenType);
+                    }
+                    else
+                    {
+                        InAudio.Music.StopAll();
+                    }
                 }
                 else
                 {
                     InDebug.MissingActionTarget(controllingObject, eventData);
                 }
                 break;
-            }
-            case EventActionTypes.StopAllMusic:
-            musicFade = eventData as InEventMusicFade;
-            if (musicFade.Target != null)
-            {
-                if (musicFade.Duration > 0)
-                {
-                    InAudio.Music.StopAll(musicFade.Duration, musicFade.TweenType);
-                }
-                else
-                {
-                    InAudio.Music.StopAll();
-                }
-            }
-            else
-            {
-                InDebug.MissingActionTarget(controllingObject, eventData);
-            }
-            break;
             default:
                 InDebug.UnusedActionType(gameObject, eventData);
                 break;
@@ -1304,6 +1305,14 @@ public class InAudio : MonoBehaviour
     #region Unity functions
     void Update()
     {
+#if UNITY_EDITOR
+        if (InAudioInstanceFinder.Instance == null || InAudioInstanceFinder.DataManager == null || InAudioInstanceFinder.MusicPlayer == null)
+        {
+            Debug.LogError("There seems to be a problem with the InAudio prefab. Please try to remove it from the scene and re-add it from the prefab.");
+            return;
+        }
+#endif
+
         var musicTree = InAudioInstanceFinder.DataManager.MusicTree;
         if (musicTree != null)
         {
@@ -1330,11 +1339,11 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.6"; 
+    public const string CurrentVersion = "2.6";
 
     void OnLevelWasLoaded()
     {
-       
+
         if (activeAudioListener == null)
             activeAudioListener = FindActiveListener();
     }
@@ -1356,6 +1365,11 @@ public class InAudio : MonoBehaviour
 
     void OnEnable()
     {
+        if (InAudioInstanceFinder.Instance == null || InAudioInstanceFinder.DataManager == null || InAudioInstanceFinder.MusicPlayer == null)
+        {
+            Debug.LogError("There seems to be a problem with the InAudio prefab. Please try to remove it from the scene and re-add it from the prefab.");
+        }
+
         if (instance == null || instance == this)
         {
             if (activeAudioListener == null)
@@ -1402,7 +1416,7 @@ public class InAudio : MonoBehaviour
     }
 
 
-    
+
 
 #if UNITY_EDITOR
     void OnApplicationQuit()

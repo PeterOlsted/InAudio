@@ -359,16 +359,7 @@ public class JeremyController : MonoBehaviour
 
     bool isInSafety()
     {
-        foreach (SafeArea sa in SafeArea.safeAreas)
-        {
-            if (sa.Check())
-            {
-                inSafety = true;
-                return true;
-            }
-        }
-        timeInSafety = 0;
-        inSafety = false;
+        
         return false;
     }
 }
@@ -400,7 +391,7 @@ public class Soldier
 
 internal class SafeArea
 {
-    internal static IEnumerable<SafeArea> safeAreas;
+//    internal static IEnumerable<SafeArea> safeAreas;
 
     public bool Check()
     {

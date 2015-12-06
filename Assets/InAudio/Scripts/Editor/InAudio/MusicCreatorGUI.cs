@@ -161,7 +161,7 @@ namespace InAudioSystem.InAudioEditor
                             treeDrawer.SelectedNode = TreeWalker.GetPreviousVisibleNode(treeDrawer.SelectedNode);
                             MusicWorker.Duplicate(newParent.gameObject, dragged, newParent);
                             DeleteNodeRec(dragged);
-                            AudioBankWorker.RebuildBanks();
+                            AudioBankWorker.RebuildBanks(); 
                         }
                     }
                     else
