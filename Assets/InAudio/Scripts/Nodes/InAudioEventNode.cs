@@ -26,6 +26,12 @@ namespace InAudioSystem
         [FormerlySerializedAs("ActionList")]
         public List<AudioEventAction> _actionList = new List<AudioEventAction>();
 
+        public Object[] GetAuxData()
+        {
+            return _actionList.ToArray();
+        }
+
+
         public void AssignParent(InAudioEventNode node)
         {
             node._children.Add(this);
@@ -65,6 +71,8 @@ namespace InAudioSystem
         {
             get { return _type == EventNodeType.Folder; }
         }
+
+        public bool PlacedExternaly;
 
         public string GetName
         {

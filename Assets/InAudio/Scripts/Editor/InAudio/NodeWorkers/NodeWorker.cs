@@ -157,12 +157,19 @@ namespace InAudioSystem.InAudioEditor
 
         public static T DuplicateHierarchy<T>(T toCopy, Action<T, T> elementAction = null) where T : Component, InITreeNode<T>
         {
-            return CopyHierarchy(toCopy, toCopy._getParent, elementAction);
+            return CopyHierarchy(toCopy, toCopy._getParent, toCopy.gameObject, elementAction);
         }
 
-        private static T CopyHierarchy<T>(T toCopy, T parent, Action<T, T> elementAction) where T : Component, InITreeNode<T>
+        public static T DuplicateHierarchy<T>(T toCopy, T newParent, GameObject targetGO, Action<T, T> elementAction = null) where T : Component, InITreeNode<T>
         {
-            T newNode = CopyComponent(toCopy);
+            return CopyHierarchy(toCopy, newParent, targetGO, elementAction);
+        }
+
+
+
+        private static T CopyHierarchy<T>(T toCopy, T parent, GameObject targetGO, Action<T, T> elementAction) where T : Component, InITreeNode<T>
+        {
+            T newNode = CopyComponent(toCopy, targetGO);
             newNode.AssignParent(parent);
             newNode._ID = GUIDCreator.Create();
 
@@ -172,7 +179,7 @@ namespace InAudioSystem.InAudioEditor
             int childrenCount = newNode._getChildren.Count;
             for (int i = 0; i < childrenCount; i++)
             {
-                CopyHierarchy(newNode._getChildren[i], newNode, elementAction);
+                CopyHierarchy(newNode._getChildren[i], newNode, targetGO, elementAction);
             }
             newNode._getChildren.RemoveRange(0, childrenCount);
             return newNode;
@@ -180,17 +187,15 @@ namespace InAudioSystem.InAudioEditor
 
         public static T CopyComponent<T>(T toCopy) where T : Component
         {
-            T newComp = toCopy.gameObject.AddComponentUndo(toCopy.GetType()) as T;
+            return CopyComponent(toCopy, toCopy.gameObject);
+        }
+
+        public static T CopyComponent<T>(T toCopy, GameObject targetGO) where T : Component
+        {
+            T newComp = targetGO.AddComponentUndo(toCopy.GetType()) as T;
             EditorUtility.CopySerialized(toCopy, newComp);
 
             return newComp;
         }
-
-        /*public static GameObject CreateFolder<T>(string name, string path, T root)
-        {
-            SystemFolderHelper.CreateIfMissing(FolderSettings.AudioDataCreateFolder);
-            AssetDatabase.CopyAsset(FolderSettings.EmptyTemplatePath,
-                FolderSettings.AudioDataPath + "AudioData " + GUIDCreator.Create() + ".prefab");
-        }*/
     }
 }

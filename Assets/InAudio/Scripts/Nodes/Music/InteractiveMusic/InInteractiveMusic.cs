@@ -9,6 +9,11 @@ namespace InAudioSystem
         public int BeatsPerBar = 4;
         public int BeatUnit = 4;
 
+        public Object[] GetAuxData()
+        {
+            return new Object[] { };
+        }
+
         public string GetName
         {
             get

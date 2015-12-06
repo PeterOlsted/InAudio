@@ -26,7 +26,13 @@ using UnityEngine.Audio;
         public Vector2 ScrollPosition = new Vector2();
 
 #endif
-        public List<InMusicNode> _children = new List<InMusicNode>();
+
+        public Object[] GetAuxData()
+        {
+            return new Object[] {};
+        }
+
+    public List<InMusicNode> _children = new List<InMusicNode>();
 
         public InMusicNode _parent;
 

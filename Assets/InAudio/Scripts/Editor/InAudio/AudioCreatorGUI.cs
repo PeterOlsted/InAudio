@@ -226,14 +226,22 @@ namespace InAudioSystem.InAudioEditor
                     node.IsFoldedOut = true;
                     var nodeToMove = objects[0] as InAudioNode;
 
-                    InUndoHelper.RecordObject(
-                        new UnityEngine.Object[] { node, node._nodeData, nodeToMove._parent._nodeData, nodeToMove, nodeToMove._parent }.AddObj(
-                            AudioBankWorker.GetAllBanks().ToArray()),
-                        "Audio Node Move");
+                    if (node.gameObject != nodeToMove.gameObject)
+                    {
+                        if (EditorUtility.DisplayDialog("Move?",
+                            "Moving this node will move it from the game object \"" + nodeToMove.gameObject.name +
+                            "\" to \"" + node.gameObject.name + "\"", "Ok", "Cancel"))
+                        {
+                            treeDrawer.SelectedNode = TreeWalker.GetPreviousVisibleNode(treeDrawer.SelectedNode);
+                            AudioNodeWorker.CopyTo(nodeToMove, node);
+                            AudioNodeWorker.DeleteNodeNoGroup(nodeToMove);
+                        }
 
-                    NodeWorker.ReasignNodeParent(nodeToMove, node);
-                    AudioBankWorker.RebuildBanks();
-                    Event.current.UseEvent();
+                    }
+                    else
+                    {
+                        MoveNode(node, nodeToMove);
+                    }
                 });
                 
             }
@@ -287,6 +295,19 @@ namespace InAudioSystem.InAudioEditor
                 Event.current.UseEvent();
 
             }
+        }
+
+        private static void MoveNode(InAudioNode node, InAudioNode nodeToMove)
+        {
+            InUndoHelper.RecordObject(
+                new UnityEngine.Object[]
+                {node, node._nodeData, nodeToMove._parent._nodeData, nodeToMove, nodeToMove._parent}.AddObj(
+                    AudioBankWorker.GetAllBanks().ToArray()),
+                "Audio Node Move");
+
+            NodeWorker.ReasignNodeParent(nodeToMove, node);
+            AudioBankWorker.RebuildBanks();
+            Event.current.UseEvent();
         }
 
         protected override void OnContext(InAudioNode node)
@@ -461,7 +482,7 @@ namespace InAudioSystem.InAudioEditor
             MenuItems.ShowNewDataWindow((gameObject =>
             {
                 var node = AudioNodeWorker.CreateChild(gameObject, parent, AudioNodeType.Folder);
-                node.name += " (Seperate)";
+                node.Name += " (External)";
                 (node._nodeData as InFolderData).ExternalPlacement = true;
             }));
         }

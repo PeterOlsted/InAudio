@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using InAudioSystem.ExtensionMethods;
 using UnityEditor;
 using UnityEngine;
@@ -129,7 +130,7 @@ public static class AudioNodeWorker  {
     public static InAudioNode CreateChild(GameObject go, InAudioNode parent, AudioNodeType newNodeType)
     {
         var bank = parent.GetBank();
-        InUndoHelper.RecordObject(InUndoHelper.Array(parent, parent._nodeData, bank), "Undo Node Creation");
+        InUndoHelper.RecordObject(InUndoHelper.Array(parent, bank).Concat(parent.GetAuxData()).ToArray(), "Undo Node Creation");
         OnRandomNode(parent);
 
         var child = CreateNode(go, parent, GUIDCreator.Create(), newNodeType);
@@ -165,10 +166,10 @@ public static class AudioNodeWorker  {
     {
         InUndoHelper.DoInGroup(() =>
         {
-
             List<Object> toUndo = new List<Object>(AudioBankWorker.GetAllBanks().ConvertAll(b => b as Object));
 
             toUndo.Add(audioNode._parent);
+            toUndo.AddRange(audioNode._parent.GetAuxData());
             toUndo.Add(audioNode.GetBank());
 
             InUndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Duplication Of " + audioNode.Name);
@@ -181,20 +182,61 @@ public static class AudioNodeWorker  {
             { 
                 var gameObject = audioNode.gameObject;
                 if(oldNode._nodeData != null)
-                { 
-                    Type type = oldNode._nodeData.GetType();
-                    newNode._nodeData = gameObject.AddComponentUndo(type) as InAudioNodeBaseData;
-                    EditorUtility.CopySerialized(oldNode._nodeData, newNode._nodeData);
-                    if (newNode._type == AudioNodeType.Audio)
-                    {
-                        AudioBankWorker.AddNodeToBank(newNode);
-                    }
+                {
+                    NodeDuplicate(oldNode, newNode, gameObject);
                 }
             });
         });
     }
 
-    public static void DeleteNode(InAudioNode node)
+        public static void CopyTo(InAudioNode audioNode, InAudioNode newParent)
+        {
+            List<Object> toUndo = new List<Object>(AudioBankWorker.GetAllBanks().ConvertAll(b => b as Object));
+
+            toUndo.Add(audioNode._parent);
+            toUndo.AddRange(audioNode._parent.GetAuxData());
+            toUndo.Add(audioNode.GetBank());
+
+            InUndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Move");
+
+            NodeWorker.DuplicateHierarchy(audioNode, newParent, newParent.gameObject, (@oldNode, newNode) =>
+            {
+                var gameObject = newParent.gameObject;
+                if (oldNode._nodeData != null)
+                {
+                    NodeDuplicate(oldNode, newNode, gameObject);
+                }
+            });
+        }
+
+    private static void NodeDuplicate(InAudioNode oldNode, InAudioNode newNode, GameObject gameObject)
+    {
+        Type type = oldNode._nodeData.GetType();
+        newNode._nodeData = gameObject.AddComponentUndo(type) as InAudioNodeBaseData;
+        EditorUtility.CopySerialized(oldNode._nodeData, newNode._nodeData);
+        if (newNode._type == AudioNodeType.Audio)
+        {
+            AudioBankWorker.AddNodeToBank(newNode);
+        }
+    }
+
+        public static void DeleteNodeNoGroup(InAudioNode node)
+        {
+
+            InUndoHelper.RecordObjects("Undo Deletion of " + node.Name, node, node._nodeData, node._parent, node._parent._nodeData);
+
+            if (node._parent._type == AudioNodeType.Random) //We also need to remove the child from the weight list
+            {
+                var data = node._parent._nodeData as RandomData;
+                if (data != null)
+                    data.weights.RemoveAt(node._parent._children.FindIndex(node)); //Find in parent, and then remove the weight in the random node
+                node._parent._children.Remove(node);
+            }
+
+            DeleteNodeRec(node);
+        }
+
+        public static void DeleteNode(InAudioNode node)
     {
         InUndoHelper.DoInGroup(() =>
         {           

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace InAudioSystem
 {
@@ -14,6 +15,8 @@ namespace InAudioSystem
         string GetName { get; }
 
         int _ID { get; set; }
+
+        Object[] GetAuxData();
 
 #if UNITY_EDITOR
         bool IsFoldedOut { get; set; }

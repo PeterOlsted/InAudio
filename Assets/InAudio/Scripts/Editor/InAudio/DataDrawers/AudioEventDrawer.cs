@@ -109,6 +109,19 @@ public static class AudioEventDrawer
             EditorGUILayout.EndScrollView();
             DrawSelected(audioEventAction);
         }
+        else if (audioevent._type == EventNodeType.Folder)
+        {
+            if (audioevent.PlacedExternaly)
+            {
+                EditorGUILayout.Separator();
+
+                GUI.enabled = false;
+                EditorGUILayout.ObjectField("Placed on", audioevent.gameObject, typeof(GameObject), false);
+                GUI.enabled = true;
+
+                EditorGUILayout.Separator();
+            }
+        }
 
         EditorGUILayout.EndVertical(); 
 

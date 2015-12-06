@@ -171,6 +171,18 @@ namespace InAudioSystem.InAudioEditor
             menu.AddSeparator("");
 
             #endregion
+            #region Duplicate
+           
+
+            if (node._type == EventNodeType.Folder)
+            {
+                menu.AddItem(new GUIContent("Create child folder in new prefab"), false, obj =>
+                {
+                    CreateFolderInNewPrefab(node);
+                }, node);
+                menu.AddSeparator("");
+            }
+            #endregion
 
 
             #region Create child
@@ -205,6 +217,21 @@ namespace InAudioSystem.InAudioEditor
             #endregion
 
             menu.ShowAsContext();
+        }
+
+        private void CreateFolderInNewPrefab(InAudioEventNode parent)
+        {
+            MenuItems.ShowNewDataWindow((gameObject =>
+            {
+                InUndoHelper.DoInGroup(() =>
+                {
+                    var node = AudioEventWorker.CreateNode(parent, gameObject, EventNodeType.Folder);
+                    node.Name += " (External)";
+                    node.PlacedExternaly = true;
+                });
+                
+            }));
+            isDirty = true;
         }
 
         private void CreateChild(InAudioEventNode node, EventNodeType type)

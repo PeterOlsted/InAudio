@@ -7,6 +7,7 @@ using UnityEngine.Audio;
 
 //namespace InAudioSystem
 using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 public class InAudioNode : MonoBehaviour, InITreeNode<InAudioNode>
 {
@@ -30,8 +31,13 @@ public class InAudioNode : MonoBehaviour, InITreeNode<InAudioNode>
         [FormerlySerializedAs("Children")]
         public List<InAudioNode> _children = new List<InAudioNode>();
 
+        public Object[] GetAuxData()
+        {
+            return new Object[] {_nodeData};
+        }
+
 #if UNITY_EDITOR
-        public bool Filtered = false;
+    public bool Filtered = false;
 
         public bool FoldedOut;
 

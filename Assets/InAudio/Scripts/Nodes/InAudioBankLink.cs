@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 namespace InAudioSystem
 {
@@ -34,6 +36,11 @@ namespace InAudioSystem
         public bool _autoLoad = false;
 
         public List<BankData> _bankData = new List<BankData>();
+
+        public Object[] GetAuxData()
+        {
+            return new Object[] {};
+        }
 
 #if UNITY_EDITOR
         public bool FoldedOut;
