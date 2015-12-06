@@ -66,6 +66,11 @@ namespace InAudioSystem.InAudioEditor
 
             return node;
         }
+
+        public static void Duplicate(GameObject go, InMusicNode current, InMusicNode parent)
+        {
+            NodeWorker.DuplicateHierarchy(current, parent, go, (node, musicNode) => {});
+        }
     }
 
 }

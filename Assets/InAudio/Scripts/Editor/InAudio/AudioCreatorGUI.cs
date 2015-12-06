@@ -325,7 +325,7 @@ namespace InAudioSystem.InAudioEditor
 
             #endregion
 
-            if (node._type == AudioNodeType.Folder)
+            if (node.IsRootOrFolder)
             {
                 menu.AddItem(new GUIContent("Create child folder in new prefab"), false, obj =>
                 {

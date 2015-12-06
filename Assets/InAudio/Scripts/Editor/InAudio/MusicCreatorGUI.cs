@@ -152,13 +152,30 @@ namespace InAudioSystem.InAudioEditor
 
                 InUndoHelper.DoInGroup(() =>
                 {
-                    var oldParent = dragged._parent;
-                    InUndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
+                    if (dragged.gameObject != newParent.gameObject)
+                    {
+                        if (EditorUtility.DisplayDialog("Move?",
+                            "Moving this node will move it from the game object \"" + dragged.gameObject.name +
+                            "\" to \"" + newParent.gameObject.name + "\"", "Ok", "Cancel"))
+                        {
+                            treeDrawer.SelectedNode = TreeWalker.GetPreviousVisibleNode(treeDrawer.SelectedNode);
+                            MusicWorker.Duplicate(newParent.gameObject, dragged, newParent);
+                            DeleteNodeRec(dragged);
+                            AudioBankWorker.RebuildBanks();
+                        }
+                    }
+                    else
+                    {
+                        var oldParent = dragged._parent;
+                        InUndoHelper.RecordObjects("Music drag-n-drop", dragged, oldParent, newParent);
 
-                    dragged.MoveToNewParent(newParent);
+                        dragged.MoveToNewParent(newParent);
 
-                    AudioBankWorker.RebuildBanks();
-                    newParent.IsFoldedOut = true;
+                       
+                        newParent.IsFoldedOut = true;
+                    }
+
+                 
                     Event.current.UseEvent();
                 });
             }
@@ -202,6 +219,19 @@ namespace InAudioSystem.InAudioEditor
             #region Send to event
 
 
+            if (node.IsRootOrFolder)
+            {
+                menu.AddItem(new GUIContent("Create child folder in new prefab"), false, obj =>
+                {
+                    CreateFolderInNewPrefab(node);
+                }, node);
+            }
+
+            #endregion
+
+            #region Send to event
+
+
             if (!node.IsRootOrFolder)
             {
                 menu.AddItem(new GUIContent("Send to Event Window"), false, () => EventWindow.Launch().ReceiveNode(node as InMusicGroup));
@@ -230,6 +260,16 @@ namespace InAudioSystem.InAudioEditor
         private void DeleteNode(InMusicNode toDelete)
         {
             InUndoHelper.DoInGroup(() => DeleteNodeRec(toDelete));
+        }
+
+        private void CreateFolderInNewPrefab(InMusicNode parent)
+        {
+            MenuItems.ShowNewDataWindow((gameObject =>
+            {
+                var node = MusicWorker.CreateFolder(gameObject, parent);
+                node._name += " (External)";
+                node._externalPlacement = true;
+            }));
         }
 
         private void DeleteNodeRec(InMusicNode toDelete)
