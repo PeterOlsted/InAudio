@@ -3,6 +3,8 @@
     public class InMusicFolder : InMusicNode, IBankUsage
     {
         public bool _overrideParentBank;
+
+        public bool _externalPlacement;
         public InAudioBankLink _bankLink;
 
 
