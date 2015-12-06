@@ -45,9 +45,6 @@ namespace InAudioSystem.InAudioEditor
 
 		private void OnGUI()
 		{
-            EditorResources.Reload();
-            
-
 		    if (wordwrapStyle == null)
 		    {
                 wordwrapStyle = new GUIStyle(GUI.skin.label);
@@ -82,7 +79,7 @@ namespace InAudioSystem.InAudioEditor
             //*********************************************************************//
             EditorGUILayout.BeginHorizontal();
 		    EditorGUILayout.BeginVertical(GUILayout.Width(pictureSize + 3));
-		    if (GUILayout.Button(EditorResources.Book, GUILayout.Width(pictureSize), GUILayout.Height(pictureSize)))
+		    if (GUILayout.Button(EditorResources.Instance.Book, GUILayout.Width(pictureSize), GUILayout.Height(pictureSize)))
 		    {
 		        Application.OpenURL("http://innersystems.net/wiki/");
 		    }
@@ -95,7 +92,7 @@ namespace InAudioSystem.InAudioEditor
             //*********************************************************************//
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginVertical(GUILayout.Width(pictureSize+3));
-		    if (GUILayout.Button(EditorResources.Question, GUILayout.Width(pictureSize), GUILayout.Height(pictureSize)))
+		    if (GUILayout.Button(EditorResources.Instance.Question, GUILayout.Width(pictureSize), GUILayout.Height(pictureSize)))
 		    {
 		        Application.OpenURL("http://forum.unity3d.com/threads/inaudio-2-new-open-source.232490/");
 		    }
@@ -108,7 +105,7 @@ namespace InAudioSystem.InAudioEditor
             //*********************************************************************//
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginVertical(GUILayout.Width(pictureSize + 3));
-            if (GUILayout.Button(EditorResources.Support, GUILayout.Width(pictureSize), GUILayout.Height(pictureSize)))
+            if (GUILayout.Button(EditorResources.Instance.Support, GUILayout.Width(pictureSize), GUILayout.Height(pictureSize)))
 		    {
                 FeedbackWindow window = EditorWindow.GetWindow<FeedbackWindow>();
 

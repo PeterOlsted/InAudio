@@ -20,7 +20,7 @@ namespace InAudioSystem.TreeDrawer
             Rect fullArea = EditorGUILayout.BeginHorizontal();
             Rect area = EditorGUILayout.BeginHorizontal();
             if(isSelected)
-                GUI.DrawTexture(area, EditorResources.GetBackground());
+                GUI.DrawTexture(area, EditorResources.Instance.GetBackground());
             
             if (node._type != EventNodeType.Event)
                 GUILayout.Space(EditorGUI.indentLevel * 16);
@@ -31,17 +31,17 @@ namespace InAudioSystem.TreeDrawer
             {
                 Texture picture;
                 if (node.IsFoldedOut || node._children.Count == 0)
-                    picture = EditorResources.Minus;
+                    picture = EditorResources.Instance.Minus;
                 else
-                    picture = EditorResources.Plus;
+                    picture = EditorResources.Instance.Plus;
 
-                if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height), GUILayout.Width(EditorResources.Minus.width)))
+                if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Instance.Minus.height), GUILayout.Width(EditorResources.Instance.Minus.width)))
                 {
                     node.IsFoldedOut = !node.IsFoldedOut;
                     Event.current.UseEvent();
                 }
           
-                TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), EditorResources.Folder, noMargain);
+                TreeNodeDrawerHelper.DrawIcon(GUILayoutUtility.GetLastRect(), EditorResources.Instance.Folder, noMargain);
             }
 
       

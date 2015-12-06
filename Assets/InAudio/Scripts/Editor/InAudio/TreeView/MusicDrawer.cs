@@ -18,7 +18,7 @@ namespace InAudioSystem.TreeDrawer
 
             Rect area = EditorGUILayout.BeginHorizontal();
             if (isSelected)
-                GUI.DrawTexture(area, EditorResources.GetBackground());
+                GUI.DrawTexture(area, EditorResources.Instance.GetBackground());
 
             GUILayout.Space(EditorGUI.indentLevel * 16);
 
@@ -30,11 +30,11 @@ namespace InAudioSystem.TreeDrawer
 
             Texture picture;
             if (folded || node._getChildren.Count == 0)
-                picture = EditorResources.Minus;
+                picture = EditorResources.Instance.Minus;
             else
-                picture = EditorResources.Plus;
+                picture = EditorResources.Instance.Plus;
 
-            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height), GUILayout.Width(EditorResources.Minus.width)))
+            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Instance.Minus.height), GUILayout.Width(EditorResources.Instance.Minus.width)))
             {
                 node.IsFoldedOut = !node.IsFoldedOut;
                 Event.current.UseEvent();
@@ -81,10 +81,10 @@ namespace InAudioSystem.TreeDrawer
             Texture playing;
             
             if(Application.isPlaying)
-                playing = group.PlayingInfo.State == MusicState.Playing ? EditorResources.Pause : EditorResources.Play;
+                playing = group.PlayingInfo.State == MusicState.Playing ? EditorResources.Instance.Pause : EditorResources.Instance.Play;
             else
             {
-                playing = EditorResources.Play;
+                playing = EditorResources.Instance.Play;
             }
 
             if (GUI.Button(butArea, playing, GUIStyle.none))
@@ -101,7 +101,7 @@ namespace InAudioSystem.TreeDrawer
                 GUI.enabled = false;
             }
             butArea.y += 14;
-            Texture stop= EditorResources.Stop;
+            Texture stop= EditorResources.Instance.Stop;
 
             if (GUI.Button(butArea, stop, GUIStyle.none))
             {
@@ -131,7 +131,7 @@ namespace InAudioSystem.TreeDrawer
             butArea.y += 3;
             butArea.x += EditorGUI.indentLevel*5 + 5;
 
-            Texture mute = MusicUpdater.IsMute(node) ? EditorResources.Muted : EditorResources.NotMute;
+            Texture mute = MusicUpdater.IsMute(node) ? EditorResources.Instance.Muted : EditorResources.Instance.NotMute;
 
             if (GUI.Button(butArea, mute, GUIStyle.none))
             {
@@ -140,7 +140,7 @@ namespace InAudioSystem.TreeDrawer
             }
 
             butArea.y += 14;
-            Texture solo = MusicUpdater.IsSolo(node) ? EditorResources.Soloed : EditorResources.NotSolo;
+            Texture solo = MusicUpdater.IsSolo(node) ? EditorResources.Instance.Soloed : EditorResources.Instance.NotSolo;
 
             if (GUI.Button(butArea, solo, GUIStyle.none))
             {
@@ -155,19 +155,19 @@ namespace InAudioSystem.TreeDrawer
             if (!Application.isPlaying || group == null)
             {
                 if (node._type == MusicNodeType.Music)
-                    return EditorResources.Audio;
+                    return EditorResources.Instance.Audio;
                 if (node.IsRootOrFolder)
-                    return EditorResources.Folder;
+                    return EditorResources.Instance.Folder;
                 return null;
             }
             else
             {
                 if (group.PlayingInfo.State == MusicState.Playing)
-                    return EditorResources.Play;
+                    return EditorResources.Instance.Play;
                 else if (group.PlayingInfo.State == MusicState.Paused)
-                    return EditorResources.Pause;
+                    return EditorResources.Instance.Pause;
                 else //if (group.PlayingInfo.State == MusicState.Stopped)
-                    return EditorResources.Stop;
+                    return EditorResources.Instance.Stop;
             }
         }
     }

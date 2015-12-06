@@ -44,8 +44,6 @@ namespace InAudioSystem.InAudioEditor
 
             Manager = InAudioInstanceFinder.DataManager;
             minSize = new Vector2(400, 100);
-
-            EditorResources.Reload();
         }
 
         [UnityEditor.Callbacks.DidReloadScripts]

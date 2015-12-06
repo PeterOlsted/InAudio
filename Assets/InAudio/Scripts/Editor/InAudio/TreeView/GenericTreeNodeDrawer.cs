@@ -15,7 +15,7 @@ namespace InAudioSystem.TreeDrawer
             Rect area = EditorGUILayout.BeginHorizontal();
             if (isSelected)
             {
-                GUI.DrawTexture(area, EditorResources.GetBackground());
+                GUI.DrawTexture(area, EditorResources.Instance.GetBackground());
             }
 
 
@@ -25,12 +25,12 @@ namespace InAudioSystem.TreeDrawer
 
             Texture picture;
             if (folded || node._getChildren.Count == 0)
-                picture = EditorResources.Minus;
+                picture = EditorResources.Instance.Minus;
             else
-                picture = EditorResources.Plus;
+                picture = EditorResources.Instance.Plus;
 
-            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Minus.height),
-                GUILayout.Width(EditorResources.Minus.width)))
+            if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Instance.Minus.height),
+                GUILayout.Width(EditorResources.Instance.Minus.width)))
             {
                 node.IsFoldedOut = !node.IsFoldedOut;
                 Event.current.UseEvent();
@@ -99,24 +99,24 @@ namespace InAudioSystem.TreeDrawer
             {
                 InAudioNode audioNode = node as InAudioNode;
                 if (audioNode._type == AudioNodeType.Audio)
-                    return EditorResources.Audio;
+                    return EditorResources.Instance.Audio;
                 if (audioNode._type == AudioNodeType.Folder || audioNode.IsRoot)
-                    return EditorResources.Folder;
+                    return EditorResources.Instance.Folder;
                 if (audioNode._type == AudioNodeType.Random)
-                    return EditorResources.Dice;
+                    return EditorResources.Instance.Dice;
                 if (audioNode._type == AudioNodeType.Sequence)
-                    return EditorResources.List;
+                    return EditorResources.Instance.List;
                 if (audioNode._type == AudioNodeType.Multi)
-                    return EditorResources.Tree;
+                    return EditorResources.Instance.Tree;
             }
             else if (node is InAudioBankLink)
             {
                 InAudioBankLink link = node as InAudioBankLink;
                 if(link._type == AudioBankTypes.Bank)
-                    return EditorResources.Bank;
+                    return EditorResources.Instance.Bank;
                 else
                 {
-                    return EditorResources.Folder;
+                    return EditorResources.Instance.Folder;
                 }
             }
 
