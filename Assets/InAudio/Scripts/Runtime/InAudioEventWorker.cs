@@ -71,10 +71,11 @@ namespace InAudioSystem.Internal
             List<InstanceInfo> currentInstances = audioNode.CurrentInstances;
             if (!AllowedStealing(audioNode, currentInstances))
                 return null;
-            var poolObject = InAudioInstanceFinder.RuntimePlayerControllerPool.GetObject();
-            poolObject.transform.position = position;
-            Play(controllingObject, audioNode, poolObject, fade, fadeType, audioParameters);
-            return poolObject;
+            var runtimePlayer = InAudioInstanceFinder.RuntimePlayerControllerPool.GetObject();
+            runtimePlayer.transform.position = position;
+            currentInstances.Add(new InstanceInfo(AudioSettings.dspTime, runtimePlayer));
+            Play(controllingObject, audioNode, runtimePlayer, fade, fadeType, audioParameters);
+            return runtimePlayer;
         }
 
         public void StopAll(InAudioNode node, float fadeOutTime, LeanTweenType type)

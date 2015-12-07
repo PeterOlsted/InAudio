@@ -155,8 +155,9 @@ namespace InAudioSystem.InAudioEditor
                     if (dragged.gameObject != newParent.gameObject)
                     {
                         if (EditorUtility.DisplayDialog("Move?",
-                            "Moving this node will move it from the game object \"" + dragged.gameObject.name +
-                            "\" to \"" + newParent.gameObject.name + "\"", "Ok", "Cancel"))
+                            "Warning, this will break all external references to this and all child nodes!\n" +
+                            "Move node from\"" + dragged.gameObject.name +
+                            "\" to \"" + newParent.gameObject.name + "\"?", "Ok", "Cancel"))
                         {
                             treeDrawer.SelectedNode = TreeWalker.GetPreviousVisibleNode(treeDrawer.SelectedNode);
                             MusicWorker.Duplicate(newParent.gameObject, dragged, newParent);

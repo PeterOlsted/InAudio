@@ -223,8 +223,9 @@ namespace InAudioSystem.InAudioEditor
                     if (node.gameObject != nodeToMove.gameObject)
                     {
                         if (EditorUtility.DisplayDialog("Move?",
-                            "Moving this node will move it from the game object \"" + nodeToMove.gameObject.name +
-                            "\" to \"" + node.gameObject.name + "\"", "Ok", "Cancel"))
+                            "Warning, this will break all external references to this and all child nodes!\n" +
+                            "Move node from\"" + nodeToMove.gameObject.name +
+                            "\" to \"" + node.gameObject.name + "\"?", "Ok", "Cancel"))
                         {
                             treeDrawer.SelectedNode = treeDrawer.SelectedNode._getParent;
                             isDirty = false;

@@ -266,8 +266,9 @@ namespace InAudioSystem.InAudioEditor
                     if (movingEvent.gameObject != audioevent.gameObject)
                     {
                         if (EditorUtility.DisplayDialog("Move?",
-                            "Moving this node will move it from the game object \"" + movingEvent.gameObject.name +
-                            "\" to \"" + audioevent.gameObject.name + "\"", "Ok", "Cancel"))
+                            "Warning, this will break all external references to this and all child nodes!\n" +
+                            "Move node from\"" + movingEvent.gameObject.name +
+                            "\" to \"" + audioevent.gameObject.name + "\"?", "Ok", "Cancel"))
                         {
                             InUndoHelper.DoInGroup(() =>
                             {

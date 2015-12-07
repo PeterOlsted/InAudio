@@ -174,7 +174,7 @@ namespace InAudioSystem.InAudioEditor
             #region Duplicate
            
 
-            if (node._type == EventNodeType.Folder)
+            if (node.IsRootOrFolder)
             {
                 menu.AddItem(new GUIContent("Create child folder in new prefab"), false, obj =>
                 {
