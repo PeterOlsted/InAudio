@@ -3,6 +3,7 @@ using InAudioSystem.InAudioEditor;
 using InAudioSystem.Internal;
 using System;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -171,8 +172,8 @@ namespace InAudioSystem.InAudioEditor
                                     folder._bankLink = Manager.BankLinkTree._getChildren[0];
                             });
 
-                        EditorApplication.MarkSceneDirty();
-                        EditorApplication.SaveCurrentSceneIfUserWantsTo();
+                        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
                     }
                 }
                 DrawStartFromScratch();

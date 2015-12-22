@@ -1,6 +1,7 @@
 using System;
 using InAudioSystem.Internal;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace InAudioSystem.InAudioEditor
@@ -89,7 +90,7 @@ namespace InAudioSystem.InAudioEditor
 
                 AssetDatabase.Refresh();
                 DataCleanup.Cleanup(DataCleanup.CleanupVerbose.Silent);
-                EditorApplication.SaveCurrentSceneIfUserWantsTo();
+                EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
             }
             else
             {
