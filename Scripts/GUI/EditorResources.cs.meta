@@ -1,0 +1,46 @@
+fileFormatVersion: 2
+guid: 751b5c6b51d87324896bee5fdb2195a9
+timeCreated: 1449436158
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - DarkSkinBackground: {fileID: 2800000, guid: 0652c8c7d885d2e4695d8a22ad7457fa,
+      type: 3}
+  - LightSkinBackground: {fileID: 2800000, guid: fae1ce6bbf41a384ebf1e29c344d7621,
+      type: 3}
+  - White: {fileID: 2800000, guid: 61d6af8faa88ad04b823e49b005a3c24, type: 3}
+  - Plus: {fileID: 2800000, guid: 0120a59201e8669449f4984bc5f3b727, type: 3}
+  - Minus: {fileID: 2800000, guid: 2f7356c63d3d35e489fe3e437fb51891, type: 3}
+  - Up: {fileID: 2800000, guid: 0bed52420c2ebca41a79d4ed6aa63cd8, type: 3}
+  - Down: {fileID: 2800000, guid: 7632d72328d7acb4b817550ade5148aa, type: 3}
+  - Bank: {fileID: 2800000, guid: 8718a8cfcaca89d4ca8fb689abc5010f, type: 3}
+  - Dice: {fileID: 2800000, guid: 7356f8f20ac37b14eb04e05a4477e613, type: 3}
+  - List: {fileID: 2800000, guid: 2e5f7cfa71091fd4e8ddf5bcf177dcaf, type: 3}
+  - Event: {fileID: 2800000, guid: f9bcc721411fcb144918482501bb16e6, type: 3}
+  - Tree: {fileID: 2800000, guid: 20dd125a868fa8c438cf97b4e519bc5d, type: 3}
+  - Audio: {fileID: 2800000, guid: 10d0af2ba16cf824ab4fdad4ab9c1a49, type: 3}
+  - Pause: {fileID: 2800000, guid: 7eb2ad2776601714e826465ee3ba7573, type: 3}
+  - Play: {fileID: 2800000, guid: f21a227b6ae0b2748a0fcdf07b59e5e7, type: 3}
+  - Stop: {fileID: 2800000, guid: 79bdeb73e8c953f4aa38570a7af0853a, type: 3}
+  - Folder: {fileID: 2800000, guid: ea9f1c4bfff928b42aff008517e04063, type: 3}
+  - Soloed: {fileID: 2800000, guid: cddd7edc4656bd94297c37d5dec9b392, type: 3}
+  - NotSolo: {fileID: 2800000, guid: 39b196d44be681040a4c5b04804a37e8, type: 3}
+  - Muted: {fileID: 2800000, guid: 692d9f6fedd4b7c43b01f8f6d8999939, type: 3}
+  - NotMute: {fileID: 2800000, guid: b1d8c16aab313bb46bc82125a4b964e2, type: 3}
+  - Question: {fileID: 2800000, guid: 5b903d3552626054380adad282ebb165, type: 3}
+  - Support: {fileID: 2800000, guid: 9b77f7d1264a09f40bc3996701b49cb2, type: 3}
+  - Book: {fileID: 2800000, guid: b63f8746bcc20e74f88706f091c752df, type: 3}
+  - ContainerBackground: {fileID: 2800000, guid: b732e2a9dc559044eb775341af67d4bb,
+      type: 3}
+  - ContainerBackgroundWhite: {fileID: 2800000, guid: 14d59cfe00fc48b40b2769580ac7da47,
+      type: 3}
+  - GrabHandle: {fileID: 2800000, guid: b1510edf4cd90db458831439aade7163, type: 3}
+  - TitleBackground: {fileID: 2800000, guid: 46aeaf3f12f582f4fa6b07416351b0d4, type: 3}
+  - ItemSplitter: {fileID: 2800000, guid: 4090a2faca7272b48a917ce5acffe082, type: 3}
+  - GenericColor: {fileID: 2800000, guid: ee12ef7a691dc3743bf887fdfb629efb, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

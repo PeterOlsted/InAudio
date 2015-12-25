@@ -1,0 +1,20 @@
+Attribution
+
+Pictures
+Logo wave			by Mikael Altemark - http://www.flickr.com/photos/altemark/
+
+Icons
+Up & Down arrow		by PICOL - http://www.picol.org/
+Tree 	 			by PICOL - http://www.picol.org/
+Sound				by Designmodo - http://designmodo.com/
+Dice				by http://icons8.com/
+Sequence 			by Danilo Demarco - http://www.danilodemarco.com/
+Flag				by Yummygum - http://www.yummygum.nl/
+Play				by Yannick Lung - http://yummygum.com/
+Folder				by Ionicons - http://ionicons.com/
+Support				by http://www.icons-land.com/
+Question 			by https://www.iconfinder.com/DemSt
+Book				by http://www.doublejdesign.co.uk/
+
+Code
+Reorderable List Editor Field for Unity by https://bitbucket.org/rotorz/reorderable-list-editor-field-for-unity
