@@ -1,8 +1,12 @@
 using System;
 using InAudioSystem.Internal;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
+
+#if !UNITY_5_2
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
+#endif
 
 namespace InAudioSystem.InAudioEditor
 {
@@ -24,17 +28,15 @@ namespace InAudioSystem.InAudioEditor
             GameObject eventGO = new GameObject();
             GameObject bankGO = new GameObject();
             GameObject musicGO = new GameObject();
-            GameObject interactiveGO = new GameObject();
 
             Manager.BankLinkTree = AudioBankWorker.CreateTree(bankGO);
             Manager.AudioTree = AudioNodeWorker.CreateTree(audioGO, levelSize);
             Manager.MusicTree = MusicWorker.CreateTree(musicGO, levelSize);
-            Manager.InteractiveMusicTree = InteractiveMusicWorker.CreateTree(interactiveGO, 0);
             Manager.EventTree = AudioEventWorker.CreateTree(eventGO, levelSize);
 
 
 
-            SaveAndLoad.CreateDataPrefabs(Manager.AudioTree.gameObject, Manager.MusicTree.gameObject, Manager.EventTree.gameObject, Manager.BankLinkTree.gameObject, Manager.InteractiveMusicTree.gameObject);
+            SaveAndLoad.CreateDataPrefabs(Manager.AudioTree.gameObject, Manager.MusicTree.gameObject, Manager.EventTree.gameObject, Manager.BankLinkTree.gameObject);
 
             Manager.Load(true);
 
@@ -76,7 +78,7 @@ namespace InAudioSystem.InAudioEditor
                 var sequence = AudioNodeWorker.CreateChild(firstAudioFolder, AudioNodeType.Sequence, "Sequence-Sound Example");
                 AudioNodeWorker.CreateChild(sequence, AudioNodeType.Audio, "Played first");
                 AudioNodeWorker.CreateChild(sequence, AudioNodeType.Audio, "Played secondly");
-                
+
 
                 var firstEventFolder = Manager.EventTree._children[0];
                 firstEventFolder.FoldedOut = true;
@@ -88,7 +90,7 @@ namespace InAudioSystem.InAudioEditor
 
                 var firstMusicFolder = Manager.MusicTree._children[0];
                 var musicGroup = MusicWorker.CreateMusicGroup(firstMusicFolder, "Empty Music Group");
-                firstMusicFolder.FoldedOut = true; 
+                firstMusicFolder.FoldedOut = true;
                 MusicWorker.CreateMusicGroup(musicGroup, "Empty Music Group - Child 1");
                 MusicWorker.CreateMusicGroup(musicGroup, "Empty Music Group - Child 2");
                 musicGroup.FoldedOut = true;
@@ -96,7 +98,14 @@ namespace InAudioSystem.InAudioEditor
 
                 AssetDatabase.Refresh();
                 DataCleanup.Cleanup(DataCleanup.CleanupVerbose.Silent);
+
+#if !UNITY_5_2
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                 EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+#else
+                EditorApplication.MarkSceneDirty();
+                EditorApplication.SaveCurrentSceneIfUserWantsTo();
+#endif
             }
             else
             {

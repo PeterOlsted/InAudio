@@ -70,7 +70,7 @@ namespace InAudioSystem
             PlayMusicGroup(parent, playTime, 0);
         }
 
-        
+
         public void PlayAt(InMusicGroup musicGroup, double absoluteDSPTime, int skipSamples)
         {
             if (musicGroup == null)
@@ -251,7 +251,7 @@ namespace InAudioSystem
                     {
 
                         FadeAndStop(music, 0f, duration, tweenType);
-                    }   
+                    }
                 }
             });
         }
@@ -432,7 +432,7 @@ namespace InAudioSystem
 
             if (group._parent.IsRootOrFolder)
                 return group;
-            else 
+            else
                 return GetParent(group._parent as InMusicGroup);
         }
 
@@ -506,10 +506,10 @@ namespace InAudioSystem
                 var playing = playingInfo.Players;
                 for (int i = 0; i < playing.Count; i++)
                 {
-                    if(playing[i] != null)
+                    if (playing[i] != null)
                         playing[i].Stop();
                     MusicUpdater.CleanupMusicNode(musicGroup);
-                    
+
                 }
             }
             for (int i = 0; i < musicGroup._children.Count; i++)
@@ -536,7 +536,7 @@ namespace InAudioSystem
             }
         }
 
-       
+
 
         private static void UnpausePlayers(InMusicGroup musicGroup)
         {
@@ -548,7 +548,7 @@ namespace InAudioSystem
                 for (int i = 0; i < playing.Count; i++)
                 {
                     playing[i].UnPause();
-                    
+
                 }
             }
             for (int i = 0; i < musicGroup._children.Count; i++)
@@ -567,7 +567,7 @@ namespace InAudioSystem
                 for (int i = 0; i < playing.Count; i++)
                 {
                     playing[i].Pause();
-                    
+
                 }
             }
             for (int i = 0; i < musicGroup._children.Count; i++)
@@ -576,16 +576,24 @@ namespace InAudioSystem
             }
         }
 
-        private void OnEnable()
+        private void Awake()
         {
-            CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
-            MusicUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
-            AudioUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+            if (InAudioInstanceFinder.DataManager.MusicTree != null)
+            {
+                CreateMusicLists(InAudioInstanceFinder.DataManager.MusicTree);
+                MusicUpdater.SetInitialSettings(InAudioInstanceFinder.DataManager.MusicTree, 1.0f, 1.0f);
+                AudioUpdater.AudioTreeInitialVolume(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+            }
+            else
+            {
+                Debug.LogError("InAudio: Could not initialize the music player. Did you create an InAudio project?");
+            }
         }
 
 
         private void CreateMusicLists(InMusicNode inMusicNode)
         {
+
             var group = inMusicNode as InMusicGroup;
             if (group != null)
             {
@@ -596,7 +604,11 @@ namespace InAudioSystem
             }
             for (int i = 0; i < inMusicNode._children.Count; i++)
             {
-                CreateMusicLists(inMusicNode._children[i]);
+                if (inMusicNode._children[i] != null)
+                {
+                    CreateMusicLists(inMusicNode._children[i]);
+                }
+
             }
         }
 

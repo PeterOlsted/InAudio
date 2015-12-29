@@ -1,4 +1,4 @@
-(C) 2015 Peter Ølsted. Attribution is appreciated. Please tell me at inaudio@outlook.com about what you have used InAudio for.
+(C) 2015 Peter Ølsted. Attribution is appreciated. Please tell me at inaudio@outlook.com and tell me what cool thing you have used InAudio for.
 
 License:
 

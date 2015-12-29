@@ -1,11 +1,12 @@
-using InAudioSystem;
-using InAudioSystem.InAudioEditor;
 using InAudioSystem.Internal;
-using System;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Audio;
+
+#if !UNITY_5_2
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
+#endif 
 
 namespace InAudioSystem.InAudioEditor
 {
@@ -13,7 +14,7 @@ namespace InAudioSystem.InAudioEditor
     public class AuxWindow : InAudioBaseWindow
     {
         private int selectedToolbar = 0;
-        private readonly string[] toolbarOptions = {"Banks", "Integrity", "Project Data"};
+        private readonly string[] toolbarOptions = { "Banks", "Integrity", "Project Data" };
 
         private AudioMixerGroup selectedBus;
 
@@ -66,10 +67,9 @@ namespace InAudioSystem.InAudioEditor
                 bool missingaudioEvent = Manager.EventTree == null;
                 bool missingBank = Manager.BankLinkTree == null;
                 bool missingMusic = Manager.MusicTree == null;
-                bool missingInteractiveMusic = Manager.InteractiveMusicTree == null;
 
-                bool areAllMissing = missingaudio && missingaudioEvent && missingBank && missingMusic && missingInteractiveMusic;
-                bool areAnyMissing = missingaudio || missingaudioEvent || missingBank || missingMusic || missingInteractiveMusic;
+                bool areAllMissing = missingaudio && missingaudioEvent && missingBank && missingMusic;
+                bool areAnyMissing = missingaudio || missingaudioEvent || missingBank || missingMusic;
 
                 if (areAllMissing)
                 {
@@ -96,7 +96,7 @@ namespace InAudioSystem.InAudioEditor
 
             if (selectedToolbar == 0)
             {
-                isDirty |= bankGUI.OnGUI(LeftWidth, (int) position.height - (int)EditorGUIUtility.singleLineHeight);
+                isDirty |= bankGUI.OnGUI(LeftWidth, (int)position.height - (int)EditorGUIUtility.singleLineHeight);
             }
 
             if (selectedToolbar == 1)
@@ -121,23 +121,21 @@ namespace InAudioSystem.InAudioEditor
             bool missingaudioEvent = Manager.EventTree == null;
             bool missingbankLink = Manager.BankLinkTree == null;
             bool missingMusic = Manager.MusicTree == null;
-            bool missingInteractiveMusic = Manager.InteractiveMusicTree == null;
 
 
-            bool areAnyMissing = missingaudio | missingaudioEvent | missingbankLink | missingMusic | missingInteractiveMusic;
+            bool areAnyMissing = missingaudio | missingaudioEvent | missingbankLink | missingMusic;
             if (areAnyMissing)
             {
                 string missingAudioInfo = missingaudio ? "Audio Data\n" : "";
                 string missingEventInfo = missingaudioEvent ? "Event Data\n" : "";
                 string missingBankInfo = missingbankLink ? "BankLink Data\n" : "";
                 string missingMusicInfo = missingMusic ? "Music Data\n" : "";
-                string missingInteractiveMusicInfo = missingInteractiveMusic ? "Interactive Music Data\n" : "";
 
                 EditorGUILayout.BeginVertical();
-                EditorGUILayout.HelpBox(missingAudioInfo + missingEventInfo + missingMusicInfo + missingBankInfo + missingInteractiveMusicInfo + "is missing.\nThis may be because of new project data is required in this version of InAudio",
+                EditorGUILayout.HelpBox(missingAudioInfo + missingEventInfo + missingMusicInfo + missingBankInfo + "is missing.\nThis may be because of new project data is required in this version of InAudio",
                     MessageType.Error, true);
 
-                bool areAllMissing = missingaudio && missingaudioEvent && missingbankLink && missingMusic && missingInteractiveMusic;
+                bool areAllMissing = missingaudio && missingaudioEvent && missingbankLink && missingMusic;
                 if (!areAllMissing)
                 {
 
@@ -153,8 +151,7 @@ namespace InAudioSystem.InAudioEditor
                             CreateBankLinkPrefab();
                         if (missingMusic)
                             CreateMusicPrefab(levelSize);
-                        if (missingInteractiveMusic)
-                            CreateInteractiveMusicPrefab(0);
+     
                         Manager.Load(true);
 
                         if (Manager.AudioTree != null && Manager.BankLinkTree != null)
@@ -172,8 +169,14 @@ namespace InAudioSystem.InAudioEditor
                                     folder._bankLink = Manager.BankLinkTree._getChildren[0];
                             });
 
-                        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+#if !UNITY_5_2
+                        EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+#else
+                        EditorApplication.MarkSceneDirty();
+                        EditorApplication.SaveCurrentSceneIfUserWantsTo();
+#endif
+
                     }
                 }
                 DrawStartFromScratch();
@@ -188,8 +191,8 @@ namespace InAudioSystem.InAudioEditor
             bool missingaudioEvent = Manager.EventTree == null;
             bool missingbankLink = Manager.BankLinkTree == null;
             bool missingMusic = Manager.MusicTree == null;
-            bool missingInteractiveMusic = Manager.InteractiveMusicTree == null;
-            return missingaudio && missingaudioEvent && missingbankLink && missingMusic && missingInteractiveMusic;
+
+            return missingaudio && missingaudioEvent && missingbankLink && missingMusic ;
         }
 
         private void DrawStartFromScratch()
@@ -257,12 +260,6 @@ namespace InAudioSystem.InAudioEditor
             SaveAndLoad.CreateMusicRootPrefab(go);
         }
 
-        private void CreateInteractiveMusicPrefab(int levelSize)
-        {
-            GameObject go = new GameObject();
-            Manager.InteractiveMusicTree = InteractiveMusicWorker.CreateTree(go, levelSize);
-            SaveAndLoad.CreateInteractiveMusicRootPrefab(go);
-        }
 
         private void CreateAudioPrefab(int levelSize)
         {

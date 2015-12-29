@@ -214,7 +214,7 @@ public class InPlaylist : MonoBehaviour
     [Range(0, 60)]
     private float delayBetweenTracks = 0;
 
-    [SerializeField]
+    [SerializeField] 
     private List<InMusicGroup> playlist;
 
     [SerializeField]

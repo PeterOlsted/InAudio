@@ -17,6 +17,6 @@ namespace InAudioSystem
     public class InEventHookMusicControl
     {
         public InMusicGroup MusicGroup;
-        public MusicState PlaybackControl = MusicState.Nothing;
+        public MusicState PlaybackControl = MusicState.Playing;
     }
 }

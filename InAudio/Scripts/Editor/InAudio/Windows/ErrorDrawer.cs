@@ -49,9 +49,8 @@ namespace InAudioSystem.InAudioEditor
             bool missingaudioEvent = manager.EventTree == null;
             bool missingMusic = manager.MusicTree == null;
             bool missingBankLink = manager.BankLinkTree == null;
-            bool missingInteractiveMusic = manager.InteractiveMusicTree == null;
 
-            return missingaudio || missingMusic || missingaudioEvent || missingBankLink || missingInteractiveMusic;
+            return missingaudio || missingMusic || missingaudioEvent || missingBankLink;
         }
 
         public static bool IsAllDataMissing(InCommonDataManager manager)
@@ -60,9 +59,8 @@ namespace InAudioSystem.InAudioEditor
             bool missingaudioEvent = manager.EventTree == null;
             bool missingBankLink = manager.BankLinkTree == null;
             bool missingMusic = manager.MusicTree == null;
-            bool missingInteractiveMusic = manager.InteractiveMusicTree == null;
 
-            return missingaudio && missingaudioEvent && missingBankLink && missingMusic && missingInteractiveMusic;
+            return missingaudio && missingaudioEvent && missingBankLink && missingMusic;
         }
 
         public static bool MissingData(InCommonDataManager manager)
@@ -71,9 +69,8 @@ namespace InAudioSystem.InAudioEditor
             bool missingaudioEvent = manager.EventTree == null;
             bool missingBankLink = manager.BankLinkTree == null;
             bool missingMusic = manager.MusicTree == null;
-            bool missingInteractiveMusic = manager.InteractiveMusicTree == null;
 
-            bool areAnyMissing = missingaudio || missingaudioEvent || missingBankLink || missingMusic || missingInteractiveMusic;
+            bool areAnyMissing = missingaudio || missingaudioEvent || missingBankLink || missingMusic;
 
             if (areAnyMissing)
             {
@@ -111,8 +108,9 @@ namespace InAudioSystem.InAudioEditor
 
         public static void MissingGuiUserPrefs()
         {
-            EditorGUILayout.HelpBox("Missing GUI Layout settings", MessageType.Info);
-            if (GUILayout.Button("Create object"))
+            EditorGUILayout.HelpBox("Couldn't locate InAudio. Please try and reimport the project.\nIf the problem persists, please write to inaudio@outlook.com", MessageType.Error);
+            
+            if (GUILayout.Button("Auto try and fix it (low change it will work)"))
             {
                 var go = new GameObject();
                 go.AddComponent<InAudioGUIUserPrefs>();

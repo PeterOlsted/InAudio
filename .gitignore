@@ -1,7 +1,7 @@
 
 # Created by https://www.gitignore.io/api/unity,visualstudio
 
-*/InAudio/Resources/*.prefab
+*/Resources/InAudio/InAudio*.prefab
 
 ### Unity ###
 /[Ll]ibrary/

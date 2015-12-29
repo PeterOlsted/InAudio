@@ -12,13 +12,12 @@ namespace InAudioSystem.Internal
         private InAudioEventNode EventRoot;
         private InAudioBankLink BankLinkRoot;
         private InMusicNode MusicRoot;
-        private InInteractiveMusic InteractiveMusicRoot;
 
         public MonoBehaviour[] AllRoots
         {
             get
             {
-                return new MonoBehaviour[] { AudioTree, EventTree, BankLinkTree, MusicTree, InteractiveMusicTree};
+                return new MonoBehaviour[] { AudioTree, EventTree, BankLinkTree, MusicTree};
             }
         }
 
@@ -46,28 +45,20 @@ namespace InAudioSystem.Internal
             set { MusicRoot = value; }
         }
 
-        public InInteractiveMusic InteractiveMusicTree
-        {
-            get { return InteractiveMusicRoot; }
-            set { InteractiveMusicRoot = value; }
-        }
-
         public void Load(bool forceReload = false)
         {
-            if (AudioRoot == null || BankLinkRoot == null || EventRoot == null || MusicRoot == null || InteractiveMusicRoot == null || forceReload)
+            if (AudioRoot == null || BankLinkRoot == null || EventRoot == null || MusicRoot == null || forceReload)
             {
                 Component[] audioData;
                 Component[] eventData;
                 Component[] bankLinkData;
                 Component[] musicData;
-                Component[] interactiveMusicData;
 
-                SaveAndLoad.LoadManagerData(out audioData, out eventData, out musicData, out bankLinkData, out interactiveMusicData);
+                SaveAndLoad.LoadManagerData(out audioData, out eventData, out musicData, out bankLinkData);
                 AudioRoot = CheckData<InAudioNode>(audioData);
                 EventRoot = CheckData<InAudioEventNode>(eventData);
                 BankLinkTree = CheckData<InAudioBankLink>(bankLinkData);
                 MusicTree = CheckData<InMusicNode>(musicData);
-                InteractiveMusicTree = CheckData<InInteractiveMusic>(interactiveMusicData);
                 
             }
         }
@@ -124,7 +115,7 @@ namespace InAudioSystem.Internal
         private IEnumerator VersionCheck()
         {
             
-            WWW website = new WWW("http://innersystems.net/version3.html");
+            WWW website = new WWW("http://innersystems.net/version.html");
             yield return website;
             if (website.error == null)
             {
@@ -139,7 +130,6 @@ namespace InAudioSystem.Internal
         {
             if (!checkVersion && PlayerPrefs.GetString("InAudioUpdateCheckTime") != DateTime.Now.Date.DayOfYear.ToString(CultureInfo.InvariantCulture))
             {
-//                Debug.Log("Run version check");
                 checkVersion = true;
                 StartCoroutine(VersionCheck());
             }

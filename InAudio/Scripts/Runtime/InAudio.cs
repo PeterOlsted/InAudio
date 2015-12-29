@@ -50,11 +50,29 @@ public class InAudio : MonoBehaviour
     #endregion
 
     #region Music
-    public static MusicPlayer Music { get; private set; }
-    #endregion
 
-    #region Audio player
-    #region Play
+    private static MusicPlayer music;
+
+    public static MusicPlayer Music
+    {
+        get
+        {
+            if (music == null)
+            {
+#if UNITY_5_2
+                Debug.LogError("InAudio: Could not find music player. Please ensure that InAudio is loaded before accessing it.");
+#else
+                Debug.LogError("InAudio: Could not find music player. Please ensure that InAudio is loaded before accessing it.\nIs the scene with InAudio loaded after the script trying to access it?");
+#endif
+            }
+            return music;
+        }
+        set { music = value; }
+    }
+#endregion
+
+#region Audio player
+#region Play
 
     /// <summary>
     /// Play an audio node directly
@@ -383,9 +401,9 @@ public class InAudio : MonoBehaviour
         return player;
     }
 
-    #endregion
+#endregion
 
-    #region Stop
+#region Stop
 
     /// <summary>
     /// Stop all instances of the this audio node on the game object
@@ -546,9 +564,9 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Players
+#region Players
     /// <summary>
     /// Get a list of all players attached to this game object
     /// </summary>
@@ -591,11 +609,11 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
-    #region Set/Get Parameters
+#region Set/Get Parameters
 
     /// <summary>
     /// Sets the volume for all instances of this audio node on the object. 
@@ -659,9 +677,9 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Post Event by reference
+#region Post Event by reference
     /// <summary>
     /// Post all actions in this event attached to this gameobject
     /// </summary>
@@ -736,9 +754,9 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Post Event lists (inspector lists)
+#region Post Event lists (inspector lists)
 
     /// <summary>
     /// Post all actions in this event in accordance to the data specified in the inspector, but overrides which object is it attached to.
@@ -853,9 +871,9 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Find Event by ID
+#region Find Event by ID
 
     /// <summary>
     /// Find an Audio Event by id so it can be posted directly
@@ -875,9 +893,9 @@ public class InAudio : MonoBehaviour
         }
         return postEvent;
     }
-    #endregion
+#endregion
 
-    #region Find audio node by ID
+#region Find audio node by ID
 
     /// <summary>
     /// Finds an audio node based on the ID specified
@@ -896,9 +914,9 @@ public class InAudio : MonoBehaviour
         }
         return null;
     }
-    #endregion
+#endregion
 
-    #region Banks
+#region Banks
     /// <summary>
     /// Load all audio clips in this bank
     /// </summary>
@@ -927,10 +945,10 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
     /*Internal systems*/
-    #region Internal system
+#region Internal system
 
     private void HandleEventAction(GameObject controllingObject, AudioEventAction eventData, GameObject attachedTo, Vector3 playAt = new Vector3())
     {
@@ -1167,15 +1185,15 @@ public class InAudio : MonoBehaviour
 
     }
 
-    #region Debug
+#region Debug
 
     public static InDebug InDebug = new InDebug();
-    #endregion
+#endregion
 
-    #region Internal event handling
+#region Internal event handling
 
 
-    #region Post attached to
+#region Post attached to
     private void OnPostEvent(GameObject controllingObject, InAudioEventNode postEvent, GameObject attachedToOther)
     {
         bool areAnyDelayed = false;
@@ -1228,8 +1246,8 @@ public class InAudio : MonoBehaviour
         yield return new WaitForSeconds(eventData.Delay);
         HandleEventAction(controllingObject, eventData, attachedToOther);
     }
-    #endregion
-    #region Post at position
+#endregion
+#region Post at position
     private void OnPostEventAtPosition(GameObject controllingObject, InAudioEventNode audioEvent, Vector3 position)
     {
         if (instance != null && controllingObject != null && audioEvent != null)
@@ -1288,10 +1306,10 @@ public class InAudio : MonoBehaviour
         yield return new WaitForSeconds(eventData.Delay);
         HandleEventAction(controllingObject, eventData, null, postAt);
     }
-    #endregion
-    #endregion
+#endregion
+#endregion
 
-    #region Internal data
+#region Internal data
 
     private InAudioEventWorker _inAudioEventWorker;
 
@@ -1300,9 +1318,9 @@ public class InAudio : MonoBehaviour
     private static InAudio instance;
 
 
-    #endregion
+#endregion
 
-    #region Unity functions
+#region Unity functions
     void Update()
     {
 #if UNITY_EDITOR
@@ -1360,6 +1378,11 @@ public class InAudio : MonoBehaviour
 #endif
         {
             Music = GetComponentInChildren<MusicPlayer>();
+            if (Music == null)
+            {
+                Debug.LogError(
+                    "InAudio: Could not find music player in InAudio Mananger object.\nPlease add the 'InAudio Manager' prefab to the scene again or reimport the project from the Asset Store and try again.");
+            }
         }
     }
 
@@ -1420,9 +1443,9 @@ public class InAudio : MonoBehaviour
     }
 #endif
 
-    #endregion
+#endregion
 
-    #region Other
+#region Other
 
     public static InAudioEventWorker _getEventWorker()
     {
@@ -1431,7 +1454,7 @@ public class InAudio : MonoBehaviour
         return null;
     }
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 }

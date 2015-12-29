@@ -187,34 +187,6 @@ namespace InAudioSystem.Internal
         }
 
 #if UNITY_EDITOR
-        //private static AudioSource _editorAudioSource;
-        //public static AudioSource EditorAudioSource
-        //{
-        //    get
-        //    {
-        //        if (_editorAudioSource == null)
-        //        {
-        //            var guide = Object.FindObjectOfType(typeof(InAudioGuide)) as InAudioGuide;
-        //            if (guide != null)
-        //            {
-        //                var source = guide.GetComponentInChildren<AudioSource>();
-
-        //                if (source != null)
-        //                    _editorAudioSource = source;
-        //                else
-        //                    _editorAudioSource = guide.transform.GetChild(0).gameObject.AddComponent<AudioSource>();
-
-
-        //            }
-
-        //        }
-        //        if (_editorAudioSource != null)
-        //            _editorAudioSource.playOnAwake = false;
-
-        //        return _editorAudioSource;
-        //    }
-        //}
-
         private static InAudioGUIUserPrefs _inAudioGuiUserPref;
 
         public static InAudioGUIUserPrefs InAudioGuiUserPrefs
@@ -223,7 +195,8 @@ namespace InAudioSystem.Internal
             {
                 if (_inAudioGuiUserPref == null)
                 {
-                    var prefGO = AssetDatabase.LoadAssetAtPath(FolderSettings.GUIUserPrefs, typeof (GameObject)) as GameObject;
+                    string path = FolderSettings.GUIUserPrefs;
+                    var prefGO = AssetDatabase.LoadAssetAtPath(path, typeof (GameObject)) as GameObject;
                     if (prefGO != null)
                     {
                         _inAudioGuiUserPref = prefGO.GetComponent<InAudioGUIUserPrefs>();
