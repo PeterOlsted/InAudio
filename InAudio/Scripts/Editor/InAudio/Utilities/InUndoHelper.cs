@@ -26,7 +26,6 @@ namespace InAudioSystem.InAudioEditor
 
         public static void RecordObject(Object obj, string undoDescription)
         {
-            EditorUtility.SetDirty(obj);
             RecordObjectFull(obj, undoDescription);
         }
 

@@ -43,9 +43,9 @@ namespace InAudioSystem.InAudioEditor
         {
             if (newParent._type == AudioNodeType.Random)
             {
-                var parentData = newParent._nodeData as RandomData;
-                parentData.weights.Insert(index, 50);
-                Undo.RecordObject(newParent._nodeData, "Random weights");
+                var randomData = newParent._nodeData as RandomData;
+                InUndoHelper.RecordObject(randomData, "Random weights");
+                randomData.weights.Insert(index, 50);                
             }
             newParent._children.Insert(index, node);
             node._parent = newParent;
@@ -215,11 +215,12 @@ namespace InAudioSystem.InAudioEditor
         {
             if (objects[0] as InAudioNode != null) //Drag N Drop internally in the tree, change the parent
             {
+                
                 InUndoHelper.DoInGroup(() =>
                 {
                     node.IsFoldedOut = true;
                     var nodeToMove = objects[0] as InAudioNode;
-
+                    
                     if (node.gameObject != nodeToMove.gameObject)
                     {
                         if (EditorUtility.DisplayDialog("Move?",
@@ -297,7 +298,7 @@ namespace InAudioSystem.InAudioEditor
         {
             InUndoHelper.RecordObject(
                 new UnityEngine.Object[]
-                {node, node._nodeData, nodeToMove._parent._nodeData, nodeToMove, nodeToMove._parent}.AddObj(
+                {node, node._nodeData, node._parent, node._parent != null ? node._parent._nodeData : null, nodeToMove._parent._nodeData, nodeToMove, nodeToMove._parent, nodeToMove._parent._nodeData}.AddObj(
                     AudioBankWorker.GetAllBanks().ToArray()),
                 "Audio Node Move");
 

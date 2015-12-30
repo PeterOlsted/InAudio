@@ -52,7 +52,7 @@ namespace InAudioSystem.InAudioEditor
                 }
                 else
                 {
-                    EditorGUILayout.HelpBox("The number of weights does not match the children count", MessageType.Error);
+                    EditorGUILayout.HelpBox("The number of weights does not match the children count.\n"+node._children.Count+" children was found and " + randomData.weights.Count + " weights.", MessageType.Error);
                     if (GUILayout.Button("Fix weights"))
                     {
                         weights.Clear();

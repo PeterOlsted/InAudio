@@ -207,31 +207,35 @@ namespace InAudioSystem.InAudioEditor
 
         private void genericPlaceHere(T p, T n)
         {
-            InUndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
-
-            DeattachFromParent(n);
-            if (p._getChildren.Any() && p.IsFoldedOut)
+            InUndoHelper.DoInGroup(() =>
             {
-                AssignNewParent(p, n, 0);
-            }
-            else if (n._getParent == p._getParent)
-            {
-                var index = p._getParent._getChildren.IndexOf(p);
-                AssignNewParent(p._getParent, n, index + 1);
-            }
-            else
-            {
-                if (!p.IsRoot)
+                InUndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
+                DeattachFromParent(n);
+                if (p._getChildren.Any() && p.IsFoldedOut)
                 {
-                    int newIndex = p._getParent._getChildren.IndexOf(p) + 1;
-                    AssignNewParent(p._getParent, n, newIndex);
+                    AssignNewParent(p, n, 0);
+                }
+                else if (n._getParent == p._getParent)
+                {
+                    var index = p._getParent._getChildren.IndexOf(p);
+                    AssignNewParent(p._getParent, n, index + 1);
                 }
                 else
                 {
-                    int newIndex = p._getChildren.IndexOf(p) + 1;
-                    AssignNewParent(p, n, newIndex);
+                    if (!p.IsRoot)
+                    {
+                        int newIndex = p._getParent._getChildren.IndexOf(p) + 1;
+                        AssignNewParent(p._getParent, n, newIndex);
+                    }
+                    else
+                    {
+                        int newIndex = p._getChildren.IndexOf(p) + 1;
+                        AssignNewParent(p, n, newIndex);
+                    }
                 }
-            }
+            });
+
+            
         }
 
         public static void GUIDrawRect(Rect position, Color color)
@@ -280,7 +284,7 @@ namespace InAudioSystem.InAudioEditor
 
                 if (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform)
                 {
-                    if (Event.current.Contains(drawArea))
+                    if (Event.current.Contains(drawArea) && DragAndDrop.objectReferences.Length > 0)
                     {
                         if (genericCanPlaceHere(node, DragAndDrop.objectReferences[0] as T))
                         {
@@ -308,7 +312,6 @@ namespace InAudioSystem.InAudioEditor
                     }
                     else if (Event.current.Contains(area) && CanDropObjects(node, DragAndDrop.objectReferences))
                     {
-
                         OnDrop(node, DragAndDrop.objectReferences);
                     }
                 }

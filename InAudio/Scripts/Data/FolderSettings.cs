@@ -1,6 +1,8 @@
 using System;
 using InAudioSystem.ExtensionMethods;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace InAudioSystem
