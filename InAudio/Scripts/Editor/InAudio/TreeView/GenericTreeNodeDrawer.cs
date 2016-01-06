@@ -24,10 +24,18 @@ namespace InAudioSystem.TreeDrawer
             bool folded = node.IsFoldedOut;
 
             Texture picture;
-            if (folded || node._getChildren.Count == 0)
-                picture = EditorResources.Instance.Minus;
+            if (EditorResources.Instance != null)
+            {
+                
+                if (folded || node._getChildren.Count == 0)
+                    picture = EditorResources.Instance.Minus;
+                else
+                    picture = EditorResources.Instance.Plus;
+            }
             else
-                picture = EditorResources.Instance.Plus;
+            {
+                picture = null; 
+            }
 
             if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Instance.Minus.height),
                 GUILayout.Width(EditorResources.Instance.Minus.width)))

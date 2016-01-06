@@ -48,11 +48,11 @@ namespace InAudioSystem
                     relativePath = BuildPath();
                 return relativePath;
             }
-        }
+        } 
 
         public static string GetIconPath(string name)
         {
-            return AssetFolder + "InAudio/Icons/" + name + ".png"; 
+            return AssetFolder + "Icons/" + name + ".png"; 
         } 
 
         private static string BuildPath()

@@ -1,7 +1,6 @@
 using InAudioSystem;
 using UnityEditor;
 using UnityEngine;
-using System.Collections;
 
 [CustomPropertyDrawer(typeof(InSplineConnection))]
 public class InSplineConnectionDrawer : PropertyDrawer {
