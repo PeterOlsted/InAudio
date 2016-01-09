@@ -21,7 +21,6 @@ namespace InAudioSystem.InAudioEditor
         public Texture Up;
         public Texture Down;
 
-        public Texture Bank;
         public Texture Dice;
         public Texture List;
         public Texture Event;

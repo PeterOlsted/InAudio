@@ -29,8 +29,6 @@ namespace InAudioSystem.InAudioEditor
             {
                 FixParentChild();
                 Debug.Log("Reassigned parent/childs");
-                AudioBankWorker.RebuildBanks();
-                Debug.Log("All Banks rebuild");
             }
 
             EditorGUILayout.Separator();
@@ -54,7 +52,6 @@ namespace InAudioSystem.InAudioEditor
             var data = InAudioInstanceFinder.DataManager;
             TreeWalker.ForEach(data.AudioTree, FixParentChild);
             TreeWalker.ForEach(data.MusicTree, FixParentChild);
-            TreeWalker.ForEach(data.BankLinkTree, FixParentChild);
             TreeWalker.ForEach(data.EventTree, FixParentChild);
         }
 

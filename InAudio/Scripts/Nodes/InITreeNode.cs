@@ -16,7 +16,7 @@ namespace InAudioSystem
 
         int _ID { get; set; }
 
-        Object[] GetAuxData();
+        MonoBehaviour[] GetAuxData();
 
 #if UNITY_EDITOR
         bool IsFoldedOut { get; set; }

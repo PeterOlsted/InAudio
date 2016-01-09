@@ -234,13 +234,10 @@ namespace InAudioSystem.InAudioEditor
             var audioNodes = GetConvertedList<InAudioNode>(objects.ToList());
             bool audioNodeDrop = audioNodes.TrueForAll(node => node != null && node.IsPlayable);
 
-            var audioBankLinks = GetConvertedList<InAudioBankLink>(objects.ToList());
-            bool bankLinkDrop = audioBankLinks.TrueForAll(node => node != null && node._type == AudioBankTypes.Bank);
-
-            var musicLinks = GetConvertedList<InMusicGroup>(objects.ToList());
+        var musicLinks = GetConvertedList<InMusicGroup>(objects.ToList());
             bool musicDrop = musicLinks.TrueForAll(node => node != null && node._type == MusicNodeType.Music);
 
-            return audioNodeDrop | bankLinkDrop | musicDrop;
+            return audioNodeDrop | musicDrop;
         }
 
         private static List<T> GetConvertedList<T>(List<Object> toConvert) where T : class
@@ -305,15 +302,6 @@ namespace InAudioSystem.InAudioEditor
                         EventActionTypes.PlayMusic);
                     action.MusicGroup = musicGroup;
 
-                }
-
-                var audioBank = objects[0] as InAudioBankLink;
-                if (audioBank != null)
-                {
-                    InUndoHelper.RecordObjectFull(audioevent, "Adding of Bank Load Action");
-                    var action = AddEventAction<InEventBankLoadingAction>(audioevent,
-                        EventActionTypes.BankLoading);
-                    action.BankLink = audioBank;
                 }
                 Event.current.UseEvent();
             });

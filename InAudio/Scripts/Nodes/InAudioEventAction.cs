@@ -11,7 +11,7 @@ namespace InAudioSystem
         [EnumIndex(2, "Stop Audio")] Stop = 2,
         [EnumIndex(3, "Break Audio")] Break = 3,
         [EnumIndex(5, "Stop All Audio")] StopAll = 5,
-        [EnumIndex(10, "Bank Loading")] BankLoading = 8,
+        [EnumIndex(25, "Bank Loading (deprecated)")] BankLoading = 8,
         [EnumIndex(6, "Mixer Snapshot")] SetSnapshot = 12,
         [EnumIndex(7, "Mixer Value")] MixerValue = 13,
         [EnumIndex(11, "Play Music")] PlayMusic = 14,

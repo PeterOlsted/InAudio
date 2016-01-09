@@ -162,7 +162,6 @@ namespace InAudioSystem.InAudioEditor
                             treeDrawer.SelectedNode = TreeWalker.GetPreviousVisibleNode(treeDrawer.SelectedNode);
                             MusicWorker.Duplicate(newParent.gameObject, dragged, newParent);
                             DeleteNodeRec(dragged);
-                            AudioBankWorker.RebuildBanks(); 
                         }
                     }
                     else
@@ -319,8 +318,8 @@ namespace InAudioSystem.InAudioEditor
 
         internal void FindAudio(Func<InMusicNode, bool> filter)
         {
-            searchingFor = "Finding nodes in bank";
-            lowercaseSearchingFor = "Finding nodes in bank";
+            searchingFor = "Finding nodes";
+            lowercaseSearchingFor = "Finding nodes";
             treeDrawer.Filter(filter);
         }
 

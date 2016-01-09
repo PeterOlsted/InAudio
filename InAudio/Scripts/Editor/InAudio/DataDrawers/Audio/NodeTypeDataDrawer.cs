@@ -22,21 +22,13 @@ public static class NodeTypeDataDrawer
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Play Node"))
             {
-                var link = node.GetBank();
-                if (link != null && link.IsLoaded)
+                if (preview != null)
                 {
-                    if (preview != null)
-                    {
-                        preview.Stop();
-                    }
-                    preview = InAudio.Play(InAudioInstanceFinder.Instance.gameObject, node);
-                    preview.SpatialBlend = 0.0f;
-                    preview.OnCompleted = (go, audioNode) => preview = null;
+                    preview.Stop();
                 }
-                else
-                {
-                    Debug.Log("InAudio: Cannot preview node as its beloning bank is not loaded");
-                }
+                preview = InAudio.Play(InAudioInstanceFinder.Instance.gameObject, node);
+                preview.SpatialBlend = 0.0f;
+                preview.OnCompleted = (go, audioNode) => preview = null;
             }
             if (GUILayout.Button("Stop Playing Node") && preview != null)
             {
@@ -229,9 +221,9 @@ public static class NodeTypeDataDrawer
                 if (node._type == AudioNodeType.Audio)
                 {
                     var nodeData = node._nodeData as InAudioData;
-                    if (nodeData._clip != null)
+                    if (nodeData.AudioClip != null)
                     {
-                        float length = nodeData._clip.ExactLength();
+                        float length = nodeData.AudioClip.ExactLength();
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.PrefixLabel("Clip length");
                         EditorGUILayout.SelectableLabel(length.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));

@@ -68,12 +68,10 @@ namespace InAudioSystem.InAudioEditor
 
         public static Object[] NodeUndo(InAudioNode node)
         {
-            var bank = node.GetBank();
             return new Object[]
             {
                 node,
-                node._nodeData,
-                bank
+                node._nodeData
             };
         }
 

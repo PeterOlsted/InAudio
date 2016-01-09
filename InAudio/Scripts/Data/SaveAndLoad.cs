@@ -17,26 +17,17 @@ namespace InAudioSystem
             return null;
         }
 
-        public static void LoadManagerData(out Component[] audioData, out Component[] eventData, out Component[] musicData, out Component[] bankLinkData)
+        public static Component[] LoadManagerData(string location)
         {
-            GameObject eventDataGO = Resources.Load(FolderSettings.EventLoadData) as GameObject;
-            GameObject bankLinkDataGO = Resources.Load(FolderSettings.BankLinkLoadData) as GameObject;
-            GameObject audioDataGO = Resources.Load(FolderSettings.AudioLoadData) as GameObject;
-            GameObject musicDataGO = Resources.Load(FolderSettings.MusicLoadData) as GameObject;
-
-            audioData = GetComponents(audioDataGO);
-            eventData = GetComponents(eventDataGO);
-            bankLinkData = GetComponents(bankLinkDataGO);
-            musicData = GetComponents(musicDataGO);
+            return GetComponents(Resources.Load(location) as GameObject);
         }
 
 #if UNITY_EDITOR
-        public static void CreateDataPrefabs(GameObject AudioRoot, GameObject MusicRoot, GameObject EventRoot, GameObject BankLinkRoot)
+        public static void CreateDataPrefabs(GameObject AudioRoot, GameObject MusicRoot, GameObject EventRoot)
         {
             CreateMusicRootPrefab(MusicRoot);
             CreateAudioNodeRootPrefab(AudioRoot);
             CreateAudioEventRootPrefab(EventRoot);
-            CreateAudioBankLinkPrefab(BankLinkRoot);
         }
 
         public static void CreateAudioNodeRootPrefab(GameObject root)
@@ -49,23 +40,11 @@ namespace InAudioSystem
             PrefabUtility.CreatePrefab(FolderSettings.EventSaveDataPath, root);
             Object.DestroyImmediate(root);
         }
-        public static void CreateAudioBankLinkPrefab(GameObject root)
-        {
-            PrefabUtility.CreatePrefab(FolderSettings.BankLinkSaveDataPath, root);
-            Object.DestroyImmediate(root);
-        }
         public static void CreateMusicRootPrefab(GameObject root)
         {
             PrefabUtility.CreatePrefab(FolderSettings.MusicSaveDataPath, root);
             Object.DestroyImmediate(root);
         }
-        public static void CreateInteractiveMusicRootPrefab(GameObject root)
-        {
-            PrefabUtility.CreatePrefab(FolderSettings.InteractiveMusicSaveDataPath, root);
-            Object.DestroyImmediate(root);
-        }
-
-
 #endif
     }
 }

@@ -10,28 +10,6 @@ namespace InAudioSystem.InAudioEditor
 
     public static class OnDragging
     {
-        public static InAudioBankLink BusDragging(Rect area)
-        {
-            if (area.Contains(Event.current.mousePosition) && Event.current.type == EventType.DragUpdated ||
-                Event.current.type == EventType.DragPerform)
-            {
-                if (DragAndDrop.objectReferences.Length != 0)
-                {
-                    var bankLink = DragAndDrop.objectReferences[0] as InAudioBankLink;
-                    if (bankLink != null && bankLink._type == AudioBankTypes.Bank)
-                    {
-                        DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
-
-                        if (Event.current.type == EventType.DragPerform)
-                        {
-                            return DragAndDrop.objectReferences[0] as InAudioBankLink;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
         public static T DraggingObject<T>(Rect area) where T : Object
         {
             if (area.Contains(Event.current.mousePosition) && Event.current.IsDragging() &&

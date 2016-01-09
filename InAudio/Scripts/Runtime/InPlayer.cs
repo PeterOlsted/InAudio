@@ -487,10 +487,10 @@ public class InPlayer : MonoBehaviour
 
                 if (preOffset > 0)
                 {
-                    if (audioData._clip != null)
+                    if (audioData.AudioClip != null)
                     {
 
-                        int sampleCount = audioData._clip.samples;
+                        int sampleCount = audioData.AudioClip.samples;
                         if (sampleOffset < sampleCount)
                         {
                             PlayNode(current, endTime, preOffset, audioData);
@@ -640,9 +640,9 @@ public class InPlayer : MonoBehaviour
     {
         float length = 0;
         nodeVolume = 1;
-        if (audioData._clip != null)
+        if (audioData.AudioClip != null)
         {
-            var clip = audioData._clip;
+            var clip = audioData.AudioClip;
             length = clip.ExactLength();
 
             length -= offset;

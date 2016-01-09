@@ -368,25 +368,6 @@ namespace InAudioSystem
 
         #endregion
 
-        #region Memory
-
-        public bool IsLoaded(InMusicGroup musicGroup)
-        {
-            return BankLoader.IsLoaded(musicGroup.GetBank());
-        }
-
-        public bool Load(InMusicGroup musicGroup)
-        {
-            return BankLoader.Load(musicGroup.GetBank());
-        }
-
-        public void UnLoad(InMusicGroup musicGroup)
-        {
-            BankLoader.Unload(musicGroup.GetBank());
-        }
-
-        #endregion
-
         #region Other
         public double GetRemainingTime(InMusicGroup musicGroup)
         {

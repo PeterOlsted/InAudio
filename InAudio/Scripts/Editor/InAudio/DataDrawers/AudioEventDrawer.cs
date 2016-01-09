@@ -189,8 +189,7 @@ public static class AudioEventDrawer
             }
             else if (bankLoadingAction != null)
             {
-                InUndoHelper.GUIUndo(bankLoadingAction, "Bank Loading Action", ref bankLoadingAction.LoadingAction, () =>
-                    (BankHookActionType)EditorGUI.EnumPopup(buttonArea, "Load Action", bankLoadingAction.LoadingAction));
+                //todo
             }
             else if (snapshotAction != null)
             {
@@ -415,16 +414,9 @@ public static class AudioEventDrawer
             }
             else if (currentAction is InEventBankLoadingAction)
             {
-                InAudioBankLink dragged = OnDragging.DraggingObject<InAudioBankLink>(dragArea,
-                    bank => bank._type == AudioBankTypes.Bank);
-
-                if (dragged != null)
-                {
-                    InUndoHelper.RecordObject(currentAction, "Change Action Type");
-                    currentAction.Target = dragged;
+                    //todo
                 }
-            }
-            else if(currentAction is InEventMixerValueAction)
+                else if(currentAction is InEventMixerValueAction)
             {
                 AudioMixer dragged = OnDragging.DraggingObject<AudioMixer>(dragArea);
                 if (dragged != null)

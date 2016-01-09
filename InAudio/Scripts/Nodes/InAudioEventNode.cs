@@ -26,7 +26,7 @@ namespace InAudioSystem
         [FormerlySerializedAs("ActionList")]
         public List<AudioEventAction> _actionList = new List<AudioEventAction>();
 
-        public Object[] GetAuxData()
+        public MonoBehaviour[] GetAuxData()
         {
             return _actionList.ToArray();
         }

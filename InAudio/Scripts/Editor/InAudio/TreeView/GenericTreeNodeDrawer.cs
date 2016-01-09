@@ -117,16 +117,6 @@ namespace InAudioSystem.TreeDrawer
                 if (audioNode._type == AudioNodeType.Multi)
                     return EditorResources.Instance.Tree;
             }
-            else if (node is InAudioBankLink)
-            {
-                InAudioBankLink link = node as InAudioBankLink;
-                if(link._type == AudioBankTypes.Bank)
-                    return EditorResources.Instance.Bank;
-                else
-                {
-                    return EditorResources.Instance.Folder;
-                }
-            }
 
             return null;
         }

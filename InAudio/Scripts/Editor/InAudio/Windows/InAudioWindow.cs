@@ -21,12 +21,6 @@ namespace InAudioSystem.InAudioEditor
             audioCreatorGUI.OnEnable();
         }
 
-        public void Find(Func<InAudioNode, bool> filter)
-        {
-            
-            audioCreatorGUI.FindAudio(filter);
-        }
-
         public void Find(InAudioNode toFind)
         {
             if (InAudioInstanceFinder.Instance != null)

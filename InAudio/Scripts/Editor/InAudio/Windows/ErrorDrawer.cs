@@ -1,3 +1,4 @@
+using InAudioSystem.ExtensionMethods;
 using InAudioSystem.InAudioEditor;
 using InAudioSystem.Internal;
 using UnityEditor;
@@ -45,41 +46,20 @@ namespace InAudioSystem.InAudioEditor
 
         public static bool IsDataMissing(InCommonDataManager manager)
         {
-            bool missingaudio = manager.AudioTree == null;
-            bool missingaudioEvent = manager.EventTree == null;
-            bool missingMusic = manager.MusicTree == null;
-            bool missingBankLink = manager.BankLinkTree == null;
-
-            return missingaudio || missingMusic || missingaudioEvent || missingBankLink;
+            return manager.Roots.TrueForAny(r => r == null);
         }
 
         public static bool IsAllDataMissing(InCommonDataManager manager)
         {
-            bool missingaudio = manager.AudioTree == null;
-            bool missingaudioEvent = manager.EventTree == null;
-            bool missingBankLink = manager.BankLinkTree == null;
-            bool missingMusic = manager.MusicTree == null;
-
-            return missingaudio && missingaudioEvent && missingBankLink && missingMusic;
+            return manager.Roots.TrueForAll(r => r == null);
         }
 
         public static bool MissingData(InCommonDataManager manager)
         {
-            bool missingaudio = manager.AudioTree == null;
-            bool missingaudioEvent = manager.EventTree == null;
-            bool missingBankLink = manager.BankLinkTree == null;
-            bool missingMusic = manager.MusicTree == null;
-
-            bool areAnyMissing = missingaudio || missingaudioEvent || missingBankLink || missingMusic;
-
-            if (areAnyMissing)
+            bool isDataMissing = IsDataMissing(manager);
+            if (isDataMissing)
             {
-                string missingAudioInfo = missingaudio ? "Missing Audio Data\n" : "";
-                string missingEventInfo = missingaudioEvent ? "Missing Event Data\n" : "";
-                string missingMusicInfo = missingMusic ? "Missing Music Data\n" : "";
-                string missingBankLinkInfo = missingBankLink ? "Missing BankLink Data\n" : "";
-                string missingInteractiveMusicInfo = missingBankLink ? "Missing Interactive Music Data\n" : "";
-                EditorGUILayout.HelpBox(missingAudioInfo + missingMusicInfo + missingEventInfo + missingBankLinkInfo + missingInteractiveMusicInfo + "Some data is missing. Please go to the Aux Window and follow the guide.\nThis is likely due to InAudio needing to upgrade some data.",
+                EditorGUILayout.HelpBox("Some data is missing. Please go to the Aux Window and follow the guide.\nThis is likely due to InAudio needing to upgrade some data.",
                     MessageType.Warning, true);
                 if (GUILayout.Button("Open Aux Window"))
                 {
@@ -92,7 +72,7 @@ namespace InAudioSystem.InAudioEditor
                     manager.Load(true);
                 }
             }
-            return areAnyMissing;
+            return isDataMissing;
         }
 
         public static bool AllDataMissing(InCommonDataManager manager)

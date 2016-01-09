@@ -90,16 +90,12 @@ namespace InAudioSystem.InAudioEditor
 
         public static void AddNewParent(InAudioNode node, AudioNodeType parentType)
         {
-            InUndoHelper.RecordObject(new Object[] { node, node._parent, node.GetBank() }, "Undo Add New Parent for " + node.Name);
+            InUndoHelper.RecordObject(new Object[] { node, node._parent }, "Undo Add New Parent for " + node.Name);
             var newParent = CreateNode(node.gameObject, node._parent, parentType);
             var oldParent = node._parent;
             newParent.MixerGroup = node.MixerGroup;
             newParent.FoldedOut = true;
-            if (node._type == AudioNodeType.Folder)
-            {
-                InFolderData data = (InFolderData)newParent._nodeData;
-                data.BankLink = oldParent.GetBank();
-            }
+
             int index = oldParent._children.FindIndex(node);
             NodeWorker.RemoveFromParent(node);
             node.AssignParent(newParent);
@@ -130,18 +126,13 @@ namespace InAudioSystem.InAudioEditor
 
         public static InAudioNode CreateChild(GameObject go, InAudioNode parent, AudioNodeType newNodeType)
         {
-            var bank = parent.GetBank();
-            InUndoHelper.RecordObject(InUndoHelper.Array(parent, bank).Concat(parent.GetAuxData()).ToArray(), "Undo Node Creation");
+            InUndoHelper.RecordObject(InUndoHelper.Array(parent).Concat(parent.GetAuxData()).ToArray(), "Undo Node Creation");
             OnRandomNode(parent);
 
             var child = CreateNode(go, parent, GUIDCreator.Create(), newNodeType);
             parent.FoldedOut = true;
             child.Name = parent.Name + " Child";
-            var data = AddDataClass(child);
-            if (newNodeType == AudioNodeType.Folder)
-            {
-                (data as InFolderData).BankLink = parent.GetBank();
-            }
+            AddDataClass(child);
             return child;
         }
 
@@ -152,8 +143,6 @@ namespace InAudioSystem.InAudioEditor
             InUndoHelper.DoInGroup(() =>
             {
                 InUndoHelper.RecordObjectFull(new Object[] { node, node._nodeData }, "Change Node Type");
-
-                AudioBankWorker.RemoveNodeFromBank(node);
 
                 node._type = newType;
                 InUndoHelper.Destroy(node._nodeData);
@@ -167,12 +156,11 @@ namespace InAudioSystem.InAudioEditor
         {
             InUndoHelper.DoInGroup(() =>
             {
-                List<Object> toUndo = new List<Object>(AudioBankWorker.GetAllBanks().ConvertAll(b => b as Object));
+                List<Object> toUndo = new List<Object>();
 
                 toUndo.Add(audioNode._parent);
                 toUndo.AddRange(audioNode._parent.GetAuxData());
-                toUndo.Add(audioNode.GetBank());
-
+ 
                 InUndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Duplication Of " + audioNode.Name);
 
                 if (audioNode._parent._type == AudioNodeType.Random)
@@ -192,12 +180,11 @@ namespace InAudioSystem.InAudioEditor
 
         public static void CopyTo(InAudioNode audioNode, InAudioNode newParent)
         {
-            List<Object> toUndo = new List<Object>(AudioBankWorker.GetAllBanks().ConvertAll(b => b as Object));
+            List<Object> toUndo = new List<Object>();
 
             toUndo.Add(audioNode._parent);
             toUndo.AddRange(audioNode._parent.GetAuxData());
-            toUndo.Add(audioNode.GetBank());
-
+ 
             InUndoHelper.RecordObjectFull(toUndo.ToArray(), "Undo Move");
 
             NodeWorker.DuplicateHierarchy(audioNode, newParent, newParent.gameObject, (@oldNode, newNode) =>
@@ -215,10 +202,6 @@ namespace InAudioSystem.InAudioEditor
             Type type = oldNode._nodeData.GetType();
             newNode._nodeData = gameObject.AddComponentUndo(type) as InAudioNodeBaseData;
             EditorUtility.CopySerialized(oldNode._nodeData, newNode._nodeData);
-            if (newNode._type == AudioNodeType.Audio)
-            {
-                AudioBankWorker.AddNodeToBank(newNode);
-            }
         }
 
         public static void DeleteNodeNoGroup(InAudioNode node)
@@ -259,25 +242,10 @@ namespace InAudioSystem.InAudioEditor
 
         private static void DeleteNodeRec(InAudioNode node)
         {
-            AudioBankWorker.RemoveNodeFromBank(node);
-
-            /*TreeWalker.ForEach(InAudioInstanceFinder.DataManager.EventTree, @event =>
-            {
-                for (int i = 0; i < @event.ActionList.Count; i++)
-                {
-                    var action = @event.ActionList[i];
-                    if (action.Target == node)
-                    {
-                        UndoHelper.RegisterFullObjectHierarchyUndo(action);
-                    }
-                }
-            });*/
-
             for (int i = 0; i < node._children.Count; i++)
             {
                 DeleteNodeRec(node._children[i]);
             }
-
 
             InUndoHelper.Destroy(node._nodeData);
             InUndoHelper.Destroy(node);

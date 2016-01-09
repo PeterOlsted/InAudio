@@ -27,9 +27,9 @@ using UnityEngine.Audio;
 
 #endif
 
-        public Object[] GetAuxData()
+        public MonoBehaviour[] GetAuxData()
         {
-            return new Object[] {};
+            return new MonoBehaviour[] {};
         }
 
     public List<InMusicNode> _children = new List<InMusicNode>();

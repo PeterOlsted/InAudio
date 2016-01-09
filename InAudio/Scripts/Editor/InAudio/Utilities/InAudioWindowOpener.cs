@@ -30,19 +30,7 @@ namespace InAudioSystem.InAudioEditor
             window.AssignCallback(callback);
         }
 
-        [MenuItem("Window/InAudio/Banks Window #&4", false, 4)]
-        public static AuxWindow ShowBanksWindow()
-        {
-            AuxWindow.Launch();
-            AuxWindow window = EditorWindow.GetWindow<AuxWindow>();
-            if (window != null)
-            {
-                window.SelectBankCreation();
-            }
-            return window;
-        }
-
-        [MenuItem("Window/InAudio/Integrity Window #&5", false, 5)]
+        [MenuItem("Window/InAudio/Integrity Window #&4", false, 4)]
         public static AuxWindow ShowIntegrityWindow()
         {
             AuxWindow.Launch();
@@ -54,7 +42,7 @@ namespace InAudioSystem.InAudioEditor
             return window;
         }
 
-        [MenuItem("Window/InAudio/Feedback Window #&6", false, 6)]
+        [MenuItem("Window/InAudio/Feedback Window #&5", false, 5)]
         public static FeedbackWindow ShowFeedbackWindow()
         {
             FeedbackWindow window = EditorWindow.GetWindow<FeedbackWindow>();
@@ -64,7 +52,7 @@ namespace InAudioSystem.InAudioEditor
             return window;
         }
 
-        [MenuItem("Window/InAudio/Introduction Window #&7", false, 7)]
+        [MenuItem("Window/InAudio/Introduction Window #&6", false, 6)]
         public static GuideWindow ShowIntroductionWindow()
         {
             GuideWindow window = EditorWindow.GetWindow<GuideWindow>();
@@ -73,18 +61,6 @@ namespace InAudioSystem.InAudioEditor
             window.SetTitle("InAudio Introduction");
             return window;
         }
-
-        //[MenuItem("Window/InAudio/Music Settings#&6", false, 7)]
-        //private static void InteractiveMusic()
-        //{
-        //    InteractiveMusicWindow window = EditorWindow.GetWindow<InteractiveMusicWindow>();
-
-        //    window.Show();
-        //    window.minSize = new Vector2(100, 50);
-        //    window.title = "Music Settings";
-        //}
-
-
 
         [MenuItem("Window/InAudio/Documentation (website)", false, 10)]
         private static void ShowDocumentation()

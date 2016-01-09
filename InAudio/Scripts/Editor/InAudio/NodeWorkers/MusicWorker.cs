@@ -23,10 +23,8 @@ namespace InAudioSystem.InAudioEditor
             var node = go.AddComponent<InMusicFolder>();
             node._guid = guid;
             node._type = MusicNodeType.Root;
-            node._overrideParentBank = true;
             node.FoldedOut = true;
             node._name = "Music Root";
-            TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.BankLinkTree, link => link._type == AudioBankTypes.Bank);
             return node;
         }
 
@@ -35,8 +33,6 @@ namespace InAudioSystem.InAudioEditor
         {
             var newNode = CreateNode <InMusicFolder>(go, parent, GUIDCreator.Create());
             newNode._type = MusicNodeType.Folder;
-            newNode._bankLink = TreeWalker.FindFirst(InAudioInstanceFinder.DataManager.BankLinkTree,
-                link => link._type == AudioBankTypes.Bank);
             return newNode;
         }
 

@@ -270,9 +270,7 @@ namespace InAudioSystem.InAudioEditor
                         }
 
                         var audioData = (child._nodeData as InAudioData);
-                        audioData._clip = clip;
-
-                        AudioBankWorker.AddNodeToBank(child);
+                        audioData.AudioClip = clip;
                         Event.current.UseEvent();
                     }
                 });
@@ -286,7 +284,7 @@ namespace InAudioSystem.InAudioEditor
                     if (nodeData != null)
                     {
                         InUndoHelper.RecordObject(InUndoHelper.NodeUndo(node), "Change Audio Clip In " + node.Name);
-                        nodeData._clip = objects[0] as AudioClip;
+                        nodeData.AudioClip = objects[0] as AudioClip;
                     }
                 });
                 Event.current.UseEvent();
@@ -298,12 +296,10 @@ namespace InAudioSystem.InAudioEditor
         {
             InUndoHelper.RecordObject(
                 new UnityEngine.Object[]
-                {node, node._nodeData, node._parent, node._parent != null ? node._parent._nodeData : null, nodeToMove._parent._nodeData, nodeToMove, nodeToMove._parent, nodeToMove._parent._nodeData}.AddObj(
-                    AudioBankWorker.GetAllBanks().ToArray()),
+                {node, node._nodeData, node._parent, node._parent != null ? node._parent._nodeData : null, nodeToMove._parent._nodeData, nodeToMove, nodeToMove._parent, nodeToMove._parent._nodeData}.AddObj(),
                 "Audio Node Move");
 
             NodeWorker.ReasignNodeParent(nodeToMove, node);
-            AudioBankWorker.RebuildBanks();
             Event.current.UseEvent();
         }
 
@@ -486,26 +482,14 @@ namespace InAudioSystem.InAudioEditor
 
         private void CreateChild(InAudioNode parent, AudioNodeType type)
         {
-            InUndoHelper.RecordObjectFull(new UnityEngine.Object[] { parent, parent.GetBank() },
+            InUndoHelper.RecordObjectFull(new UnityEngine.Object[] { parent },
                 "Create Audio Node");
-            var newNode = AudioNodeWorker.CreateChild(parent, type);
-
-            if (type == AudioNodeType.Audio)
-            {
-                AudioBankWorker.AddNodeToBank(newNode);
-            }
+            AudioNodeWorker.CreateChild(parent, type);
         }
 
         protected override bool OnNodeDraw(InAudioNode node, bool isSelected, out bool clicked)
         {
             return GenericTreeNodeDrawer.Draw(node, isSelected, out clicked);
-        }
-
-        internal void FindAudio(Func<InAudioNode, bool> filter)
-        {
-            searchingFor = "Finding nodes in bank";
-            lowercaseSearchingFor = "Finding nodes in bank";
-            treeDrawer.Filter(filter);
         }
 
         protected override InAudioNode Root()

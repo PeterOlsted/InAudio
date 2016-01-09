@@ -26,41 +26,21 @@ namespace InAudioSystem.InAudioEditor
             int levelSize = 3;
             GameObject audioGO = new GameObject();
             GameObject eventGO = new GameObject();
-            GameObject bankGO = new GameObject();
+
             GameObject musicGO = new GameObject();
 
-            Manager.BankLinkTree = AudioBankWorker.CreateTree(bankGO);
             Manager.AudioTree = AudioNodeWorker.CreateTree(audioGO, levelSize);
             Manager.MusicTree = MusicWorker.CreateTree(musicGO, levelSize);
             Manager.EventTree = AudioEventWorker.CreateTree(eventGO, levelSize);
 
 
 
-            SaveAndLoad.CreateDataPrefabs(Manager.AudioTree.gameObject, Manager.MusicTree.gameObject, Manager.EventTree.gameObject, Manager.BankLinkTree.gameObject);
+            SaveAndLoad.CreateDataPrefabs(Manager.AudioTree.gameObject, Manager.MusicTree.gameObject, Manager.EventTree.gameObject);
 
             Manager.Load(true);
 
-            if (Manager.BankLinkTree != null)
+            try
             {
-                var bankLink = Manager.BankLinkTree._children[0];
-                bankLink._name = "Default - Auto loaded";
-                bankLink._autoLoad = true;
-
-                NodeWorker.AssignToNodes(Manager.AudioTree, node =>
-                {
-                    var data = (node._nodeData as InFolderData);
-                    if (data != null)
-                        data.BankLink = Manager.BankLinkTree._getChildren[0];
-                });
-
-                NodeWorker.AssignToNodes(Manager.MusicTree, musicNode =>
-                {
-                    var folder = musicNode as InMusicFolder;
-                    if (folder != null)
-                        folder._bankLink = Manager.BankLinkTree._getChildren[0];
-                });
-
-
                 var firstAudioFolder = Manager.AudioTree._children[0];
 
                 AudioNodeWorker.CreateChild(firstAudioFolder, AudioNodeType.Audio, "Empty Example Audio Node");
@@ -107,7 +87,7 @@ namespace InAudioSystem.InAudioEditor
                 EditorApplication.SaveCurrentSceneIfUserWantsTo();
 #endif
             }
-            else
+            catch (Exception)
             {
                 Debug.LogError("InAudio: There was a problem creating the data.\nPlease report this bug to inaudio@outlook.com or via the feedback window.");
             }

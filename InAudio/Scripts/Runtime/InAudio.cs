@@ -916,44 +916,12 @@ public class InAudio : MonoBehaviour
     }
 #endregion
 
-#region Banks
-    /// <summary>
-    /// Load all audio clips in this bank
-    /// </summary>
-    /// <param name="bank">The reference to the bank to load</param>
-    public static void LoadBank(InAudioBankLink bank)
-    {
-        if (bank != null)
-            BankLoader.Load(bank);
-        else
-        {
-            InDebug.BankLoadMissing();
-        }
-    }
-
-    /// <summary>
-    /// Unload all audio clips in this banks. Also calls Resources.UnloadUnusedAssets(). Clips will autoreimport if any audio source still referencs this clip
-    /// </summary>
-    /// <param name="bank">The reference to the bank to unload</param>
-    public static void UnloadBank(InAudioBankLink bank)
-    {
-        if (bank != null)
-            BankLoader.Unload(bank);
-        else
-        {
-            InDebug.BankUnloadMissing();
-        }
-    }
-
-#endregion
-
     /*Internal systems*/
 #region Internal system
 
     private void HandleEventAction(GameObject controllingObject, AudioEventAction eventData, GameObject attachedTo, Vector3 playAt = new Vector3())
     {
         InAudioNode audioNode; //Because we can't create variables in the scope of the switch with the same name
-        InEventBankLoadingAction bankLoadingData;
         InEventSnapshotAction snapshotData;
         InEventMixerValueAction mixerData;
         InEventMusicControl musicControl;
@@ -1019,16 +987,7 @@ public class InAudio : MonoBehaviour
                     mixerData.Mixer.SetFloat(mixerData.Parameter, mixerData.Value);
                 break;
             case EventActionTypes.BankLoading:
-                bankLoadingData = eventData as InEventBankLoadingAction;
-                if (bankLoadingData != null)
-                {
-                    if (bankLoadingData.LoadingAction == BankHookActionType.Load)
-                        BankLoader.Load(bankLoadingData.BankLink);
-                    else
-                    {
-                        BankLoader.Unload(bankLoadingData.BankLink);
-                    }
-                }
+                Debug.LogWarning("InAudio: The bank event is deprecated and unsupported.");
                 break;
             case EventActionTypes.CrossfadeMusic:
                 musicFade = eventData as InEventMusicFade;
@@ -1417,7 +1376,6 @@ public class InAudio : MonoBehaviour
 
             _inAudioEventWorker = GetComponentInChildren<InAudioEventWorker>();
             runtimeData = GetComponentInChildren<InRuntimeAudioData>();
-            BankLoader.LoadAutoLoadedBanks();
 
             if (InAudioInstanceFinder.DataManager.Loaded)
             {

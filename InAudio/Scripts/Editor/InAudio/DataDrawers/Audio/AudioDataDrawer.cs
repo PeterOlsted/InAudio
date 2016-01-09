@@ -25,7 +25,7 @@ public static class AudioDataDrawer
         EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
 
-        var clip = (AudioClip)EditorGUILayout.ObjectField(audioData._clip, typeof(AudioClip), false);
+        var clip = (AudioClip)EditorGUILayout.ObjectField(audioData.AudioClip, typeof(AudioClip), false);
   
         Rect buttonArea = area;
         if (Application.isPlaying)
@@ -48,10 +48,10 @@ public static class AudioDataDrawer
 
         EditorGUILayout.EndVertical();
 
-        if (clip != audioData._clip) //Assign new clip
+        if (clip != audioData.AudioClip) //Assign new clip
         {
             InUndoHelper.RecordObjectFull(audioData, "Changed " + node.Name + " Clip");
-            audioData._clip = clip;            
+            audioData.AudioClip = clip;            
             EditorUtility.SetDirty(node._nodeData.gameObject);
         }
 
@@ -105,7 +105,7 @@ public static class AudioDataDrawer
             {
                 source.SetLoudness(RuntimeHelper.CalcVolume(root, node));
                 source.pitch = RuntimeHelper.CalcPitch(root, node);
-                source.clip = audioData._clip;
+                source.clip = audioData.AudioClip;
                 source.outputAudioMixerGroup = node.GetMixerGroup();
                 source.Play();
             }
@@ -119,7 +119,7 @@ public static class AudioDataDrawer
             //AudioSource source = InAudioInstanceFinder.Instance.GetComponent<AudioSource>();
             if (source != null)
             {
-                source.clip = audioData._clip;
+                source.clip = audioData.AudioClip;
                 source.volume = 1.0f;
                 source.outputAudioMixerGroup = null;
                 source.pitch = 1.0f;

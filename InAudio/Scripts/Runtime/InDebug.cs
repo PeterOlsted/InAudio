@@ -26,16 +26,6 @@ namespace InAudioSystem.Runtime
             Debug.LogWarning("InAudio: Could not run action of type " + eventData._eventActionType + " on object " + controllingObject.name + "\nas the actions target is a null reference");
         }
 
-        public void BankUnloadMissing()
-        {
-            Debug.LogWarning("InAudio: Could not unload bank as the reference was null");
-        }
-
-        public void BankLoadMissing()
-        {
-            Debug.LogWarning("InAudio: Could not load bank as the reference was null");
-        }
-
         public void InstanceMissing(string function)
         {
             Debug.LogWarning("InAudio: No instance of InAudio was found. Is the manager in the scene?\nCalled via "+function);

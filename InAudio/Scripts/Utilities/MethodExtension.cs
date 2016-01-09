@@ -67,6 +67,17 @@ namespace InAudioSystem.ExtensionMethods
             }
         }
 
+        public static bool AnyNull<T>(this T[] objs) where T : Object
+        {
+            for (int i = 0; i < objs.Length; i++)
+            {
+                if (objs[i] == null)
+                    return true;
+            }
+            return false;
+        }
+
+
         public static T FindFirstNonNull<T>(this List<T> from) where T : class 
         {
             for (int i = 0; i < from.Count; i++)
@@ -195,6 +206,19 @@ namespace InAudioSystem.ExtensionMethods
                     return true;
             }
             return false;
+        }
+
+        public static bool TrueForAll<T>(this IList<T> list, Func<T, bool> trueForElement)
+        {
+            int isTrue = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (trueForElement(list[i]))
+                {
+                    isTrue++;
+                }
+            }
+            return isTrue == list.Count;
         }
     }
     

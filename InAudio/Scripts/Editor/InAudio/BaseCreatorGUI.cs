@@ -197,9 +197,6 @@ namespace InAudioSystem.InAudioEditor
                 if (audioNode != null)
                     audioNode.Filtered = false;
             });
-            //searchingFor = node._ID.ToString();
-            //lowercaseSearchingFor = searchingFor.ToLower().Trim();
-            //treeDrawer.Filter(SearchFilter);
             TreeWalker.ForEachParent(node, n => n.IsFoldedOut = true);
             SelectedNode = node;
             treeDrawer.SelectedNode = node;

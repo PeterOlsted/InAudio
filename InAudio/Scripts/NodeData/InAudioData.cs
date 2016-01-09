@@ -6,13 +6,13 @@ namespace InAudioSystem
     public class InAudioData : InAudioNodeData
     {
         [FormerlySerializedAs("EditorClip")]
-        public AudioClip _clip;
-
-        public bool LoadedFromAssetBundle;
+        [SerializeField]
+        private AudioClip _clip;
 
         public AudioClip AudioClip
         {
             get { return _clip; }
+            set { _clip = value; }
         }
 
         public bool IsLoaded

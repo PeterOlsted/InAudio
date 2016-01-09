@@ -8,7 +8,6 @@ public class InAudioGUIUserPrefs : MonoBehaviour
     public GUIPrefs AudioGUIData = new GUIPrefs();
     public GUIPrefs EventGUIData = new GUIPrefs();
     public GUIPrefs MusicGUIData = new GUIPrefs();
-    public GUIPrefs BankGUIData = new GUIPrefs();
 
     [System.NonSerialized] public InSpline SelectedSplineController;
 #endif

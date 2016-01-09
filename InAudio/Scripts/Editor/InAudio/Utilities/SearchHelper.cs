@@ -15,11 +15,6 @@ public static class SearchHelper
         {
             InAudioWindow.Launch().Find(audioAction.Node);
         }
-        var bankAction = action as InEventBankLoadingAction;
-        if (bankAction != null && bankAction.BankLink != null)
-        {
-            AuxWindow.Launch().FindBank(bankAction.BankLink);
-        }
         var musicControl = action as InEventMusicControl;
         if (musicControl != null && musicControl.Target != null)
         {
@@ -61,12 +56,6 @@ public static class SearchHelper
         EditorApplication.ExecuteMenuItem("Window/Audio Mixer");
     }
 
-    public static void SearchFor(InAudioBankLink bank)
-    {
-        AuxWindow.Launch().FindBank(bank);
-
-    }
-
     public static void SearchFor(InAudioNode node)
     {
         InAudioWindow.Launch().Find(node);
@@ -81,8 +70,6 @@ public static class SearchHelper
     {
         if (node is InAudioNode)
             SearchFor(node as InAudioNode);
-        if (node is InAudioBankLink)
-            SearchFor(node as InAudioBankLink);
     }
 }
 }

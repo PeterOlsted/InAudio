@@ -110,12 +110,8 @@ namespace InAudioSystem.InAudioEditor
                 ReorderableListGUI.ListField(prop.FindProperty("_clips"), ReorderableListFlags.DisableDuplicateCommand);
             }
 
+            prop.ApplyModifiedProperties();
 
-            if (prop.ApplyModifiedProperties())
-            {
-                //AudioBankWorker.RebuildBanks();
-            }
-            
 
             EditorGUILayout.Separator();
             if (node._children.Count > 0)
