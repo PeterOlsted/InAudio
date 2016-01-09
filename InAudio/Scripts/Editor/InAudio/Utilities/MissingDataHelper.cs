@@ -49,8 +49,8 @@ namespace InAudioSystem.InAudioEditor
                 var firstMusicFolder = Manager.MusicTree._children[0];
                 var musicGroup = MusicWorker.CreateMusicGroup(firstMusicFolder, "Example Music Group");
                 firstMusicFolder.FoldedOut = true;
-                MusicWorker.CreateMusicGroup(musicGroup, "Example Music Group - Extra Layer 1");
-                MusicWorker.CreateMusicGroup(musicGroup, "Example Music Group - Extra Layer 2");
+                MusicWorker.CreateMusicGroup(musicGroup, "Example Music Group - Layer 1");
+                MusicWorker.CreateMusicGroup(musicGroup, "Example Music Group - Layer 2");
                 musicGroup.FoldedOut = true;
 
 

@@ -1,3 +1,4 @@
+using InAudioSystem.ExtensionMethods.Repeat;
 using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
@@ -131,12 +132,7 @@ namespace InAudioSystem.InAudioEditor
 
                     }
                 }
-                for (int i = 0; i < 4; i++)
-                {
-                    EditorGUILayout.Separator();
-                }
-                EditorGUILayout.HelpBox("Create new project",
-                MessageType.Error, true);
+
                 DrawStartFromScratch();
                 
                 EditorGUILayout.EndVertical();
@@ -146,6 +142,11 @@ namespace InAudioSystem.InAudioEditor
 
         private void DrawStartFromScratch()
         {
+            Repeater.Repeat(8, () =>
+            {
+                EditorGUILayout.Separator();
+            });
+            EditorGUILayout.HelpBox("Warning, this button will delete the entire InAudio project and create a new. This process cannot be undone.", MessageType.Error);
             if (GUILayout.Button("Start over from scratch", GUILayout.Height(30)))
             {
                 if (ErrorDrawer.IsAllDataMissing(Manager) ||

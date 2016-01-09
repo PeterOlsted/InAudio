@@ -4,8 +4,24 @@ using System.Text;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+
+namespace InAudioSystem.ExtensionMethods.Repeat
+{
+    public static class Repeater
+    {
+        public static void Repeat(int n, Action action)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                action();
+            }
+        }
+    }
+}
 namespace InAudioSystem.ExtensionMethods
 {
+    
+
     public static class AudioSourceExtension 
     {
         public static float ExactLength(this AudioClip clip)

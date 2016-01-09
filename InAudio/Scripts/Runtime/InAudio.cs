@@ -1296,16 +1296,19 @@ public class InAudio : MonoBehaviour
             bool anySolo = MusicUpdater.UpdateSoloMute(musicTree);
 
             MusicUpdater.UpdateVolumePitch(musicTree, 1.0f, 1.0f, anySolo);
-
+             
             var audioTree = InAudioInstanceFinder.DataManager.AudioTree;
-            AudioUpdater.AudioTreeUpdate(audioTree, 1.0f);
+            if (audioTree != null)
+            {
+                AudioUpdater.AudioTreeUpdate(audioTree, 1.0f);
+            }
         }
 #if UNITY_EDITOR //Remove condition in player, always update in build
         if (Application.isPlaying)
 #endif
         {
-            var controllerPool = InAudioInstanceFinder.RuntimePlayerControllerPool;
-            if (controllerPool != null)
+            var controllerPool = InAudioInstanceFinder.RuntimePlayerControllerPool; 
+            if (controllerPool != null) 
             {
                 controllerPool.DelayedRelease();
             }
