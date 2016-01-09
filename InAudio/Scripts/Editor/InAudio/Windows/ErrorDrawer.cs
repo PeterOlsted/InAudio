@@ -54,7 +54,7 @@ namespace InAudioSystem.InAudioEditor
             return manager.Roots.TrueForAll(r => r == null);
         }
 
-        public static bool MissingData(InCommonDataManager manager)
+        public static bool DrawIfMissingData(InCommonDataManager manager)
         {
             bool isDataMissing = IsDataMissing(manager);
             if (isDataMissing)
@@ -69,7 +69,7 @@ namespace InAudioSystem.InAudioEditor
                 EditorGUILayout.Separator();
                 if (GUILayout.Button("Try To Reload Data"))
                 {
-                    manager.Load(true);
+                    manager.ForceLoad();
                 }
             }
             return isDataMissing;

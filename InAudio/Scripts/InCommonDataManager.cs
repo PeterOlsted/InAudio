@@ -26,20 +26,43 @@ namespace InAudioSystem.Internal
         }
 
         public InMusicNode MusicTree
-        {
+        { 
             get { return MusicRoot; }
             set { MusicRoot = value; }
         }
 
-        public Component[] Roots { get; private set; }
 
-        public void Load(bool forceReload = false)
+        private Component[] roots = null;
+        public Component[] Roots
+        {
+            get
+            {
+                if (roots == null || roots.Length == 0)
+                {
+                    roots = new Component[] {AudioRoot, EventRoot, MusicRoot};
+                }
+                return roots;
+            } 
+        }
+
+        public void ForceLoad()
+        {
+            Load(true);
+        }
+
+        public void Load() 
+        {
+            Load(false);
+        }
+
+        private void Load(bool forceReload)
         {
             if (!Loaded || forceReload)
             {
                 AudioRoot = LoadData<InAudioNode>(FolderSettings.AudioLoadData);
                 EventRoot = LoadData<InAudioEventNode>(FolderSettings.EventLoadData);
                 MusicRoot = LoadData<InMusicNode>(FolderSettings.MusicLoadData);
+                roots = new Component[] { AudioRoot, EventTree, MusicRoot };
             }
         }
 
@@ -77,7 +100,6 @@ namespace InAudioSystem.Internal
         {
             //Instance = this;
             Load();
-            Roots = new MonoBehaviour[] {AudioTree, MusicTree, EventTree};
         }
 
         public bool Loaded

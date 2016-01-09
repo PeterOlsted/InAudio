@@ -19,31 +19,16 @@ namespace InAudioSystem
 
         public static Component[] LoadManagerData(string location)
         {
-            return GetComponents(Resources.Load(location) as GameObject);
+            var go = Resources.Load<GameObject>(location);
+            return GetComponents(go);
         }
 
 #if UNITY_EDITOR
-        public static void CreateDataPrefabs(GameObject AudioRoot, GameObject MusicRoot, GameObject EventRoot)
+        public static GameObject CreatePrefab(GameObject root, string path)
         {
-            CreateMusicRootPrefab(MusicRoot);
-            CreateAudioNodeRootPrefab(AudioRoot);
-            CreateAudioEventRootPrefab(EventRoot);
-        }
-
-        public static void CreateAudioNodeRootPrefab(GameObject root)
-        {
-            PrefabUtility.CreatePrefab(FolderSettings.AudioSaveDataPath, root);
+            var go = PrefabUtility.CreatePrefab(path, root);
             Object.DestroyImmediate(root);
-        }
-        public static void CreateAudioEventRootPrefab(GameObject root)
-        {
-            PrefabUtility.CreatePrefab(FolderSettings.EventSaveDataPath, root);
-            Object.DestroyImmediate(root);
-        }
-        public static void CreateMusicRootPrefab(GameObject root)
-        {
-            PrefabUtility.CreatePrefab(FolderSettings.MusicSaveDataPath, root);
-            Object.DestroyImmediate(root);
+            return go;
         }
 #endif
     }

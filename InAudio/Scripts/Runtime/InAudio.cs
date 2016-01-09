@@ -1296,7 +1296,9 @@ public class InAudio : MonoBehaviour
             bool anySolo = MusicUpdater.UpdateSoloMute(musicTree);
 
             MusicUpdater.UpdateVolumePitch(musicTree, 1.0f, 1.0f, anySolo);
-            AudioUpdater.AudioTreeUpdate(InAudioInstanceFinder.DataManager.AudioTree, 1.0f);
+
+            var audioTree = InAudioInstanceFinder.DataManager.AudioTree;
+            AudioUpdater.AudioTreeUpdate(audioTree, 1.0f);
         }
 #if UNITY_EDITOR //Remove condition in player, always update in build
         if (Application.isPlaying)

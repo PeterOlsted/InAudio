@@ -128,7 +128,7 @@ namespace InAudioSystem.InAudioEditor
                 }
                 if (ErrorDrawer.IsDataMissing(Manager))
                 {
-                    ErrorDrawer.MissingData(Manager);
+                    ErrorDrawer.DrawIfMissingData(Manager);
                     return false;
                 }
                 else

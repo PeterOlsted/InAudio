@@ -3,6 +3,7 @@ using System.Linq;
 using InAudioSystem;
 using InAudioSystem.ExtensionMethods;
 using UnityEngine;
+#pragma warning disable 649
 
 [AddComponentMenu("InAudio/Music/Playlist")]
 public class InPlaylist : MonoBehaviour

@@ -61,12 +61,10 @@ namespace InAudioSystem.InAudioEditor
             }
             if (Manager != null)
             {
-                bool missingaudio = Manager.AudioTree == null;
-                bool missingaudioEvent = Manager.EventTree == null;
-                bool missingMusic = Manager.MusicTree == null;
+                
+                bool areAllMissing = ErrorDrawer.IsAllDataMissing(Manager);
+                bool areAnyMissing = ErrorDrawer.IsDataMissing(Manager);
 
-                bool areAllMissing = missingaudio && missingaudioEvent && missingMusic;
-                bool areAnyMissing = missingaudio || missingaudioEvent || missingMusic;
 
                 if (areAllMissing)
                 {
@@ -78,7 +76,7 @@ namespace InAudioSystem.InAudioEditor
                     DrawMissingDataCreation();
                     return;
                 }
-
+                
             }
             else
             {
@@ -110,39 +108,19 @@ namespace InAudioSystem.InAudioEditor
 
         private void DrawMissingDataCreation()
         {
-            bool missingaudio = Manager.AudioTree == null;
-            bool missingaudioEvent = Manager.EventTree == null;
-            bool missingMusic = Manager.MusicTree == null;
-
-
-            bool areAnyMissing = missingaudio | missingaudioEvent  | missingMusic;
-            if (areAnyMissing)
+            if (ErrorDrawer.IsDataMissing(Manager))
             {
-                string missingAudioInfo = missingaudio ? "Audio Data\n" : "";
-                string missingEventInfo = missingaudioEvent ? "Event Data\n" : "";
-                string missingMusicInfo = missingMusic ? "Music Data\n" : "";
-
                 EditorGUILayout.BeginVertical();
-                EditorGUILayout.HelpBox(missingAudioInfo + missingEventInfo + missingMusicInfo + "is missing.\nThis may be because of new project data is required in this version of InAudio",
-                    MessageType.Error, true);
-
-                bool areAllMissing = missingaudio && missingaudioEvent && missingMusic;
-                if (!areAllMissing)
+                
+                if (!ErrorDrawer.IsAllDataMissing(Manager))
                 {
-
+                    EditorGUILayout.HelpBox("Some or all project data is missing. This may be because of new project data is required in this version of InAudio",
+                    MessageType.Warning, true);
                     if (GUILayout.Button("Create missing content", GUILayout.Height(30)))
                     {
-                        int levelSize = 3;
-                        //How many subfolders by default will be created. Number is only a hint for new people
-                        if (missingaudio)
-                            CreateAudioPrefab(levelSize);
-                        if (missingaudioEvent)
-                            CreateEventPrefab(levelSize);
-     
-                        if (missingMusic)
-                            CreateMusicPrefab(levelSize);
-     
-                        Manager.Load(true);
+                        MissingDataHelper.CreateIfMissing(Manager);
+
+                        Manager.ForceLoad();
 #if !UNITY_5_2
                         EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
@@ -153,33 +131,24 @@ namespace InAudioSystem.InAudioEditor
 
                     }
                 }
+                for (int i = 0; i < 4; i++)
+                {
+                    EditorGUILayout.Separator();
+                }
+                EditorGUILayout.HelpBox("Create new project",
+                MessageType.Error, true);
                 DrawStartFromScratch();
+                
                 EditorGUILayout.EndVertical();
             }
 
         }
 
-        private bool AreAllMissing()
-        {
-            bool missingaudio = Manager.AudioTree == null;
-            bool missingaudioEvent = Manager.EventTree == null;
-            bool missingMusic = Manager.MusicTree == null;
-
-            return missingaudio && missingaudioEvent && missingMusic ;
-        }
-
         private void DrawStartFromScratch()
         {
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-
             if (GUILayout.Button("Start over from scratch", GUILayout.Height(30)))
             {
-                if (AreAllMissing() ||
+                if (ErrorDrawer.IsAllDataMissing(Manager) ||
                     EditorUtility.DisplayDialog("Create new project?", "This will delete ALL data!",
                         "Start over from scratch", "Do nothing"))
                 {
@@ -187,10 +156,6 @@ namespace InAudioSystem.InAudioEditor
                 }
             }
         }
-
-
-
-
 
         public void SelectIntegrity()
         {
@@ -202,26 +167,6 @@ namespace InAudioSystem.InAudioEditor
             selectedToolbar = 1;
         }
 
-        private void CreateEventPrefab(int levelSize)
-        {
-            GameObject go = new GameObject();
-            Manager.EventTree = AudioEventWorker.CreateTree(go, levelSize);
-            SaveAndLoad.CreateAudioEventRootPrefab(go);
-        }
 
-        private void CreateMusicPrefab(int levelSize)
-        {
-            GameObject go = new GameObject();
-            Manager.MusicTree = MusicWorker.CreateTree(go, levelSize);
-            SaveAndLoad.CreateMusicRootPrefab(go);
-        }
-
-
-        private void CreateAudioPrefab(int levelSize)
-        {
-            GameObject go = new GameObject();
-            Manager.AudioTree = AudioNodeWorker.CreateTree(go, levelSize);
-            SaveAndLoad.CreateAudioNodeRootPrefab(go);
-        }
     }
 }
