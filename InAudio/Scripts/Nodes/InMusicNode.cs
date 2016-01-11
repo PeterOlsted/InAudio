@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using InAudioSystem;
+using InAudioSystem.Internal;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -17,13 +18,16 @@ using UnityEngine.Audio;
         //MinVolume instead of "Volume" if Min-Max volume is to be added later
         public float _minVolume = 1f;
         public float _minPitch = 1f;
-
+     
 #if UNITY_EDITOR
-        public bool Filtered = false;
+    private EditorSettings editorSettings = new EditorSettings();
+    public EditorSettings EditorSettings
+    {
+        get { return editorSettings; }
+        set { editorSettings = value; }
+    }
 
-        public bool FoldedOut;
-
-        public Vector2 ScrollPosition = new Vector2();
+    public Vector2 ScrollPosition = new Vector2();
 
 #endif
 
@@ -63,21 +67,7 @@ using UnityEngine.Audio;
             set { _guid = value; }
         }
 
-#if UNITY_EDITOR
-        public bool IsFoldedOut
-        {
-            get { return FoldedOut; }
-            set { FoldedOut = value; }
-        }
-
-        public bool IsFiltered
-        {
-            get { return Filtered; }
-            set { Filtered = value; }
-        }
-#endif
-
-        public bool IsRootOrFolder
+       public bool IsRootOrFolder
         {
             get
             {

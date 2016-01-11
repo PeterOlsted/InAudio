@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using InAudioSystem.ExtensionMethods;
+using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -77,7 +78,7 @@ namespace InAudioSystem.InAudioEditor
                 return true;
 
 
-            if (selectedNode.IsFiltered)
+            if (selectedNode.EditorSettings.IsFiltered)
                 selectedNode = treeRoot;
 
             if (triggerFilter)
@@ -194,7 +195,7 @@ namespace InAudioSystem.InAudioEditor
 
         private T GetPotentialParent(T p)
         {
-            if (p._getChildren.Any() && p.IsFoldedOut)
+            if (p._getChildren.Any() && p.EditorSettings.IsFoldedOut)
             {
                 return p;
             }
@@ -211,7 +212,7 @@ namespace InAudioSystem.InAudioEditor
             {
                 InUndoHelper.RecordObjects("Location", p, p._getParent, n, n._getParent);
                 DeattachFromParent(n);
-                if (p._getChildren.Any() && p.IsFoldedOut)
+                if (p._getChildren.Any() && p.EditorSettings.IsFoldedOut)
                 {
                     AssignNewParent(p, n, 0);
                 }
@@ -258,13 +259,13 @@ namespace InAudioSystem.InAudioEditor
         {
             if (node != null)
             {
-                if (node.IsFiltered)
+                if (node.EditorSettings.IsFiltered)
                     return;
                 EditorGUI.indentLevel = indentLevel + 1;
 
                 bool clicked;
                 //Draw node
-                node.IsFoldedOut = OnNodeDraw(node, node == selectedNode, out clicked);
+                node.EditorSettings.IsFoldedOut = OnNodeDraw(node, node == selectedNode, out clicked);
 
 
                 Rect area = GUILayoutUtility.GetLastRect();
@@ -362,7 +363,7 @@ namespace InAudioSystem.InAudioEditor
                 if (Event.current.type == EventType.Layout)
                     NodeWorker.RemoveNullChildren(node);
 
-                if (node.IsFoldedOut)
+                if (node.EditorSettings.IsFoldedOut)
                 {
                     for (int i = 0; i < node._getChildren.Count; ++i)
                     {
@@ -386,26 +387,26 @@ namespace InAudioSystem.InAudioEditor
 
             if (Event.current.IsKeyDown(KeyCode.LeftArrow))
             {
-                selectedNode.IsFoldedOut = false;
+                selectedNode.EditorSettings.IsFoldedOut = false;
                 FocusOnSelectedNode();
                 Event.current.UseEvent();
             }
             if (Event.current.IsKeyDown(KeyCode.RightArrow))
             {
-                selectedNode.IsFoldedOut = true;
+                selectedNode.EditorSettings.IsFoldedOut = true;
                 FocusOnSelectedNode();
                 Event.current.UseEvent();
             }
 
             if (Event.current.IsKeyDown(KeyCode.UpArrow))
             {
-                selectedNode = TreeWalker.FindPreviousUnfoldedNode(selectedNode, arg => !arg.IsFiltered);
+                selectedNode = TreeWalker.FindPreviousUnfoldedNode(selectedNode, arg => !arg.EditorSettings.IsFiltered);
                 FocusOnSelectedNode();
                 Event.current.UseEvent();
             }
             if (Event.current.IsKeyDown(KeyCode.DownArrow))
             {
-                selectedNode = TreeWalker.FindNextNode(SelectedNode, arg => !arg.IsFiltered);
+                selectedNode = TreeWalker.FindNextNode(SelectedNode, arg => !arg.EditorSettings.IsFiltered);
                 FocusOnSelectedNode();
                 Event.current.UseEvent();
             }
@@ -435,7 +436,7 @@ namespace InAudioSystem.InAudioEditor
         {
             if (node == null)
                 return false;
-            node.IsFiltered = false;
+            node.EditorSettings.IsFiltered = false;
             if (node._getChildren.Count > 0)
             {
                 bool allChildrenFilted = true;
@@ -447,15 +448,15 @@ namespace InAudioSystem.InAudioEditor
                         allChildrenFilted = false;
                     }
                 }
-                node.IsFiltered = allChildrenFilted; //If all children are filtered, this node also becomes filtered unless its name is not filtered
-                if (node.IsFiltered)
-                    node.IsFiltered = filter(node);
-                return node.IsFiltered;
+                node.EditorSettings.IsFiltered = allChildrenFilted; //If all children are filtered, this node also becomes filtered unless its name is not filtered
+                if (node.EditorSettings.IsFiltered)
+                    node.EditorSettings.IsFiltered = filter(node);
+                return node.EditorSettings.IsFiltered;
             }
             else
             {
-                node.IsFiltered = filter(node);
-                return node.IsFiltered;
+                node.EditorSettings.IsFiltered = filter(node);
+                return node.EditorSettings.IsFiltered;
             }
         }
 

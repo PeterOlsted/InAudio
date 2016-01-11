@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using InAudioSystem.Internal;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -31,7 +32,6 @@ namespace InAudioSystem
             return _actionList.ToArray();
         }
 
-
         public void AssignParent(InAudioEventNode node)
         {
             node._children.Add(this);
@@ -49,23 +49,14 @@ namespace InAudioSystem
             get { return _children; }
         }
 
-        #if UNITY_EDITOR
-        public bool FoldedOut;
-
-        public bool IsFoldedOut
+#if UNITY_EDITOR
+        private EditorSettings editorSettings = new EditorSettings();
+        public EditorSettings EditorSettings
         {
-            get { return FoldedOut; }
-            set { FoldedOut = value; }
+            get { return editorSettings; }
+            set { editorSettings = value; }
         }
-
-        public bool Filtered;
-
-        public bool IsFiltered
-        {
-            get { return Filtered; }
-            set { Filtered = value; }
-        }
-        #endif
+#endif
 
         public bool IsFolder
         {

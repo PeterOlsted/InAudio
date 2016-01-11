@@ -1,5 +1,6 @@
 using System;
 using InAudioSystem.ExtensionMethods;
+using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;

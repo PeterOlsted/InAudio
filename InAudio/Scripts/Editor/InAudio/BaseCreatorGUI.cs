@@ -195,9 +195,9 @@ namespace InAudioSystem.InAudioEditor
             TreeWalker.ForEach(InAudioInstanceFinder.DataManager.AudioTree, audioNode =>
             {
                 if (audioNode != null)
-                    audioNode.Filtered = false;
+                    audioNode.EditorSettings.IsFiltered = false;
             });
-            TreeWalker.ForEachParent(node, n => n.IsFoldedOut = true);
+            TreeWalker.ForEachParent(node, n => n.EditorSettings.IsFoldedOut = true);
             SelectedNode = node;
             treeDrawer.SelectedNode = node;
             treeDrawer.FocusOnSelectedNode();

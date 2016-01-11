@@ -30,11 +30,11 @@ namespace InAudioSystem.InAudioEditor
             AddDataClass(node);
             node._guid = guid;
             node._type = AudioNodeType.Root;
-            node.FoldedOut = true;
+            node.EditorSettings.IsFoldedOut = true;
             node.Name = "Audio Root";
             return node;
         }
-
+         
         public static InAudioNode CreateTree(GameObject go, int numberOfChildren)
         {
             var Tree = CreateRoot(go, GUIDCreator.Create());
@@ -44,6 +44,7 @@ namespace InAudioSystem.InAudioEditor
                 newNode.Name = "Audio Folder " + i;
                 AddDataClass(newNode);
             }
+            Tree.EditorSettings.IsFoldedOut = true;
             return Tree;
         }
 
@@ -94,7 +95,7 @@ namespace InAudioSystem.InAudioEditor
             var newParent = CreateNode(node.gameObject, node._parent, parentType);
             var oldParent = node._parent;
             newParent.MixerGroup = node.MixerGroup;
-            newParent.FoldedOut = true;
+            newParent.EditorSettings.IsFoldedOut = true;
 
             int index = oldParent._children.FindIndex(node);
             NodeWorker.RemoveFromParent(node);
@@ -130,7 +131,7 @@ namespace InAudioSystem.InAudioEditor
             OnRandomNode(parent);
 
             var child = CreateNode(go, parent, GUIDCreator.Create(), newNodeType);
-            parent.FoldedOut = true;
+            parent.EditorSettings.IsFoldedOut = true;
             child.Name = parent.Name + " Child";
             AddDataClass(child);
             return child;

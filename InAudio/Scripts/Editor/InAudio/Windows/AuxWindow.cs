@@ -66,7 +66,6 @@ namespace InAudioSystem.InAudioEditor
                 bool areAllMissing = ErrorDrawer.IsAllDataMissing(Manager);
                 bool areAnyMissing = ErrorDrawer.IsDataMissing(Manager);
 
-
                 if (areAllMissing)
                 {
                     ErrorDrawer.AllDataMissing(Manager);
@@ -96,6 +95,13 @@ namespace InAudioSystem.InAudioEditor
 
             if (selectedToolbar == 1)
             {
+                bool areAnyMissing = ErrorDrawer.IsDataMissing(Manager);
+                if (!areAnyMissing)
+                {
+                    EditorGUILayout.HelpBox("Everything seems good, all InAudio projects part are accounted for.", MessageType.Info);
+                }
+
+
                 DrawMissingDataCreation();
 
                 DrawStartFromScratch();

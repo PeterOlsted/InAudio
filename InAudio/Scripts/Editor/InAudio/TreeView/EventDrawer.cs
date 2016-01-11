@@ -30,14 +30,14 @@ namespace InAudioSystem.TreeDrawer
             if (node._type != EventNodeType.Event)
             {
                 Texture picture;
-                if (node.IsFoldedOut || node._children.Count == 0)
+                if (node.EditorSettings.IsFoldedOut || node._children.Count == 0)
                     picture = EditorResources.Instance.Minus;
                 else
                     picture = EditorResources.Instance.Plus;
 
                 if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Instance.Minus.height), GUILayout.Width(EditorResources.Instance.Minus.width)))
                 {
-                    node.IsFoldedOut = !node.IsFoldedOut;
+                    node.EditorSettings.IsFoldedOut = !node.EditorSettings.IsFoldedOut;
                     Event.current.UseEvent();
                 }
           
@@ -72,7 +72,7 @@ namespace InAudioSystem.TreeDrawer
             }
 
 
-            return node.IsFoldedOut;
+            return node.EditorSettings.IsFoldedOut;
         }
     }
 

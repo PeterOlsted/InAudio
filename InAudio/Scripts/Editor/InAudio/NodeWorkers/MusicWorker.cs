@@ -23,7 +23,7 @@ namespace InAudioSystem.InAudioEditor
             var node = go.AddComponent<InMusicFolder>();
             node._guid = guid;
             node._type = MusicNodeType.Root;
-            node.FoldedOut = true;
+            node.EditorSettings.IsFoldedOut = true;
             node._name = "Music Root";
             return node;
         }

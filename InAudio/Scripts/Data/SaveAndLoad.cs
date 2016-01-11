@@ -1,3 +1,5 @@
+using System;
+using InAudioSystem.Internal;
 using UnityEngine;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
@@ -23,7 +25,18 @@ namespace InAudioSystem
             return GetComponents(go);
         }
 
+
 #if UNITY_EDITOR
+        private const int levelSize = 3;
+        public static GameObject CreatePrefab<T>(ref T node, Func<GameObject, int, T> create, string path) where T : MonoBehaviour, InITreeNode<T>
+        {
+            GameObject go = new GameObject();
+            node = create(go, levelSize);
+            go = CreatePrefab(node.gameObject, path);
+            go.GetComponent<T>().EditorSettings.IsFoldedOut = true;
+            return go;
+        }
+
         public static GameObject CreatePrefab(GameObject root, string path)
         {
             var go = PrefabUtility.CreatePrefab(path, root);

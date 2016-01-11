@@ -5,6 +5,7 @@ using InAudioSystem.ExtensionMethods;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using InAudioSystem.InAudioEditor;
 
 namespace InAudioSystem.InAudioEditor
 {
@@ -15,7 +16,7 @@ namespace InAudioSystem.InAudioEditor
             var node = go.AddComponentUndo<InAudioEventNode>();
             node._type = EventNodeType.Root;
             node._guid = guid;
-            node.FoldedOut = true;
+            node.EditorSettings.IsFoldedOut = true;
             node.Name = "Event Root";
             return node;
         }
@@ -98,7 +99,7 @@ namespace InAudioSystem.InAudioEditor
         public static InAudioEventNode CreateNode(InAudioEventNode parent, EventNodeType type)
         {
             var child = CreateEvent(parent.gameObject, parent, GUIDCreator.Create(), type);
-            child.FoldedOut = true;
+            child.EditorSettings.IsFoldedOut = true;
 
             return child;
         }
@@ -106,7 +107,7 @@ namespace InAudioSystem.InAudioEditor
         public static InAudioEventNode CreateNode(InAudioEventNode parent, GameObject go, EventNodeType type)
         {
             var child = CreateEvent(go, parent, GUIDCreator.Create(), type);
-            child.FoldedOut = true;
+            child.EditorSettings.IsFoldedOut = true;
 
             return child;
         }
@@ -278,7 +279,7 @@ namespace InAudioSystem.InAudioEditor
                     {
                         InUndoHelper.RecordObjectFull(new Object[] { audioevent, movingEvent, movingEvent._parent }, "Event Move");
                         NodeWorker.ReasignNodeParent(movingEvent, audioevent);
-                        audioevent.IsFoldedOut = true;
+                        audioevent.EditorSettings.IsFoldedOut = true;
                     }
                 }
 

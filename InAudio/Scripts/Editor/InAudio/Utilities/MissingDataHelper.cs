@@ -48,23 +48,23 @@ namespace InAudioSystem.InAudioEditor
 
                 var firstMusicFolder = Manager.MusicTree._children[0];
                 var musicGroup = MusicWorker.CreateMusicGroup(firstMusicFolder, "Example Music Group");
-                firstMusicFolder.FoldedOut = true;
+                firstMusicFolder.EditorSettings.IsFoldedOut = true;
                 MusicWorker.CreateMusicGroup(musicGroup, "Example Music Group - Layer 1");
                 MusicWorker.CreateMusicGroup(musicGroup, "Example Music Group - Layer 2");
-                musicGroup.FoldedOut = true;
+                musicGroup.EditorSettings.IsFoldedOut = true;
 
 
 
                 var firstEventFolder = Manager.EventTree._children[0];
-                firstEventFolder.FoldedOut = true;
+                firstEventFolder.EditorSettings.IsFoldedOut = true;
 
                 var audioEvent = AudioEventWorker.CreateNode(firstEventFolder, EventNodeType.Event);
                 audioEvent.Name = "Playing Music & Random Audio Event";
                 var musicAction = AudioEventWorker.AddEventAction<InEventMusicControl>(audioEvent, EventActionTypes.PlayMusic);
-                audioEvent.FoldedOut = true;
+                audioEvent.EditorSettings.IsFoldedOut = true;
                 musicAction.MusicGroup = musicGroup;
                 var action = AudioEventWorker.AddEventAction<InEventAudioAction>(audioEvent, EventActionTypes.Play);
-                audioEvent.FoldedOut = true;
+                audioEvent.EditorSettings.IsFoldedOut = true;
                 action.Node = random;
                 
                 AssetDatabase.Refresh();
@@ -87,11 +87,13 @@ namespace InAudioSystem.InAudioEditor
         private static void Create(InCommonDataManager Manager, bool ignoreMissing)
         {
             if (Manager.AudioTree == null || ignoreMissing)
-                CreateAudioPrefab(Manager);
+                SaveAndLoad.CreatePrefab(ref Manager.AudioRoot, AudioNodeWorker.CreateTree, FolderSettings.AudioSaveDataPath);
             if (Manager.EventTree == null || ignoreMissing)
-                CreateEventPrefab(Manager);
+                SaveAndLoad.CreatePrefab(ref Manager.EventRoot, AudioEventWorker.CreateTree, FolderSettings.EventSaveDataPath);
             if (Manager.MusicTree == null || ignoreMissing)
-                CreateMusicPrefab(Manager);
+                SaveAndLoad.CreatePrefab(ref Manager.MusicRoot, MusicWorker.CreateTree, FolderSettings.MusicSaveDataPath);
+            if (Manager.SettingsTree == null || ignoreMissing)
+                SaveAndLoad.CreatePrefab(ref Manager.SettingsRoot, NodeFactory.CreateSettingsTree, FolderSettings.SettingsSaveDataPath);
         }
 
         public static void CreateIfMissing(InCommonDataManager Manager)
@@ -104,27 +106,7 @@ namespace InAudioSystem.InAudioEditor
             Create(Manager, true);
         }
 
-        private const int levelSize = 3;
-        private static GameObject CreateEventPrefab(InCommonDataManager Manager)
-        {
-            GameObject go = new GameObject();
-            Manager.EventTree = AudioEventWorker.CreateTree(go, levelSize);
-            return SaveAndLoad.CreatePrefab(Manager.EventTree.gameObject, FolderSettings.EventSaveDataPath);
-        }
-
-        private static GameObject CreateMusicPrefab(InCommonDataManager Manager)
-        {
-            GameObject go = new GameObject();
-            Manager.MusicTree = MusicWorker.CreateTree(go, levelSize);
-            return SaveAndLoad.CreatePrefab(Manager.MusicTree.gameObject, FolderSettings.MusicSaveDataPath);
-        }
-
-        private static GameObject CreateAudioPrefab(InCommonDataManager Manager)
-        {
-            GameObject go = new GameObject();
-            Manager.AudioTree = AudioNodeWorker.CreateTree(go, levelSize);
-            return SaveAndLoad.CreatePrefab(Manager.AudioTree.gameObject, FolderSettings.AudioSaveDataPath);
-        }
+        
     }
 
 }

@@ -26,7 +26,7 @@ namespace InAudioSystem.TreeDrawer
             DrawVolume(fullArea, node);
             
 
-            bool folded = node.IsFoldedOut;
+            bool folded = node.EditorSettings.IsFoldedOut;
 
             Texture picture;
             if (folded || node._getChildren.Count == 0)
@@ -36,7 +36,7 @@ namespace InAudioSystem.TreeDrawer
 
             if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Instance.Minus.height), GUILayout.Width(EditorResources.Instance.Minus.width)))
             {
-                node.IsFoldedOut = !node.IsFoldedOut;
+                node.EditorSettings.IsFoldedOut = !node.EditorSettings.IsFoldedOut;
                 Event.current.UseEvent();
             }
 
@@ -67,7 +67,7 @@ namespace InAudioSystem.TreeDrawer
                 clicked = true;
             }
          
-            return node.IsFoldedOut;
+            return node.EditorSettings.IsFoldedOut;
         }
 
         private static void DrawPlayStop(Rect fullArea, InMusicGroup group)

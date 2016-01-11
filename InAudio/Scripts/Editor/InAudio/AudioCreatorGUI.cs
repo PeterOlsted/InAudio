@@ -218,7 +218,7 @@ namespace InAudioSystem.InAudioEditor
                 
                 InUndoHelper.DoInGroup(() =>
                 {
-                    node.IsFoldedOut = true;
+                    node.EditorSettings.IsFoldedOut = true;
                     var nodeToMove = objects[0] as InAudioNode;
                     
                     if (node.gameObject != nodeToMove.gameObject)

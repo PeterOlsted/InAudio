@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using InAudioSystem;
+using InAudioSystem.Internal;
 using InAudioSystem.Runtime;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -36,9 +37,12 @@ public class InAudioNode : MonoBehaviour, InITreeNode<InAudioNode>
         }
 
 #if UNITY_EDITOR
-    public bool Filtered = false;
-
-        public bool FoldedOut;
+        private EditorSettings editorSettings = new EditorSettings();
+        public EditorSettings EditorSettings
+        {
+            get { return editorSettings;}
+            set { editorSettings = value; }
+        }
 
         public Vector2 ScrollPosition = new Vector2();
 
@@ -89,20 +93,6 @@ public class InAudioNode : MonoBehaviour, InITreeNode<InAudioNode>
         {
             get { return !IsRootOrFolder; }
         }
-
-#if UNITY_EDITOR
-        public bool IsFoldedOut
-        {
-            get { return FoldedOut; }
-            set { FoldedOut = value; }
-        }
-
-        public bool IsFiltered
-        {
-            get { return Filtered; }
-            set { Filtered = value; }
-        }
-#endif
 }
 
 

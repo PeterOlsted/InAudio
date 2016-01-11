@@ -1,10 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InAudioSystem
+namespace InAudioSystem.Internal
 {
+    [System.Serializable]
+    public class EditorSettings
+    {
+        public bool IsFoldedOut;
+        public bool IsFiltered;
+    }
 
-    public interface InITreeNode<T> where T : UnityEngine.Object, InITreeNode<T>
+    public interface InITreeNode<T> where T : Object, InITreeNode<T>
     {
         T _getParent { get; set; }
 
@@ -19,9 +25,7 @@ namespace InAudioSystem
         MonoBehaviour[] GetAuxData();
 
 #if UNITY_EDITOR
-        bool IsFoldedOut { get; set; }
-
-        bool IsFiltered { get; set; }
+        EditorSettings EditorSettings { get; set; }
 #endif
         bool IsFolder { get; }
     }

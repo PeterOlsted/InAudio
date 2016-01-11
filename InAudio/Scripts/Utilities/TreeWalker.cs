@@ -234,7 +234,7 @@ namespace InAudioSystem
             else
             {
                 var parent = node._getParent;
-                if (!parent.IsFoldedOut)
+                if (!parent.EditorSettings.IsFoldedOut)
                     return parent;
                 else
                     return FindFoldedParent(parent);
@@ -256,7 +256,7 @@ namespace InAudioSystem
             else
             {
                 T previousNode = node._getParent._getChildren[index - 1];
-                while (previousNode.IsFoldedOut)
+                while (previousNode.EditorSettings.IsFoldedOut)
                 {
                     if (previousNode._getChildren.Count == 0)
                         return previousNode;
@@ -271,7 +271,7 @@ namespace InAudioSystem
 
         public static T GetPreviousVisibleNode<T>(T node) where T : Object, InITreeNode<T>
         {
-            return FindPreviousUnfoldedNode(node, arg => !arg.IsFiltered);
+            return FindPreviousUnfoldedNode(node, arg => !arg.EditorSettings.IsFiltered);
         }
 
         public static T FindPreviousUnfoldedNode<T>(T node, Func<T, bool> predicate) where T : Object, InITreeNode<T>
@@ -300,7 +300,7 @@ namespace InAudioSystem
                     return node._getParent;
                 }
 
-                while (previousNode.IsFoldedOut)
+                while (previousNode.EditorSettings.IsFoldedOut)
                 {
                     if (previousNode._getChildren.Count == 0)
                         return previousNode;
@@ -358,7 +358,7 @@ namespace InAudioSystem
         public static T FindNextNode<T>(T node, Func<T, bool> predicate) where T : Object, InITreeNode<T>
         {
             var nodeChildren = node._getChildren;
-            if (node.IsFoldedOut && predicate(node) && nodeChildren.Count > 0)
+            if (node.EditorSettings.IsFoldedOut && predicate(node) && nodeChildren.Count > 0)
             {
                 for (int i = 0; i < nodeChildren.Count; i++)
                 {

@@ -172,7 +172,7 @@ namespace InAudioSystem.InAudioEditor
                         dragged.MoveToNewParent(newParent);
 
                        
-                        newParent.IsFoldedOut = true;
+                        newParent.EditorSettings.IsFoldedOut = true;
                     }
 
                  
@@ -286,7 +286,7 @@ namespace InAudioSystem.InAudioEditor
             InUndoHelper.DoInGroup(() =>
             {
                 InUndoHelper.RecordObjectFull(parent, "Create Music Folder");
-                parent.FoldedOut = true;
+                parent.EditorSettings.IsFoldedOut = true;
                 MusicWorker.CreateFolder(parent.gameObject, parent);
             });
             
@@ -297,7 +297,7 @@ namespace InAudioSystem.InAudioEditor
             InUndoHelper.DoInGroup(() =>
             {
                 InUndoHelper.RecordObjectFull(parent, "Create Music Folder");
-                parent.FoldedOut = true;
+                parent.EditorSettings.IsFoldedOut = true;
                 MusicWorker.CreateMusicGroup(parent);
             });
         }

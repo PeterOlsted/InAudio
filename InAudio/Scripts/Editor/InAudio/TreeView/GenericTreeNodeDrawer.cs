@@ -1,5 +1,6 @@
 using InAudioSystem.ExtensionMethods;
 using InAudioSystem.InAudioEditor;
+using InAudioSystem.Internal;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace InAudioSystem.TreeDrawer
 
             GUILayout.Space(EditorGUI.indentLevel * 16);
 
-            bool folded = node.IsFoldedOut;
+            bool folded = node.EditorSettings.IsFoldedOut;
 
             Texture picture;
             if (EditorResources.Instance != null)
@@ -40,7 +41,7 @@ namespace InAudioSystem.TreeDrawer
             if (GUILayout.Button(picture, GUIStyle.none, GUILayout.Height(EditorResources.Instance.Minus.height),
                 GUILayout.Width(EditorResources.Instance.Minus.width)))
             {
-                node.IsFoldedOut = !node.IsFoldedOut;
+                node.EditorSettings.IsFoldedOut = !node.EditorSettings.IsFoldedOut;
                 Event.current.UseEvent();
             }
             Texture icon = TreeNodeDrawerHelper.LookUpIcon(node);
@@ -70,7 +71,7 @@ namespace InAudioSystem.TreeDrawer
                 clicked = true;
             }
 
-            return node.IsFoldedOut;
+            return node.EditorSettings.IsFoldedOut;
         }
     }
 

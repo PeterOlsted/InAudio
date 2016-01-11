@@ -9,9 +9,10 @@ namespace InAudioSystem.Internal
 {
     public class InCommonDataManager : MonoBehaviour
     {
-        private InAudioNode AudioRoot;
-        private InAudioEventNode EventRoot;
-        private InMusicNode MusicRoot;
+        public InAudioNode AudioRoot;
+        public InAudioEventNode EventRoot;
+        public InMusicNode MusicRoot;
+        public InSettingsNode SettingsRoot;
 
         public InAudioNode AudioTree
         {
@@ -26,31 +27,37 @@ namespace InAudioSystem.Internal
         }
 
         public InMusicNode MusicTree
-        { 
+        {
             get { return MusicRoot; }
             set { MusicRoot = value; }
         }
 
+        public InSettingsNode SettingsTree
+        {
+            get { return SettingsRoot; }
+            set { SettingsRoot = value; }
+        }
 
         private Component[] roots = null;
+
         public Component[] Roots
         {
             get
             {
                 if (roots == null || roots.Length == 0)
                 {
-                    roots = new Component[] {AudioRoot, EventRoot, MusicRoot};
+                    roots = new Component[] {AudioRoot, EventRoot, MusicRoot, SettingsRoot};
                 }
                 return roots;
-            } 
+            }
         }
 
-        public void ForceLoad()
+        public void ForceLoad() 
         {
             Load(true);
         }
 
-        public void Load() 
+        public void Load()
         {
             Load(false);
         }
@@ -62,7 +69,8 @@ namespace InAudioSystem.Internal
                 AudioRoot = LoadData<InAudioNode>(FolderSettings.AudioLoadData);
                 EventRoot = LoadData<InAudioEventNode>(FolderSettings.EventLoadData);
                 MusicRoot = LoadData<InMusicNode>(FolderSettings.MusicLoadData);
-                roots = new Component[] { AudioRoot, EventTree, MusicRoot };
+                SettingsRoot = LoadData<InSettingsNode>(FolderSettings.SettingsLoadData);
+                roots = new Component[] { AudioRoot, EventTree, MusicRoot, SettingsRoot };
             }
         }
 

@@ -100,7 +100,7 @@ namespace InAudioSystem.InAudioEditor
             {
                 InUndoHelper.DoInGroup(() =>
                 {
-                    TreeWalker.ForEachParent(SelectedNode, n => n.FoldedOut = true);
+                    TreeWalker.ForEachParent(SelectedNode, n => n.EditorSettings.IsFoldedOut = true);
                     InUndoHelper.RecordObject(SelectedNode, "Send to Event");                
                     if (SelectedNode.IsRootOrFolder)
                     {
@@ -125,7 +125,7 @@ namespace InAudioSystem.InAudioEditor
             {
                 InUndoHelper.DoInGroup(() =>
                 {
-                    TreeWalker.ForEachParent(SelectedNode, n => n.FoldedOut = true);
+                    TreeWalker.ForEachParent(SelectedNode, n => n.EditorSettings.IsFoldedOut = true);
                     InUndoHelper.RecordObject(SelectedNode, "Send to Event");
                     if (SelectedNode.IsRootOrFolder)
                     {
@@ -242,7 +242,7 @@ namespace InAudioSystem.InAudioEditor
                 AudioEventWorker.CreateNode(node, type);
             });
 
-            node.FoldedOut = true;
+            node.EditorSettings.IsFoldedOut = true;
         }
 
         protected override InAudioEventNode Root()
