@@ -340,6 +340,11 @@ namespace InAudioSystem
             Fade(to, 1f, duration, tweenType, Time.time);
         }
 
+        public void CrossfadePlayStop(InMusicNode from, InMusicGroup to, float duration, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
+        {
+            FadeAndStop(from, duration, tweenType);
+            PlayWithFadeIn(to, 1f, duration, tweenType);
+        }
 
         #endregion
 

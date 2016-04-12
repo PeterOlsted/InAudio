@@ -2167,12 +2167,6 @@ private static float previousRealTime;
             LeanTween.update();
         }
 
-        public void OnLevelWasLoaded(int lvl)
-        {
-            // Debug.Log("reseting gui");
-            LTGUI.reset();
-        }
-
         private static Transform trans;
         private static float timeTotal;
         private static TweenAction tweenAction;
