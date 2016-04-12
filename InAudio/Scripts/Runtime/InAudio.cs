@@ -7,6 +7,7 @@ using InAudioSystem.ExtensionMethods;
 using InAudioSystem.Internal;
 using InAudioSystem.Runtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 /// <summary>
@@ -1357,14 +1358,7 @@ public class InAudio : MonoBehaviour
         }
     }
 
-    public const string CurrentVersion = "2.6";
-
-    void OnLevelWasLoaded()
-    {
-
-        if (activeAudioListener == null)
-            activeAudioListener = FindActiveListener();
-    }
+    public const string CurrentVersion = "2.6.1";
 
     private static AudioListener FindActiveListener()
     {
@@ -1377,12 +1371,17 @@ public class InAudio : MonoBehaviour
         if (Application.isPlaying)
 #endif
         {
-            Music = GetComponentInChildren<MusicPlayer>();
-            if (Music == null)
-            {
-                Debug.LogError(
-                    "InAudio: Could not find music player in InAudio Mananger object.\nPlease add the 'InAudio Manager' prefab to the scene again or reimport the project from the Asset Store and try again.");
+            if(InAudio.instance == null)
+            { 
+                Music = GetComponentInChildren<MusicPlayer>();
+                if (Music == null)
+                {
+                    Debug.LogError(
+                        "InAudio: Could not find music player in InAudio Mananger object.\nPlease add the 'InAudio Manager' prefab to the scene again or reimport the project from the Asset Store and try again.");
+
+                }
             }
+
         }
     }
 
