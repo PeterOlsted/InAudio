@@ -104,24 +104,17 @@ namespace InAudioSystem.InAudioEditor
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
             //*********************************************************************//
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical(GUILayout.Width(pictureSize + 3));
-            if (GUILayout.Button(EditorResources.Support, GUILayout.Width(pictureSize), GUILayout.Height(pictureSize)))
-		    {
-                FeedbackWindow window = EditorWindow.GetWindow<FeedbackWindow>();
-
-                window.Show();
-            }
-            EditorGUILayout.EndVertical();
             EditorGUILayout.BeginVertical();
+            
+            EditorGUILayout.LabelField("Do you have a question, bug report or feedback you want to say directly to the developer? Please do! Your feedback is always welcome. Please send to:\n", wordwrapStyle);
 
-       
-            EditorGUILayout.LabelField("Direct Support", EditorStyles.boldLabel);
-            GUI.skin.label.wordWrap = true;
-            EditorGUILayout.LabelField("Do you have a question, bug report or feedback you want to say directly to the developer? Please do! Your feedback is always welcome.\nYou can send it directly from Unity or send an email to inaudio@outlook.com", wordwrapStyle);
-
-
+		    EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("inaudio@outlook.com");
+            GUILayout.FlexibleSpace();
             EditorGUILayout.EndVertical();
+
+            
             EditorGUILayout.EndHorizontal();
             //*********************************************************************//
 

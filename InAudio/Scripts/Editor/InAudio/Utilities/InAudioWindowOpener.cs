@@ -54,17 +54,8 @@ namespace InAudioSystem.InAudioEditor
             return window;
         }
 
-        [MenuItem("Window/InAudio/Feedback Window #&6", false, 6)]
-        public static FeedbackWindow ShowFeedbackWindow()
-        {
-            FeedbackWindow window = EditorWindow.GetWindow<FeedbackWindow>();
-
-            window.Show();
-            window.minSize = new Vector2(100, 50);
-            return window;
-        }
-
-        [MenuItem("Window/InAudio/Introduction Window #&7", false, 7)]
+     
+        [MenuItem("Window/InAudio/Introduction Window #&6", false, 6)]
         public static GuideWindow ShowIntroductionWindow()
         {
             GuideWindow window = EditorWindow.GetWindow<GuideWindow>();
