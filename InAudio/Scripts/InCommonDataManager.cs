@@ -70,12 +70,10 @@ namespace InAudioSystem.Internal
             {
                 for (int i = 0; i < data.Length; i++)
                 {
-                    if (data[i] as InITreeNode<T> != null)
+                    var node = data[i] as InITreeNode<T>;
+                    if (node != null && node.IsRoot)
                     {
-                        if ((data[i] as InITreeNode<T>).IsRoot)
-                        {
-                            return data[i] as T;
-                        }
+                        return data[i] as T;
                     }
                 }
             }

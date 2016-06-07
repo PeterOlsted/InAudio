@@ -117,6 +117,7 @@ public class InPlayer : MonoBehaviour
             {
                 audioSources[i].AudioSource.panStereo = value;
             }
+
             audioParameters.StereoPan = value;
         }
     }
@@ -126,8 +127,11 @@ public class InPlayer : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        //Use a non zero amount to avoid any issues with sound glitching
-        StartCoroutine(StopAndMute(0.08f, LeanTweenType.notUsed));
+        if (isActive)
+        {
+            //Use a non zero amount to avoid any issues with sound glitching
+            StartCoroutine(StopAndMute(0.08f, LeanTweenType.notUsed));
+        }
     }
 
     /// <summary>
@@ -136,7 +140,10 @@ public class InPlayer : MonoBehaviour
     /// <param name="fadeOutTime"></param>
     public void Stop(float fadeOutTime, LeanTweenType tweenType = LeanTweenType.easeInOutQuad)
     {
-        StartCoroutine(StopAndMute(fadeOutTime, tweenType));
+        if (isActive)
+        {
+            StartCoroutine(StopAndMute(fadeOutTime, tweenType));
+        }
     }
 
     /// <summary>
@@ -722,6 +729,9 @@ public class InPlayer : MonoBehaviour
 
     private void Cleanup()
     {
+        isActive = false;
+        toFollow = null;
+
         if(ParentFolder != null && ParentFolder.runtimePlayers != null)
         {
             ParentFolder.runtimePlayers.Remove(this);
@@ -731,7 +741,7 @@ public class InPlayer : MonoBehaviour
         {
             OnCompleted(controlling, NodePlaying);
         }
-        isActive = false;
+        
         if (PlayingNode != null && PlayingNode.CurrentInstances != null)
         {
             var instances = PlayingNode.CurrentInstances;
